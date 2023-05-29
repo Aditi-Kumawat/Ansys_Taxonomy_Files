@@ -1,0 +1,51 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore Results_Ansys folder
+Results_Ansys
+
+# Ignore Figs folder
+Matlab_codes/SAVE_FIGS
+
+# Ignore save data folder
+Matlab_codes/SAVE_DATA
+
+# Ignore all text files
+*.txt
+
+# Ignore all jpg files
+*.jpg
+# Ignore all png files
+*.png
+
+# Ignore all job related files
+*.CMP
+*.dbb
+*.db
+*.dmp
+*.DSP
+*.emat
+*.err
+*.esav
+*.full
+*.ldhi
+*.lock
+*.log
+*.mlv
+*.mntr
+*.mode
+*.page
+*.r001
+*.rdb
+*.rst
+*.stat
+*.tmp
+
+zobname*.*
+ansuitmp
+
+# Ignore files related to API keys
+.env
+
+# Ignore SASS config files
+.sass-cache
