@@ -6,9 +6,13 @@ Results_Ansys
 
 # Ignore Figs folder
 Matlab_codes/SAVE_FIGS
-
+*.fig
+*.pdf
 # Ignore save data folder
 Matlab_codes/SAVE_DATA
+*.asv
+*.csv
+*.xlsx
 
 # Ignore all text files
 *.txt
