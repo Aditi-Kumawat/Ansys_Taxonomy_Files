@@ -16,10 +16,13 @@ Matlab_codes/SAVE_DATA
 
 # Ignore all text files
 *.txt
+*.dat
 
-# Ignore all jpg files
+# Ignore all figure files
 *.jpg
-# Ignore all png files
+*.jpeg
+*.emf
+*.eps
 *.png
 
 # Ignore all job related files
