@@ -50,7 +50,7 @@ Matlab_codes/SAVE_DATA
 
 zobname*.*
 ansuitmp
-
+F_para
 # Ignore files related to API keys
 .env
 
