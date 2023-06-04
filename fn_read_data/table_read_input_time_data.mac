@@ -1,0 +1,19 @@
+
+*DIM,VT1,TABLE,datarows,4
+*VREAD,VT1(1,0),'ut_rec_%rec%',txt,filepath,jik,4,datarows,1,1,
+(1x,E14.7,1x,E14.7,1x,E14.7,1x,E14.7)
+VT1(0,1)=0.0
+*VPLOt,VT1(1,0),VT1(1,1)
+*SET,VT1(0,1,1) , 1  
+*SET,VT1(0,2,1) , 2  
+*SET,VT1(0,3,1) , 3
+
+
+!*DIM,VT1,TABLE,datarows,4
+!*VREAD,VT1(1,0),'fref_vel_t_mat',txt,filepath,jik,4,datarows,1,1,
+!(1x,E14.7,1x,E14.7,1x,E14.7,1x,E14.7)
+!VT1(0,1)=0.0
+!*VPLOt,VT1(1,0),VT1(1,1)
+!*SET,VT1(0,1,1) , 1  
+!*SET,VT1(0,2,1) , 2  
+!*SET,VT1(0,3,1) , 3
