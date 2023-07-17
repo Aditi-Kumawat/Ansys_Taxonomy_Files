@@ -5,8 +5,10 @@
 !------------------creating a group to define building base-------------------!
 NSEL,S,LOC,Z,0
 CM, n_buil_base, NODE       
-
-NSEL,ALL				      !define stiffness matrix to element
+D,n_buil_base,rotx,0
+D,n_buil_base,roty,0
+D,n_buil_base,rotz,0
+NSEL,ALL
 *GET,n_count,NODE,0,COUNT
 NGEN,2,n_count,n_buil_base,,,0,0,-.1
 CM,node_K,NODE

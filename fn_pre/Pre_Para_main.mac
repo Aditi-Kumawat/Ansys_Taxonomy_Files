@@ -35,10 +35,10 @@ n_roomsy=3
 t_floor1=0.2
 !--------------------------------------------------------------!
 !-------------------------Element Size-------------------------!
-n_ele_size=0.25
+n_ele_size=0.5
 !--------------------------------------------------------------!
 !-----------------------Soil properties------------------------!
-Vs=450         !Shear wave velocity [m/s]
+Vs=450          !Shear wave velocity [m/s]
 Rho=2.3e3       !Soil density [kg/m^3]
 Nu=0.33         !Soil Poisson's Ratio
 !--------------------------------------------------------------!
@@ -46,7 +46,11 @@ Nu=0.33         !Soil Poisson's Ratio
 L_f=0.75        !Foundation half-length [m]
 B_f=0.75        !Foundation half-width [m]
 *IF,ftyp,EQ,'PLATE',THEN
-L_f=n_ele_size/2        !Foundation half-length [m]
-B_f=n_ele_size/2        !Foundation half-width [m]
+L_f=n_ele_size/2     !Foundation half-length [m]
+B_f=n_ele_size/2     !Foundation half-width [m]
 *ENDIF
 
+!---Number of Elements   
+nVolx=l/n_ele_size                                       
+nVoly=b/n_ele_size                                      
+nVolz=h/n_ele_size                         

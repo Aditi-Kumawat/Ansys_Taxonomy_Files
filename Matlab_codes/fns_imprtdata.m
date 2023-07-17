@@ -59,42 +59,89 @@ classdef fns_imprtdata
                 bf_nm,i_str,cmpt,n_c,rf_fldr,cols)
             for i_l=1:length(l_vect)
                 l=l_vect(i_l);
-%                 for i_b=1:length(b_vect)
-                    b=b_vect(i_l);
-%                     if b>l
-%                         break
-%                     end
+                %                 for i_b=1:length(b_vect)
+                b=b_vect(i_l);
+                %                     if b>l
+                %                         break
+                %                     end
 
-                    fldr = fns_plot.get_fldrnm(n_str, n_rx, n_ry,...
-                        l, b,ftyp, V_s, L_f, B_f);
-                    fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
-                        l, b),cmpt, 'UniformOutput', false);
+                fldr = fns_plot.get_fldrnm(n_str, n_rx, n_ry,...
+                    l, b,ftyp, V_s, L_f, B_f);
+                fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
+                    l, b),cmpt, 'UniformOutput', false);
 
-                    cd ..
-                    fil_pth = fullfile(rf_fldr, fldr, fil_nm);
-                    U_all = cellfun(@(x) readtable(x), fil_pth,...
-                        'UniformOutput', false);
-                    cd Matlab_codes
+                cd ..
+                cd Results_Ansys
+                fil_pth = fullfile(rf_fldr, fldr, fil_nm);
+                U_all = cellfun(@(x) readtable(x), fil_pth,...
+                    'UniformOutput', false);
+                cd ..
+                cd Matlab_codes
 
-                    for i_c = 1:n_c
-                        Uc = U_all{i_c};
-                        Uc.Properties.VariableNames = cols;
-                        if i_l == 1
-                            f = Uc.Freq;
-                            Uamp_mat{i_c} = Uc.AMPL;
-                            UR_mat{i_c} = Uc.REAL;
-                            UIm_mat{i_c} = Uc.IMAG;
-                            Ucpmlx_mat{i_c} = Uc.REAL+1i.*Uc.IMAG;
-                        else
-                            Uamp_mat{i_c}(:, i_l)= Uc.AMPL;
-                            UR_mat{i_c}(:, i_l)= Uc.REAL;
-                            UIm_mat{i_c}(:, i_l)= Uc.IMAG;
-                            Ucpmlx_mat{i_c}(:, i_l)=Uc.REAL+1i.*Uc.IMAG;
-                        end
-%                     end
+                for i_c = 1:n_c
+                    Uc = U_all{i_c};
+                    Uc.Properties.VariableNames = cols;
+                    if i_l == 1
+                        f = Uc.Freq;
+                        Uamp_mat{i_c} = Uc.AMPL;
+                        UR_mat{i_c} = Uc.REAL;
+                        UIm_mat{i_c} = Uc.IMAG;
+                        Ucpmlx_mat{i_c} = Uc.REAL+1i.*Uc.IMAG;
+                    else
+                        Uamp_mat{i_c}(:, i_l)= Uc.AMPL;
+                        UR_mat{i_c}(:, i_l)= Uc.REAL;
+                        UIm_mat{i_c}(:, i_l)= Uc.IMAG;
+                        Ucpmlx_mat{i_c}(:, i_l)=Uc.REAL+1i.*Uc.IMAG;
+                    end
+                    %                     end
                 end
             end
         end
+%%
+        function [f,Uamp_mat,Ucpmlx_mat]=get_TFvSvary(n_str, n_rx, n_ry,...
+                l_vect, b_vect, ftyp, V_s, L_f, B_f,...
+                bf_nm,i_str,cmpt,n_c,rf_fldr,cols)
+            for i_l=1:length(l_vect)
+                l=l_vect(i_l);
+                %                 for i_b=1:length(b_vect)
+                b=b_vect(i_l);
+                %                     if b>l
+                %                         break
+                %                     end
+
+                fldr = fns_plot.get_fldrnm(n_str, n_rx, n_ry,...
+                    l, b,ftyp, V_s, L_f, B_f);
+                fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
+                    V_s),cmpt, 'UniformOutput', false);
+
+                cd ..
+                cd Results_Ansys
+                fil_pth = fullfile(rf_fldr, fldr, fil_nm);
+                U_all = cellfun(@(x) readtable(x), fil_pth,...
+                    'UniformOutput', false);
+                cd ..
+                cd Matlab_codes
+
+                for i_c = 1:n_c
+                    Uc = U_all{i_c};
+                    Uc.Properties.VariableNames = cols;
+                    if i_l == 1
+                        f = Uc.Freq;
+                        Uamp_mat{i_c} = Uc.AMPL;
+                        UR_mat{i_c} = Uc.REAL;
+                        UIm_mat{i_c} = Uc.IMAG;
+                        Ucpmlx_mat{i_c} = Uc.REAL+1i.*Uc.IMAG;
+                    else
+                        Uamp_mat{i_c}(:, i_l)= Uc.AMPL;
+                        UR_mat{i_c}(:, i_l)= Uc.REAL;
+                        UIm_mat{i_c}(:, i_l)= Uc.IMAG;
+                        Ucpmlx_mat{i_c}(:, i_l)=Uc.REAL+1i.*Uc.IMAG;
+                    end
+                    %                     end
+                end
+            end
+        end
+
         %%
         function [f,Uamp_mat,Ucpmlx_mat]=get_U_rec(n_str, n_rx, n_ry,...
                 l_vect, b_vect, ftyp, V_s, L_f, B_f,rec,...

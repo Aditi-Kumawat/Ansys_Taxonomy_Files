@@ -1,0 +1,54 @@
+!Define the stiffness matrix
+ET,5,MATRIX27				  	
+KEYOPT,5,1,1
+KEYOPT,5,2,0
+KEYOPT,5,3,4
+KEYOPT,5,4,1
+R,5  , K_11(freq,1),0,0,0,K_15(freq,1),0,                                   ! C1 to C6
+RMORE,-K_11(freq,1),0,0,0,-K_15(freq,1),0,                                  ! C7 to C12
+RMORE, K_22(freq,1),0,K_24(freq,1),0,0,0,            						! C13 to 18
+RMORE,-K_22(freq,1),0,-K_24(freq,1),0,0,K_33(freq,1),        		 		! C19 to 24
+RMORE,0,0,0,0,0,-K_33(freq,1),        			                        	! C25 to 30
+RMORE,0,0,0,K_44(freq,1),0,0,            			            			! C31 to 36
+RMORE,0,-K_24(freq,1),0,-K_44(freq,1),0,0,           					    ! C37 to 42
+RMORE,K_55(freq,1),0,-K_15(freq,1),0,0,0,                                   ! C43 to 48
+RMORE,-K_55(freq,1),0,K_66(freq,1),0,0,0,         	                		! C49 to 54
+RMORE,0,0,-K_66(freq,1),K_11(freq,1),0,0,          		                	! C55 to 60
+RMORE,0,K_15(freq,1),0,K_22(freq,1),0,K_24(freq,1),          	       		! C61 to 66
+RMORE,0,0,K_33(freq,1),0,0,0, 			 			                        ! C67 to 72
+RMORE,K_44(freq,1),0,0,K_55(freq,1),0,K_66(freq,1),                			! C73 to 78
+
+
+
+!Define the damping matrix, input *K(imaginary element stiffness matrix)/omega here 
+ET,6,MATRIX27                
+KEYOPT,6,1,1
+KEYOPT,6,2,0
+KEYOPT,6,3,5
+KEYOPT,6,4,1
+R,6  , C_11(freq,1),0,0,0,C_15(freq,1),0,                                   ! C1 to C6
+RMORE,-C_11(freq,1),0,0,0,-C_15(freq,1),0,                                  ! C7 to C12
+RMORE, C_22(freq,1),0,C_24(freq,1),0,0,0,            						! C13 to 18
+RMORE,-C_22(freq,1),0,-C_24(freq,1),0,0,C_33(freq,1),        		 		! C19 to 24
+RMORE,0,0,0,0,0,-C_33(freq,1),        			                        	! C25 to 30
+RMORE,0,0,0,C_44(freq,1),0,0,            			            			! C31 to 36
+RMORE,0,-C_24(freq,1),0,-C_44(freq,1),0,0,           					    ! C37 to 42
+RMORE,C_55(freq,1),0,-C_15(freq,1),0,0,0,                                   ! C43 to 48
+RMORE,-C_55(freq,1),0,C_66(freq,1),0,0,0,         	                		! C49 to 54
+RMORE,0,0,-C_66(freq,1),C_11(freq,1),0,0,          		                	! C55 to 60
+RMORE,0,C_15(freq,1),0,C_22(freq,1),0,C_24(freq,1),          	       		! C61 to 66
+RMORE,0,0,C_33(freq,1),0,0,0, 			 			                        ! C67 to 72
+RMORE,C_44(freq,1),0,0,C_55(freq,1),0,C_66(freq,1),                			! C73 to 78
+
+
+CMSEL,ALL
+CMSEL,S,node_K,NODE
+TYPE,5
+REAL,5
+EINTF,.12,,LOW,,,,,0
+CMSEL,ALL
+CMSEL,S,node_D,NODE
+TYPE,6
+REAL,6
+EINTF,.12,,LOW,,,,,0 
+CMSEL,ALL

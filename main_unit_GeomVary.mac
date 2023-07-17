@@ -25,7 +25,7 @@ ftyp='FOOTING'
 /INPUT,'fn_fndtn_para\fndn_para_cnstvals_FULL','mac'
 
 !for accidental runs
-!/eof
+/eof
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
@@ -45,6 +45,10 @@ ftyp='FOOTING'
         PARRES, NEW, F_para,,
         b=b_vect(i_geo_para_b,1)
         *IF,b,GT,l,*EXIT
+        !---Number of Elements                                                                     
+        nVolx=l/n_ele_size                         
+        nVoly=b/n_ele_size                               
+        nVolz=h/n_ele_size                     
         *IF,ftyp,EQ,'FOOTING',THEN
             /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
         *ELSEIF,ftyp,EQ,'PLATE'
@@ -52,7 +56,7 @@ ftyp='FOOTING'
         *ENDIF
         !---------------------------------------------------------------------------!
         !-----Define matrix27 to element, here create second node at (x,y,-0.1)-----!
-        /INPUT,'fn_pre\Pre_CM_M27','mac'						!matrix27 used
+        /INPUT,'fn_pre\Pre_CM_colbase_M27','mac'						!matrix27 used
         /INPUT,'fn_pre\Pre_M27_Full','mac'		!matrix27 used
         !---------------------------Constraints for the LPM-------------------------!
         /INPUT,'fn_pre\Pre_Load_BCs','mac'				!matrix27 used

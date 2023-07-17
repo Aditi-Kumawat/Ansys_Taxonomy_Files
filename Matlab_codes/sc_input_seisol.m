@@ -15,13 +15,13 @@ ftyp = 'PLATE';
 % ftyp = 'FOOTING';
 
 % Define the foundation behaviour and analysis type
-rec=936;
+rec=1324;
 
 % Define the velocity of the excitation
 V_s = 450;
 
 % Define the size of the elements
-n_esize = 0.5;
+n_esize = 1;
 
 % Calculate the length and width of the footing based on the
 % foundation type
@@ -35,9 +35,8 @@ end
 %% Importing Transfer Function
 
 % Define the name of the folder where the results are stored
-% rf_fldr = 'Results_Freq_Indepn_Inpt/SeisSol/data_Vs30_Bld';
-rf_fldr = 'Results_Freq_Indepn_TF';
-% rf_fldr = 'Results_multi_unit_geometry_variation';
+% rf_fldr = 'MultiUnitBld_GeomVary';
+rf_fldr = 'TF_F_Indpn';
 % Define the base file name for the U center results in ANSYS
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 
@@ -49,7 +48,7 @@ cmpt = {'X', 'Y', 'Z'};
 n_c = length(cmpt);
 
 %% Importing Data
-ff_fldr = 'GM/SeisSol/data_Vs30_Bld';
+ff_fldr = 'GM/SeisSol/data_noVs30_Bld_new';
 % Define the base file name for the U center results in ANSYS
 bf_nm_u = 'fftd_%d_%s_%d';
 bf_nm_v = 'fftv_%d_%s_%d';
@@ -69,7 +68,7 @@ n_snr = numel(s_dir);
     fns_imprtdata.get_inpt_seisl(bf_nm_v,s_dir,...
     stn,rec,n_snr,ff_fldr,cols);
 %%
-ss_fldr = 'GM/SeisSol/data_Vs30_Bld';
+ss_fldr = 'GM/SeisSol/data_noVs30_Bld_new';
 rec_b_vect=[1324 1325 1326];
 [bldUampmat,bldUcmplx_mat]=fns_imprtdata.get_bldata_seisl(bf_nm_u,...
     stn,rec_b_vect,s_dir,ss_fldr,cols);
@@ -77,10 +76,10 @@ rec_b_vect=[1324 1325 1326];
     stn,rec_b_vect,s_dir,ss_fldr,cols);
 
 % Plotting Data
-date='936';
-time='936';
-% fns_plot.plt_ff(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-%     stn,date, time,'Velocity~(m/s)','initial')
+date='1324';
+time='1324';
+fns_plot.plt_ff(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
+    stn,date, time,'Velocity~(m/s)','initial')
 % fns_plot.plt_ff(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
 %     stn,date, time,'Displacement~(m)','initial')
 %% % Time domain
@@ -101,9 +100,9 @@ Vcmplx_mat=cell(1, n_c);
 y_lbl='Velocity~(m/s)';
 
 for i_str = 0:n_str
-    if strcmp(rf_fldr, 'Results_Freq_Indepn_TF')...
+    if strcmp(rf_fldr, 'TF_F_Indpn')...
             ||...
-            strcmp(rf_fldr, 'Results_multi_unit_geometry_variation')
+            strcmp(rf_fldr, 'MultiUnitBld_GeomVary')
         [f_out,Uamp_mat,Ucpmlx_mat]=fns_imprtdata.get_TF(...
             n_str, n_rx, n_ry,...
             l_vect, b_vect, ftyp, V_s, L_f, B_f,...
@@ -126,9 +125,9 @@ for i_str = 0:n_str
             f_inpt_U{i_c},'linear','extrap');
         % Ucpmlx_intrp{i_cmp}=Ucpmlx_mat{i_cmp};
 
-        if strcmp(rf_fldr, 'Results_Freq_Indepn_TF')...
+        if strcmp(rf_fldr, 'TF_F_Indpn')...
                 ||...
-                strcmp(rf_fldr, 'Results_multi_unit_geometry_variation')
+                strcmp(rf_fldr, 'MultiUnitBld_GeomVary')
             Ucmplx_mat{i_c}=ff_Ucmplx_mat{i_c}.*Ucpmlx_intrp{i_c};
         else
             Ucmplx_mat{i_c}=Ucpmlx_intrp{i_c};
@@ -141,8 +140,8 @@ for i_str = 0:n_str
         %         fns_saveData.fn_saveVF(Vcmplx_mat,f_inpt_U,i_c,i_str,rf_fldr)
 
     end
-    %     fil_nm = ['vel_seisol_',num2str(i_str),'.png'];
-    %     fns_saveSbplt.saveFig(rf_fldr,fil_nm)
+        fil_nm = ['vel_seisol_',num2str(i_str),'.emf'];
+        fns_saveSbplt.saveFig(rf_fldr,fil_nm)
     %%
     Vabs_zCell{i_str+1} = Vabs_mat{3};
     ff_VzMat=ff_Vamp_mat{3};
@@ -164,20 +163,20 @@ end
 % % This part of the code calculates the octave bands for the vertical
 % % velocity levels (Z-components for each story of each building).
 % % The octave bands are calculated using the get_vel_on_octave_scale
-% % function in the funs_Octave_analysis module.
-df=f_in(10)-f_in(9);
-[Vratio_dbCell,f_linVect,Vratio_rms_cell,f_cenVect]=...
-    fns_Octve.get_V_octave(Vabs_zCell,ff_VzMat,n_str,f_in,l_vect, df);
-[f_iso,n_octBands]=fns_Octve.get_fvect_iso(f_cenVect);
-for i_str = 0:n_str
-    Vratio_rms_mat=Vratio_rms_cell{i_str+1};
-    Vratio_db_mat=Vratio_dbCell{i_str+1};
-    % Plotting velocity levels Octave Bands (in octave 1/3 bands)
-    fns_plot.plt_VampZ_Oct(f_cenVect, Vratio_rms_mat,...
-        i_str, n_rx, n_ry, l_vect, b_vect, ftyp,...
-        V_s, L_f, B_f,3,cmpt,f_iso)
-    %     % Plotting velocity levels in db over linear frequency range
-    %     fns_plot.plt_VampZ_db(f_linVect, vel_db_mat,...
-    %         i_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f,3,cmpt)
-
-end
+% % % function in the funs_Octave_analysis module.
+% df=f_in(10)-f_in(9);
+% [Vratio_dbCell,f_linVect,Vratio_rms_cell,f_cenVect]=...
+%     fns_Octve.get_V_octave(Vabs_zCell,ff_VzMat,n_str,f_in,l_vect, df);
+% [f_iso,n_octBands]=fns_Octve.get_fvect_iso(f_cenVect);
+% for i_str = 0:n_str
+%     Vratio_rms_mat=Vratio_rms_cell{i_str+1};
+%     Vratio_db_mat=Vratio_dbCell{i_str+1};
+%     % Plotting velocity levels Octave Bands (in octave 1/3 bands)
+%     fns_plot.plt_VampZ_Oct(f_cenVect, Vratio_rms_mat,...
+%         i_str, n_rx, n_ry, l_vect, b_vect, ftyp,...
+%         V_s, L_f, B_f,3,cmpt,f_iso)
+%     %     % Plotting velocity levels in db over linear frequency range
+%     %     fns_plot.plt_VampZ_db(f_linVect, vel_db_mat,...
+%     %         i_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f,3,cmpt)
+% 
+% end

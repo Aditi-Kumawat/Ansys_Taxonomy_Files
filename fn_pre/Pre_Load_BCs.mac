@@ -12,7 +12,7 @@
 NSEL,S,LOC,Z,-.1
 CM, n_load, NODE        !creating a group to define load location
 NSEL,ALL
-
+!
 D,n_load,rotx,0
 D,n_load,roty,0
 D,n_load,rotz,0

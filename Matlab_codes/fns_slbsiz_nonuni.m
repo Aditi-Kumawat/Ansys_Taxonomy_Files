@@ -23,9 +23,11 @@ classdef fns_slbsiz_nonuni
                     l, b),cmpt, 'UniformOutput', false);
 
                 cd ..
+                cd Results_Ansys
                 fil_pth = fullfile(r_fldr, fldr, fil_nm);
                 U_all = cellfun(@(x) readtable(x), fil_pth,...
                     'UniformOutput', false);
+                cd ..
                 cd Matlab_codes
 
                 for i_c = 1:n_c
@@ -53,8 +55,8 @@ classdef fns_slbsiz_nonuni
                 room_off,l_vect_off, b_vect_off,rf_fldr)
             ha_col = @colors;
             lStyl = {'-', ':', ':', '-.'};
-            lcol = {ha_col('persian orange'), ha_col('cadmium green'),...
-                ha_col('black'),ha_col('ball blue'),...
+            lcol = {ha_col('boston university red'), ha_col('cadmium green'),...
+                ha_col('black'),ha_col('denim'),...
                 ha_col('dark goldenrod')};
             ustr_vect={'$u_x$~(m)','$u_y$~(m)','$u_z$~(m)'};
             figure
@@ -69,17 +71,28 @@ classdef fns_slbsiz_nonuni
                 % num2str(b_off),'m,~','Offset:~2m'];
                 txt_1='Uniform~floor~size';
                 txt_2='Non-uniform~floor~size';
-
+            if i_c==1
+                i_col=1;
+            elseif i_c==2
+                i_col=2;
+            else
+                i_col=4;
+            end
                 hold on
                 plot(f,Uamp_1(:,i_lb),...
                     'linestyle',lStyl{mod(i_lb-1,numel(lStyl))+1},...
                     'DisplayName',txt_1,'LineWidth',1.5,...
-                    'Color',lcol{mod(i_lb-1,numel(lcol))+4})
+                    'Color',lcol{mod(i_lb-1,numel(lcol))+i_col})
                 hold on
                 plot(f_off,Uamp_2(:,i_lb),...
                     'linestyle',lStyl{mod(i_lb-1,numel(lStyl))+2},...
                     'DisplayName',txt_2,'LineWidth',1.5,...
                     'Color',lcol{mod(i_lb-1,numel(lcol))+3})
+            end
+            if i_str==0
+                ylim([0.9,1.2])
+            else
+                ylim([0,16])
             end
             xlim([0,40])
             %text_Str_TF=['Floor=~',num2str(i_str),...
@@ -93,7 +106,7 @@ classdef fns_slbsiz_nonuni
                 '_n_rooms_Y_', num2str(n_ry),...
                 '_ftyp_', ftyp,'_Vs_', num2str(V_s),...
                 '_Lf_', num2str(L_f), '_Bf_', num2str(B_f),...
-                '_room_off_',room_off '.png'];
+                '_room_off_',room_off '.pdf'];
 
             cd SAVE_FIGS
             if ~exist(rf_fldr, 'dir')

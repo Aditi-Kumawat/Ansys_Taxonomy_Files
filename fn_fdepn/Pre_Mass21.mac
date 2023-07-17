@@ -1,0 +1,35 @@
+!L1 = equavalent radius (from luco and Wong, 1978)
+L1=(4*L_f*B_f/3.14159)**0.5 
+
+!From Wolf,1997
+K_hor = 8*G*L1/(2-Nu)
+K_vert =4*G*L1/(1-Nu)
+K_rock =8*G*(L1**3)/(3*(1-Nu))
+K_tors= 16*G*(L1**3)/3	
+!Lumped Mass coefficient [kg] 
+M_Z=((L1**2)/(Vs**2))*0.27*K_vert	
+M_Y=((L1**2)/(Vs**2))*0.095*K_hor
+M_X=((L1**2)/(Vs**2))*0.095*K_hor
+Ix = ((L1**2)/(Vs**2))*0.24*K_rock	
+Iy = ((L1**2)/(Vs**2))*0.24*K_rock	
+Iz = ((L1**2)/(Vs**2))*0.045*K_tors
+	
+
+!Create MASS21 at origin.
+NSEL,S,LOC,Z,0
+CM, n_buil_base, NODE        	!creating a group to define load location   
+NSEL,ALL
+D,n_buil_base,rotx,0
+D,n_buil_base,roty,0
+D,n_buil_base,rotz,0
+NSEL,ALL
+KNODE,,n_buil_base
+NUMMRG,KP
+ET,4,MASS21
+KEYOPT,4,3,0 				!3D mass with rotary inertia, check mass21,
+R,4,M_X,M_Y,M_Z,Ix,Iy,Iz 	!MASSX, MASSY, MASSZ, IXX, IYY, IZZ, if KEYOPT (3) = 0
+KATT,0,4,4,
+KSEL,S,LOC,Z,0
+KMESH,ALL
+KSEL,ALL
+NUMMRG,NODE

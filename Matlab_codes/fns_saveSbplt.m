@@ -20,8 +20,8 @@ classdef fns_saveSbplt
             hold on
             plot(f{i_c}, abs(reslt_mat{i_c}),'k','DisplayName',...
                 'LPM-FEM', 'LineWidth', 1.2);
-            xlabel('Frequency~(Hz)','Interpreter','latex','FontSize',10);
-            ylabel(y_lbl,'Interpreter','latex','FontSize',10);
+            xlabel('Frequency~(Hz)','Interpreter','latex','FontSize',12);
+            ylabel(y_lbl,'Interpreter','latex','FontSize',12);
             xlim([0 50])
             legend show
             legend('Box','off','Interpreter','latex','FontSize',11)

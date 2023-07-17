@@ -1,0 +1,70 @@
+
+!Currently the nodes at 2nd floor are ignored.
+
+!-------------------------------ground node: foundation -----------------------------
+NSEL,S,LOC,X,0  
+NSEL,R,LOC,Y,0
+NSEL,R,LOC,Z,0
+*GET,n_center_0,NODE,,NUM,MIN  
+NSEL,All
+    
+*IF,ftyp,EQ,'PLATE',THEN
+    NSEL,S,LOC,X,l/2.0  
+    NSEL,R,LOC,Y,b/2.0
+    NSEL,R,LOC,Z,0
+    *GET,n_center_0,NODE,,NUM,MIN  
+    NSEL,All
+*ENDIF
+NSEL,All                                                                          
+                                                                                     
+!-------------------------------1st floor node: floor centre ------------------------
+NSEL,S,LOC,X,l/2.0                                                                   
+NSEL,R,LOC,Y,b/2.0                                                                   
+NSEL,R,LOC,Z,h                                                                       
+*GET,n_center_1,NODE,,NUM,MIN                                                        
+NSEL,All                                                                                                                                                                  
+                                                                                                                                                       
+!-------------------------------2nd floor node: floor centre -----------------------
+NSEL,S,LOC,X,l/2.0                                                                  
+NSEL,R,LOC,Y,b/2.0                                                                  
+NSEL,R,LOC,Z,2*h                                                                    
+*GET,n_center_2,NODE,,NUM,MIN                                                       
+NSEL,All   
+
+
+
+!!-------------------------------1st floor node: floor edge --------------------
+!NSEL,S,LOC,X,l/2.0                                                                   
+!NSEL,R,LOC,Y,b                                                                       
+!NSEL,R,LOC,Z,h                                                                       
+!*GET,n_edge_2,NODE,,NUM,MIN                                                          
+!NSEL,All                                                                            
+                                                                                     
+!!-------------------------------2nd floor node: floor edge -------------------------
+!NSEL,S,LOC,X,l/2.0                                                                  
+!NSEL,R,LOC,Y,b                                                                      
+!NSEL,R,LOC,Z,2*h
+!*GET,n_edge_1,NODE,,NUM,MIN     
+!NSEL,All
+
+
+!------------------Array for solution-------------------------------!
+
+! for ground floor
+*DIM,Disp_Center_0_Ux,array,nfreq,5,1
+*DIM,Disp_Center_0_Uy,array,nfreq,5,1
+*DIM,Disp_Center_0_Uz,array,nfreq,5,1
+
+! for 1st floor
+*DIM,Disp_Center_1_Ux,array,nfreq,5,1	
+*DIM,Disp_Center_1_Uy,array,nfreq,5,1
+*DIM,Disp_Center_1_Uz,array,nfreq,5,1
+
+! for 2nd floor
+*DIM,Disp_Center_2_Ux,array,nfreq,5,1
+*DIM,Disp_Center_2_Uy,array,nfreq,5,1
+*DIM,Disp_Center_2_Uz,array,nfreq,5,1
+
+!---------------Create table for visualization-------------------------------!
+*DIM,Result_Visual,table,nfreq,10,1
+

@@ -35,7 +35,7 @@ n_roomsy=3
 t_floor1=0.2
 !--------------------------------------------------------------!
 !-------------------------Element Size-------------------------!
-n_ele_size=0.25
+n_ele_size=0.5
 !--------------------------------------------------------------!
 !-----------------------Soil properties------------------------!
 Vs=450          !Shear wave velocity [m/s]
@@ -49,3 +49,9 @@ B_f=0.75        !Foundation half-width [m]
 L_f=n_ele_size/2        !Foundation half-length [m]
 B_f=n_ele_size/2        !Foundation half-width [m]
 *ENDIF
+
+!*************************Footing Foundation*************************!
+!---Number of Elements                                                                      
+nVolx=l/n_ele_size                      ! Anzahl VolElemente in x-Richtung                  
+nVoly=(l+2)/n_ele_size                      ! Anzahl VolElemente in y-Richtung                  
+nVolz=h/n_ele_size                      ! Anzahl VolElemente in y-Richtung  

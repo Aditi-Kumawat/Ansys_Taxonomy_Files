@@ -1,0 +1,64 @@
+!!!!!! Either use read input from or paste the following file in the command 
+!!!!!! line starting with /INPUT
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+!!!!!! ftyp: foundation for the input building can be a footing or plate foundation
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+/CLEAR,NOSTART  ! Clear model since no SAVE found  
+
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+!ftyp='PLATE'
+ftyp='FOOTING'
+!ModAn='fixed_base'
+ModAn='with_springs'
+
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+/INPUT,'fn_pre\Pre_Para_main','mac'
+/INPUT,'fn_fndtn_para\fndn_para_cnstvals_FULL','mac'
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+*IF,ftyp,EQ,'FOOTING',THEN
+    /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
+*ELSEIF,ftyp,EQ,'PLATE'
+    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn','mac'
+*ENDIF
+!/eof
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+!-------------------------------Mode Analysis-------------------------------!
+n_modes=20                      ! Number of modes to extract           
+Star_ModeFreq=0                 ! Starting frequency                              
+End_ModeFreq=200                 ! End frequency
+!------------------------------Mode Extraction------------------------------!
+delta_mode_extract=1            ! Save the deformation figure of the every 
+                                ! (delta_mode_extract)th mode
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+*IF,ModAn,EQ,'fixed_base',THEN
+    NSEL,S,LOC,Z,0
+    CM, n_base, NODE           
+    NSEL,ALL
+    D,n_base,ux,0 
+    D,n_base,uy,0 
+    D,n_base,uz,0
+    D,n_base,rotx,0
+    D,n_base,roty,0
+    D,n_base,rotz,0
+    NSEL,ALL
+    FINISH 
+*ELSEIF,ModAn,EQ,'with_springs'
+    /INPUT,'fn_pre\Pre_CM_colbase_M27','mac'						
+    /INPUT,'fn_pre\Pre_M27_Full','mac'	
+    /INPUT,'fn_pre\Pre_M27_BaseFixed','mac'
+*ENDIF
+!/eof
+/INPUT,'fn_analysis\Analysis_Modal','mac'
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+/INPUT,'fn_post\Settings_Export_Pictures','mac'
+/INPUT,'fn_post\post_Modal','mac'

@@ -8,28 +8,21 @@ n_rx = 2;
 n_ry = 3;
 
 h = 3;
-l_vect=4;
-b_vect=4;
+l_vect=5;
+b_vect=5;
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
 ftyp = 'PLATE';
 % Define the velocity of the excitation
 V_s = 450;
 
 % Define the size of the elements
-n_esize = 0.25;
-
-% Calculate the length and width of the footing based on the
-% foundation type
-
-%%
-room_off='Y2_2m';
-
+n_esize = 0.5;
 %% Importing Transfer Function
 
 
 % Define the name of the folder where the results are stored
-rf_fldr_wall = 'Results_walls';
-rf_fldr = 'Results_multi_unit_geometry_variation';
+rf_fldr_wall = 'Bld_with_Walls';
+rf_fldr = 'MultiUnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 if strcmp(ftyp,'PLATE')
     B_f = n_esize/2;
@@ -65,9 +58,9 @@ for i_str = 0:n_str
         %                     V_s, L_f, B_f, i_c, cmpt);
         ha_col = @colors;
         lStyl = {'-', ':', ':', '-.'};
-        lcol = {ha_col('persian orange'), ha_col('cadmium green'),...
-            ha_col('black'),ha_col('ball blue'),...
-            ha_col('dark goldenrod')};
+        lcol = {ha_col('boston university red'), ha_col('cadmium green'),...
+                ha_col('black'),ha_col('denim'),...
+                ha_col('dark goldenrod')};
         ustr_vect={'$u_x$~(m)','$u_y$~(m)','$u_z$~(m)'};
         figure
         for i_lb=1:length(l_vect)
@@ -79,12 +72,18 @@ for i_str = 0:n_str
             % num2str(b_off),'m,~','Offset:~2m'];
             txt_1='frame~without~walls';
             txt_2='frame~with~walls';
-
+            if i_c==1
+                i_col=1;
+            elseif i_c==2
+                i_col=2;
+            else
+                i_col=4;
+            end
             hold on
             plot(f_vect,TFamp{i_c}(:,i_lb),...
                 'linestyle',lStyl{mod(i_lb-1,numel(lStyl))+1},...
                 'DisplayName',txt_1,'LineWidth',1.5,...
-                'Color',lcol{mod(i_lb-1,numel(lcol))+2})
+                'Color',lcol{mod(i_lb-1,numel(lcol))+i_col})
             hold on
             plot(f_vect,TFamp_wl{i_c}(:,i_lb),...
                 'linestyle',lStyl{mod(i_lb-1,numel(lStyl))+2},...
@@ -102,8 +101,7 @@ for i_str = 0:n_str
             num2str(i_str),'_n_rooms_X_', num2str(n_rx),...
             '_n_rooms_Y_', num2str(n_ry),...
             '_ftyp_', ftyp,'_Vs_', num2str(V_s),...
-            '_Lf_', num2str(L_f), '_Bf_', num2str(B_f),...
-            '_room_off_',room_off '.png'];
+            '_Lf_', num2str(L_f), '_Bf_', num2str(B_f),'.pdf'];
 
         cd SAVE_FIGS
         if ~exist(rf_fldr_wall, 'dir')

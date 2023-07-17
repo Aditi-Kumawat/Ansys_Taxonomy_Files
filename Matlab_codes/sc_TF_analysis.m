@@ -10,8 +10,8 @@ n_ry = 1;
 % Define the length, width, and height of the building
 l_vect=[2 3 4 5 6 7 8];
 b_vect=[2 3 4 5 6 7 8];
-l_vect=[3 5 7];
-b_vect=[3 5 7];
+% l_vect=[3 5 7];
+% b_vect=[3 5 7];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
@@ -34,7 +34,7 @@ else
 end
 %% Importing Transfer Function
 % Define the name of the folder where the results are stored
-rf_fldr = 'Results_unit_geometry_variation';
+rf_fldr = 'UnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 
 % Define the column names in the results table
@@ -55,15 +55,7 @@ for i_str = 0:n_str
         fns_scatter.get_TF_scatter(n_str, n_rx, n_ry,...
         l_vect, b_vect, ftyp, V_s, L_f, B_f,...
         bf_nm,i_str,cmpt,n_c,rf_fldr,cols);
-    %%
-    figure
-    for i_c = 1:n_c
-        % Plotting Transfer Function
-        fns_plot.plt_TF(f_vect, TF_amp_mat{i_c},...
-            i_str, n_rx, n_ry,...
-            l_vect, b_vect, ftyp, V_s, L_f,...
-            B_f, i_c, cmpt,rf_fldr);
-    end
+
     %%
     TFabs_zcell{i_str+1} = TF_amp_mat{3};
     TFabs_xcell{i_str+1} = TF_amp_mat{1};
@@ -71,7 +63,7 @@ end
 %%
 plt_cmp='Z';
 ylim=50;
-% fns_scatter.plt_scatter(TFabs_zcell,n_str,f_vect,rf_fldr,plt_cmp,ylim);
+fns_scatter.plt_scatter(TFabs_zcell,n_str,f_vect,rf_fldr,plt_cmp,ylim,lb_combs,V_s);
 df=f_vect(3)-f_vect(2);
 uzxlim_1_vect=[0 0];
 uzxlim_2_vect=[2 2];
@@ -98,18 +90,18 @@ for i_flur = 1:2
 end
 %%
 plt_cmp='X';
-ylim=8;
+ylim=20;
 
-% fns_scatter.plt_scatter(TFabs_xcell,n_str,f_vect,rf_fldr,plt_cmp,ylim);
+fns_scatter.plt_scatter(TFabs_xcell,n_str,f_vect,rf_fldr,plt_cmp,ylim,lb_combs,V_s);
 
 uxxlim_1_vect=[0 0];
 uxxlim_2_vect=[2 2];
 if V_s==450
-    uxylim_1_vect=[0.8 0];
-    uxylim_2_vect=[1.2 15];
+    uxylim_1_vect=[0.4 0];
+    uxylim_2_vect=[2.2 15];
 elseif V_s==100
-    uxylim_1_vect=[0.8 0];
-    uxylim_2_vect=[1.2 15];
+    uxylim_1_vect=[0.4 0];
+    uxylim_2_vect=[2.2 15];
 end
 for i_flur = 1:2
     TF_abs_Xmat = TFabs_xcell{i_flur};

@@ -1,0 +1,267 @@
+!!!!This mac file imports and reads the data from the text files 
+!!!!provided inside the folder
+
+K_omega_input_file = 'new_Luco_Wong_TableA1_1_1'
+
+!****************************Create table for K22 and D22****************************
+*DIM,K_22,TABLE,21,2,,FREQ
+*DIM,K2_22,ARRAY,21,2,,FREQ
+
+*DIM,C_22,TABLE,21,2,,FREQ
+*DIM,C2_22,ARRAY,21,2,,FREQ
+
+*VREAD,K2_22(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,    
+(1x,E14.7,89x,1x,E14.7)
+*VREAD,C2_22(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,104x,1x,E14.7)
+!****************************Create table for K22 and D22****************************
+
+
+!****************************Create table for K24 and D24****************************
+*DIM,K_24,TABLE,21,2,,FREQ
+*DIM,K2_24,ARRAY,21,2,,FREQ
+
+*DIM,C_24,TABLE,21,2,,FREQ
+*DIM,C2_24,ARRAY,21,2,,FREQ
+
+*VREAD,K2_24(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,119x,1x,E14.7)
+*VREAD,C2_24(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,134x,1x,E14.7)
+!****************************Create table for K24 and D24****************************
+
+
+!****************************Create table for K44 and D44****************************
+*DIM,K_44,TABLE,21,2,,FREQ
+*DIM,K2_44,ARRAY,21,2,,FREQ
+
+*DIM,C_44,TABLE,21,2,,FREQ
+*DIM,C2_44,ARRAY,21,2,,FREQ
+
+*VREAD,K2_44(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,149x,1x,E14.7)
+*VREAD,C2_44(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,164x,1x,E14.7)
+!****************************Create table for K44 and D44****************************
+
+
+!****************************Create table for K66 and D66****************************
+*DIM,K_66,TABLE,21,2,,FREQ
+*DIM,K2_66,ARRAY,21,2,,FREQ
+
+*DIM,C_66,TABLE,21,2,,FREQ
+*DIM,C2_66,ARRAY,21,2,,FREQ
+
+*VREAD,K2_66(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,209x,1x,E14.7)
+*VREAD,C2_66(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,224x,1x,E14.7)
+!****************************Create table for K66 and D66****************************
+
+
+
+
+
+
+!****************************Create table for K33 and D33****************************
+*DIM,K_33,TABLE,21,2,,FREQ
+*DIM,K2_33,ARRAY,21,2,,FREQ
+
+*DIM,C_33,TABLE,21,2,,FREQ
+*DIM,C2_33,ARRAY,21,2,,FREQ
+
+*VREAD,K2_33(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,179x,1x,E14.7)
+*VREAD,C2_33(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,194x,1x,E14.7)
+!****************************Create table for K33 and D33****************************
+
+
+!****************************Create table for K11 and D11****************************
+*DIM,K_11,TABLE,21,2,,FREQ
+*DIM,K2_11,ARRAY,21,2,,FREQ
+
+*DIM,C_11,TABLE,21,2,,FREQ
+*DIM,C2_11,ARRAY,21,2,,FREQ
+
+*VREAD,K2_11(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,1x,E14.7)
+*VREAD,C2_11(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,14x,1x,E14.7)
+!****************************Create table for K11 and D11****************************
+
+
+!****************************Create table for K15 and D15****************************
+*DIM,K_15,TABLE,21,2,,FREQ
+*DIM,K2_15,ARRAY,21,2,,FREQ
+
+*DIM,C_15,TABLE,21,2,,FREQ
+*DIM,C2_15,ARRAY,21,2,,FREQ
+
+*VREAD,K2_15(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,29x,1x,E14.7)
+*VREAD,C2_15(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,44x,1x,E14.7)
+!****************************Create table for K15 and D15****************************
+
+
+!****************************Create table for K55 and D55****************************
+*DIM,K_55,TABLE,21,2,,FREQ
+*DIM,K2_55,ARRAY,21,2,,FREQ
+
+*DIM,C_55,TABLE,21,2,,FREQ
+*DIM,C2_55,ARRAY,21,2,,FREQ
+
+*VREAD,K2_55(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,59x,1x,E14.7)
+*VREAD,C2_55(1,1),K_omega_input_file,txt,'KO\',jik,2,21,,
+(1x,E14.7,74x,1x,E14.7)
+!****************************Create table for K55 and D55****************************
+
+!-Calculating scaling factor----------------------
+
+	L1=(4*L_f*B_f/3.14159)**0.5 !sqrt(A_f/pi)[m]  !(from luco and wang, 1978)
+	G=(Vs**2)*(Rho) 
+
+	factor1=Vs/(2*3.14159*L1)   !(from luco and wang, 1978)
+	factor2=G*L1				!(from luco and wang, 1978)
+
+!Loops through the array (K2) and converts the dimensionless values from "Luco_Wong_TableA1_1_1" into the correct units
+!After conversion, the array (K2) is copied into a table (K1)
+
+*DO,i,1,21,1
+
+	!**************scaling the parameters***********************!
+	
+	!Scaling the frequencies and input to array-----------------------
+	 
+	 K2_11(i,1)=factor1*K2_11(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_15(i,1)=factor1*K2_15(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_22(i,1)=factor1*K2_22(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_24(i,1)=factor1*K2_24(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_33(i,1)=factor1*K2_33(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_44(i,1)=factor1*K2_15(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_55(i,1)=factor1*K2_55(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 K2_66(i,1)=factor1*K2_66(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 
+	 C2_11(i,1)=factor1*C2_11(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_15(i,1)=factor1*C2_15(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_22(i,1)=factor1*C2_22(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_24(i,1)=factor1*C2_24(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_33(i,1)=factor1*C2_33(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_44(i,1)=factor1*C2_44(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_55(i,1)=factor1*C2_55(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 C2_66(i,1)=factor1*C2_66(i,1)		!f=(A0*beta)/(2*pi*L)	[Hz]
+	 
+	!Scaling the Stiffness-------------------------
+	 
+	 K2_11(i,2)=factor2*K2_11(i,2)		!re(K33)=GL		[N/m]
+	 K2_15(i,2)=factor2*K2_15(i,2)		!re(K33)=GL		[N/m]
+	 K2_22(i,2)=factor2*K2_22(i,2)		!re(K33)=GL		[N/m]
+	 K2_24(i,2)=factor2*K2_24(i,2)		!re(K33)=GL		[N/m]
+	 K2_33(i,2)=factor2*K2_33(i,2)		!re(K33)=GL		[N/m]
+	 K2_44(i,2)=factor2*K2_44(i,2)		!re(K33)=GL		[N/m]
+	 K2_55(i,2)=factor2*K2_55(i,2)		!re(K33)=GL		[N/m]
+	 K2_66(i,2)=factor2*K2_66(i,2)		!re(K33)=GL		[N/m]
+	 
+	!Scaling the damping---------------------------
+	 
+	 C2_11(i,2)=factor2*C2_11(i,2)/(C2_11(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_15(i,2)=factor2*C2_15(i,2)/(C2_15(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_33(i,2)=factor2*C2_33(i,2)/(C2_33(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_55(i,2)=factor2*C2_55(i,2)/(C2_55(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 
+	 C2_22(i,2)=factor2*C2_22(i,2)/(C2_22(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_24(i,2)=factor2*C2_24(i,2)/(C2_24(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_44(i,2)=factor2*C2_44(i,2)/(C2_44(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 C2_66(i,2)=factor2*C2_66(i,2)/(C2_66(i,1)*Vs/L1)		!img(K33) c*omega/omega = C2(i,2)/omega	[N/m]
+	 
+
+	!**************input scaling paramter back to table***********************!
+
+	!-Define frequencies to table-----------------------
+     !-Stiffness-------------------------
+	 K_33(i,0)=K2_33(i,1)
+	 K_11(i,0)=K2_11(i,1)
+	 K_15(i,0)=K2_15(i,1)
+	 K_55(i,0)=K2_55(i,1)
+	 K_22(i,0)=K2_22(i,1)
+	 K_24(i,0)=K2_24(i,1)
+	 K_44(i,0)=K2_44(i,1)
+	 K_66(i,0)=K2_66(i,1)
+	 
+	 !-damping---------------------------
+	 C_33(i,0)=C2_33(i,1)
+	 C_11(i,0)=C2_11(i,1)
+	 C_15(i,0)=C2_15(i,1)
+	 C_55(i,0)=C2_55(i,1)
+	 C_22(i,0)=C2_22(i,1)
+	 C_24(i,0)=C2_24(i,1)
+	 C_44(i,0)=C2_44(i,1)
+	 C_66(i,0)=C2_66(i,1)
+	 
+	*IF,Coupling,EQ,'coupling',THEN
+		!-Stiffness-------------------------
+		K_33(i,1)=K2_33(i,2)		!K33
+		K_11(i,1)=K2_11(i,2)		!K11
+		K_15(i,1)=K2_15(i,2)		!K15
+		K_55(i,1)=K2_55(i,2)		!K55
+		K_22(i,1)=K2_22(i,2)
+		K_24(i,1)=K2_24(i,2)
+		K_44(i,1)=K2_44(i,2)
+		K_66(i,1)=K2_66(i,2)		 
+		
+		!-damping--------------------------- 
+		C_33(i,1)=C2_33(i,2)		!C33
+		C_11(i,1)=C2_11(i,2)		!C11
+		C_15(i,1)=C2_15(i,2)		!C15
+		C_55(i,1)=C2_55(i,2)		!C55
+		C_22(i,1)=C2_22(i,2)
+		C_24(i,1)=C2_24(i,2)
+		C_44(i,1)=C2_44(i,2)
+		C_66(i,1)=C2_66(i,2)		 
+		 
+	*ELSEIF,Coupling,EQ,'static'
+	
+		!Parameters defined from Wolf,1997
+		K_hor =  8*G*L1/(2-Nu)
+		K_vert = 4*G*L1/(1-Nu)
+		K_rock = 8*G*(L1**3)/(3*(1-Nu))
+		K_tors= 16*G*(L1**3)/3
+		
+		Ix = ((L1**2)/(Vs**2))*0.24*K_rock	
+		gamma_C_rock = 0.3 / ( 1+ ((3*(1-Nu)*Ix)/(8*L1**5*rho)) )
+		Iz = ((L1**2)/(Vs**2))*0.045*K_tors
+		gamma_C_tors =(0.433/(1+((2*Iz)/(L1**5*rho))))*((Iz)/(L1**5*rho))**(0.5)
+		
+		C_hor =  L1*0.58*K_hor / Vs
+		C_vert = L1*0.85*K_vert / Vs
+		C_rock = L1*gamma_C_rock*K_rock/Vs		
+		C_tors = L1*gamma_C_tors*K_tors/Vs
+	
+		!-Stiffness-------------------------		
+		K_11(i,1)=K_hor	
+		K_15(i,1)=0
+		K_22(i,1)=K_hor
+		K_24(i,1)=0
+		K_33(i,1)=K_vert	
+		K_44(i,1)=K_rock
+		K_55(i,1)=K_rock	
+		K_66(i,1)=K_tors
+		 
+		!-damping--------------------------- 
+		C_11(i,1)=C_hor
+		C_15(i,1)=0
+		C_22(i,1)=C_hor		
+		C_24(i,1)=0	
+		C_33(i,1)=C_vert
+		C_44(i,1)=C_rock		
+		C_55(i,1)=C_rock		
+		C_66(i,1)=C_tors
+		
+	*ENDIF
+	
+*ENDDO
+
+!*VPLOt,K_33(2,0), K_33(2,1)  !Plots K1
+!*VPLOt,C_33(2,0), C_33(2,1)  !Plots C1

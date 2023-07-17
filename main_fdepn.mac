@@ -1,0 +1,116 @@
+!!!!!! Either use read input from or paste the following file in the command 
+!!!!!! line starting with /INPUT
+!---------------------------------------------------------------------------! 
+/CLEAR,NOSTART  ! Clear model since no SAVE found
+
+Coupling = 'coupling'  
+
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+!ftyp='PLATE'
+ftyp='FOOTING'
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+/INPUT,'fn_pre\Pre_Para_main','mac'
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+*IF,ftyp,EQ,'FOOTING',THEN
+    /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
+*ELSEIF,ftyp,EQ,'PLATE'
+    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn','mac'
+*ENDIF
+
+!Read frequency-dependent functions for stiffness and damping
+	/INPUT,'table_read_K_omega','mac','fn_fdepn\'
+
+	
+!Input MASS21 element 
+	/INPUT,'Pre_Mass21','mac','fn_fdepn\'
+
+!Define matrix27 to element, here create second node at (x,y,-0.1)
+	/INPUT,'Pre_CM','mac','fn_fdepn\'
+
+!Constraints for the LPM, applied on node1 and node2.
+	/INPUT,'Pre_BCs','mac','fn_fdepn\'
+!/eof	
+
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+!-----------------------------Harmonic Analysis-----------------------------!
+StarFreq=0              ! Starting frequeny f=2*pi*omeg and omeg=a_0_min*vs/b       
+FreqIncr=0.2          ! Frequeny Increment                                     
+EndFreq=100
+nfreq=((EndFreq-StarFreq)/FreqIncr)+1 
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+
+!Define the node i.e. at floor centre, foundation for solution 
+	/INPUT,'Post1_node_for_solution','mac','fn_fdepn\'
+
+D_bl=0.05
+
+
+/prep7
+*do,ifreq,1,nfreq,1  
+		freq = StarFreq+(ifreq-1)*FreqIncr       
+		
+		!Define tabular parameter into matrix27
+		/INPUT,'Pre_M27_3D','mac','fn_fdepn\'
+		
+		!********************************************************************************!FD
+		!*---------------------------LösungsTeil----------------------------------------*!FD
+		/SOLU                       ! Aufruf des Solution-Processors					 
+		ANTYPE,HARMIC               ! Harmonische Analyse				 			  	 
+		OUTRES,ALL,NONE		    	! To select specific results, deactivate all         
+		OUTRES,NSOL,1	            ! Activate node solution    		        
+		OUTRES,STRS 		   		! Activate stress solution				 				
+		OUTRES,EPEL 		    	! Activate strain solution  			 				
+		OUTRES,ESOL 		    	! Activate element solution				 				
+		OUTRES,RSOL 		    	! Activate reaction forces 				 
+		!********************************************************************************!FD
+		!********************************************************************************!FD 
+		
+		NSEL,All  									 
+		DMPRAT, D_bl
+
+		!Define load at base										  
+		freq = StarFreq+(ifreq-1)*FreqIncr   
+		
+		!Currently only support transfer function
+			D,n_load,UX,1
+			D,n_load,UY,1
+			D,n_load,UZ,1
+	    
+		*MSG,WARN, ifreq, nfreq, freq
+		***MATRIX27 Step %I von %I - Frequenz %G
+	    HARFRQ,freq,freq,     ! aktuelle Frequenz setzen                          
+	    NSUBST,1,             ! keine weitere FrequenzUnterteilung              
+	    SOLVE                 ! selbstredend					 
+	    SAVE                  ! Speichern in database		
+		
+		!Postprocessor in Loops
+		!Write the solutions to the array and table defined in "Array_and_table_store_solutions.mac"
+			/INPUT,'Post2_write_solution','mac','fn_fdepn\'	
+		
+		!Delete the element 5 and 6 to avode stiffness and damping superpositon 
+			/prep7   		 !switch back to PREP7
+			
+			!Delete Stiffness
+			ESEL,S,TYPE,,5
+			EDELE,ALL
+			ESEL,All
+			
+			!Delete damping
+			ESEL,S,TYPE,,6
+			EDELE,ALL
+			ESEL,All
+
+*enddo 
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------!
+*vplot,freq,Result_Visual(1,1),2,3  
+/INPUT,'fn_post\Settings_Export_Pictures','mac'
+/INPUT,'Post3_write_to_excel','mac','fn_fdepn\'
+
+

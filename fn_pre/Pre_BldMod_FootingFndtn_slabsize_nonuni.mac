@@ -1,9 +1,4 @@
 
-!*************************Footing Foundation*************************!
-!---Number of Elements                                                                      
-nVolx=l/n_ele_size                      ! Anzahl VolElemente in x-Richtung                  
-nVoly=(l+2)/n_ele_size                      ! Anzahl VolElemente in y-Richtung                  
-nVolz=h/n_ele_size                      ! Anzahl VolElemente in y-Richtung                  
 !****************************Geometry*******************************!
 /PREP7
 

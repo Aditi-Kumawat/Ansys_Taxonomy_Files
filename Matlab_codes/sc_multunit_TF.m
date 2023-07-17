@@ -1,5 +1,5 @@
 clear;clc;
-close all
+% close all
 n_str = 2;
 n_rx = 2;
 n_ry = 3;
@@ -8,11 +8,10 @@ l_vect=[3 4 5 6];
 b_vect=[3 4 5 6];
 h = 3;
 
-% ftyp = 'PLATE';
-ftyp = 'FOOTING';
-rec=936;
+ftyp = 'PLATE';
+% ftyp = 'FOOTING';
 V_s = 450;
-n_esize = 0.5;
+n_esize = 0.25;
 if strcmp(ftyp,'PLATE')
     B_f = n_esize/2;
     L_f = n_esize/2;
@@ -22,7 +21,7 @@ else
 end
 %% Importing Transfer Function
 % rf_fldr = 'Results_Freq_Indepn_TF';
-rf_fldr = 'Results_multi_unit_geometry_variation';
+rf_fldr = 'MultiUnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
@@ -36,9 +35,11 @@ for i_str = 0:n_str
         fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
             l, b),cmpt, 'UniformOutput', false);
         cd ..
+        cd Results_Ansys
         fil_pth = fullfile(rf_fldr, fldr, fil_nm);
         U_all = cellfun(@(x) readtable(x), fil_pth,...
             'UniformOutput', false);
+        cd ..
         cd Matlab_codes
         for i_c = 1:n_c
             Uc = U_all{i_c};

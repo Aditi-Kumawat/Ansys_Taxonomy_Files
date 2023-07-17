@@ -2,7 +2,7 @@
 %% Initialization
 
 clear;clc;
-close all
+% close all
 % Define the number of storeys, rooms in x-y-direction
 
 n_str = 2;
@@ -17,12 +17,15 @@ h = 3;
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
 ftyp = 'PLATE';
 % Define the foundation behaviour and analysis type
-rec=936;
+st_dtls='SSnoVs30Bld_DR_0pt05';
+% st_dtls='SSnoVs30Bld_DR1002DR2004';
+% st_dtls='SSnoVs30BldNoDmp';
+
 % Define the velocity of the excitation
 V_s = 450;
 
 % Define the size of the elements
-n_esize = 0.5;
+n_esize = 1;
 
 % Calculate the length and width of the footing based on the
 % foundation type
@@ -36,9 +39,9 @@ end
 
 %% Importing Data
 
-ff_fldr = 'GM/SeisSol/data_Vs30_Bld';
+ff_fldr = 'GM/SeisSol/data_noVs30_Bld_new';
 % Define the file name and path
-fil_nm = 'vt_rec_936.txt';
+fil_nm = 'vt_rec_1324.txt';
 % funs_plot_properties.import_tim_data(fref_data_folder,filename)
 cd ..
 % Combine the directory path and file name using the file separator
@@ -53,7 +56,7 @@ data.Properties.VariableNames={'t_vect', 'data_x', 'data_y', 'data_z'};
 rec_vect=[1324 1325 1326];
 %%
 % Define the name of the folder where the results are stored
-rf_fldr = 'Results_t_domain/SeisSol/data_Vs30_Bld';
+rf_fldr = 'tDmn_input';
 
 % Define the base file name for the U center results in ANSYS
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
@@ -69,15 +72,15 @@ for i_c=1:n_c
     subplot(n_c,1,i_c)
     plot(data.t_vect, data{:,i_c+1},'DisplayName',cmpt{i_c},...
         'LineWidth', 1.2)
-    xlabel('Time (s)','Interpreter','latex','FontSize',10);
-    ylabel('Displacement (m)','Interpreter','latex','FontSize',10);
+    xlabel('Time (s)','Interpreter','latex','FontSize',12);
+    ylabel('Velocity (m/s)','Interpreter','latex','FontSize',12);
     legend show
     legend('Box','off','Interpreter','latex','FontSize',11)
-    title(sprintf('Component %d', i_c),'Interpreter','latex',...
-        'FontSize',11);
+%     title(sprintf('Component %d', i_c),'Interpreter','latex',...
+%         'FontSize',11);
     set(gcf,'Units','inches', 'Position', [18 3 4.5 6],...
         'PaperUnits', 'Inches', 'PaperSize', [7.25, 9.125]);
-    fil_nm = ['FF_vel_t', '.png'];
+    fil_nm = ['FF_vel_t', '.emf'];
     cd SAVE_FIGS
     % Create the directory (if it doesn't already exist)
     if ~exist(rf_fldr, 'dir')
@@ -108,14 +111,16 @@ for i_str = 0:n_str
                 break
             end
             fldr = fns_plot.get_fldrnm_rec(n_str, n_rx, n_ry,...
-                l, b,ftyp, V_s, L_f, B_f,rec);
+                l, b,ftyp, V_s, L_f, B_f,st_dtls);
             filNms = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str, l, b),...
                 cmpt, 'UniformOutput', false);
 
             cd ..
+            cd Results_Ansys
             fil_pths = fullfile(rf_fldr, fldr, filNms);
             U_all = cellfun(@(x) readtable(x), fil_pths,...
                 'UniformOutput', false);
+            cd ..
             cd Matlab_codes
 
             for i_c = 1:n_c
@@ -149,6 +154,7 @@ for i_str = 0:n_str
     sig_mat=vt_mat;
     figure
     for i_s = 1:n_c
+
         for i_col = 1:size(sig_mat{i_s}, 2)
             sig_vect = sig_mat{i_s}(:, i_col);
 
@@ -162,12 +168,19 @@ for i_str = 0:n_str
                 ',~Component:',num2str(i_s)];
             subplot(n_c, size(sig_mat{i_s}, 2),...
                 (i_s-1)*size(sig_mat{i_s}, 2) + i_col);
-            plot(data.t, data{:,i_s+1}, 'LineWidth', 1.2)
+            plot(data.t, data{:,i_s+1}, 'LineWidth', 1.5)
             hold on
-            plot(time, real(sig_vect),'LineWidth', 1.2);
-            xlabel('Time (s)','Interpreter','latex','FontSize',10);
-            ylabel('Velocity (m/s)','Interpreter','latex','FontSize',10);
-            title(txt_2,'Interpreter','latex','FontSize',11);
+            plot(time-0.005, real(sig_vect),'LineStyle',':','LineWidth', 1.5);
+            xlabel('Time (s)','Interpreter','latex','FontSize',12);
+            ylabel('Velocity (m/s)','Interpreter','latex','FontSize',12);
+            if i_s==1 && i_str==2
+                ylim([-5e-4, 5e-4])
+            elseif i_s==2 && i_str==2
+                ylim([-2e-3, 2e-3])
+            elseif i_s==3 && i_str==2
+                ylim([-5.5e-3, 5.5e-3])
+            end
+            %             title(txt_2,'Interpreter','latex','FontSize',11);
             legend(txt);
             legend('Box','off','Interpreter','latex','FontSize',11)
             set(gcf,'Units','inches', 'Position', [18 3 4.5 6],...
@@ -176,7 +189,7 @@ for i_str = 0:n_str
     end
     fil_nm = ['Tdomain_vel_t_','_Floor_', num2str(i_str),...
         '_ftyp_', ftyp,'_Vs_', num2str(V_s),...
-        '_Lf_', num2str(L_f), '_Bf_', num2str(B_f), '.png'];
+        '_Lf_', num2str(L_f), '_Bf_', num2str(B_f), '.emf'];
     cd SAVE_FIGS
     % Create the directory (if it doesn't already exist)
     if ~exist(rf_fldr, 'dir')

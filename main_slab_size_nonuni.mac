@@ -14,7 +14,7 @@ ftyp='FOOTING'
 !---------------------------------------------------------------------------!
 !-----------------------------Harmonic Analysis-----------------------------!
 StarFreq=0               
-FreqIncr=50       ! Frequeny Increment                                     
+FreqIncr=0.2      ! Frequeny Increment                                     
 EndFreq=100.0
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
@@ -32,7 +32,7 @@ y_pick2=7.6
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 *IF,ftyp,EQ,'PLATE',THEN
-    /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac' 
+    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn_slabsize_nonuni','mac' 
 *ELSEIF,ftyp,EQ,'FOOTING'
     /INPUT,'fn_pre\Pre_BldMod_FootingFndtn_slabsize_nonuni','mac'
 *ENDIF
@@ -40,7 +40,7 @@ y_pick2=7.6
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !----------------------------Define Matrix27 -------------------------------!
-/INPUT,'fn_pre\Pre_CM_M27','mac'						
+/INPUT,'fn_pre\Pre_CM_colbase_M27_nonuni','mac'					
 /INPUT,'fn_pre\Pre_M27_Full','mac'		
 !---------------------------Constraints for the LPM-------------------------!
 /INPUT,'fn_pre\Pre_Load_BCs','mac'				

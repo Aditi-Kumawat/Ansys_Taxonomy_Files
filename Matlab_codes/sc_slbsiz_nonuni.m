@@ -37,8 +37,8 @@ room_off='Y2_2m';
 
 
 % Define the name of the folder where the results are stored
-rf_fldr_slbsizVary = 'Results_nonuni_Y_7pt5';
-rf_fldr = 'Results_nonuni_Y_7pt5';
+rf_fldr_slbsizVary = 'Nonuni_Y_7pt5';
+rf_fldr = 'Nonuni_Y_7pt5';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 
 % Define the column names in the results table

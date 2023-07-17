@@ -13,21 +13,18 @@ ftyp='PLATE'
 !-------------------ADJUST f increment according to INPUT-------------------! 
 
 StarFreq=0              ! Starting frequeny f=2*pi*omeg and omeg=a_0_min*vs/b       
-FreqIncr=0.1953          ! Frequeny Increment      
+FreqIncr=40          ! Frequeny Increment      
 EndFreq=100
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 D_bl=0.05   		!DMPART cannot work  
 !---------------------------------------------------------------------------!
-!---------------------------------------------------------------------------! 
-coupling='Freq_Indepn_Inpt'
 !---------------------------------------------------------------------------!
-!---------------------------------------------------------------------------!
-!-------------------ADJUST rec name for the POST commands-------------------! 
-rec='UH1'
-!rec='SSVs30Bld'
+!-------------------ADJUST st_dtls for the POST commands--------------------! 
+!st_dtls='UH1'
+st_dtls='SSVs30Bld'
 
-*IF,rec,EQ,'UH1',THEN
+*IF,st_dtls,EQ,'UH1',THEN
     val='d'
     ch1=1
     st='UH1'
@@ -36,7 +33,7 @@ rec='UH1'
     ch3=3
     datarows=587
     filepath='GM\GM_UH\UH1_Part1\'
-*ELSEIF,rec,EQ,'SSVs30Bld'
+*ELSEIF,st_dtls,EQ,'SSVs30Bld'
     val='d'
     ch1=1
     st='rec'

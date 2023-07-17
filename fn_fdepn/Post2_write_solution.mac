@@ -1,0 +1,118 @@
+
+/POST26 	!Postprocessor im Frequenzbereich
+		NUMVAR, 200	!Anzahl der möglichen Variablen (default 10)
+
+		!----------------nodal data to be stored ------------------!
+		
+		!for ground floor
+		
+		NSOL, 2, n_center_0,   U, X, U1_0_sol
+		NSOL, 3, n_center_0,   U, Y, U2_0_sol
+		NSOL, 4, n_center_0,   U, Z, U3_0_sol
+		
+		!for 1st floor
+		NSOL, 5, n_center_1,   U, X, U1_1_sol
+		NSOL, 6, n_center_1,   U, Y, U2_1_sol
+		NSOL, 7, n_center_1,   U, Z, U3_1_sol	
+		
+		!for 2nd floor		
+		NSOL, 8, n_center_2,   U, X, U1_2_sol
+		NSOL, 9, n_center_2,   U, Y, U2_2_sol
+		NSOL, 10,n_center_2,   U, Z, U3_2_sol		
+
+		!------------------------------- listing variables -----------------------------!	
+		prvar,2
+		prvar,3
+		prvar,4
+		prvar,5	
+		prvar,6
+		prvar,7
+		prvar,8
+		prvar,9
+		prvar,10
+		
+		!for ground floor
+		*GET,Disp_Center_0_Ux(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_0_Ux(ifreq,2),VARI,2,AMPL,freq
+		*GET,Disp_Center_0_Ux(ifreq,3),VARI,2,PHASE,freq
+		*GET,Disp_Center_0_Ux(ifreq,4),VARI,2,REAL,freq
+		*GET,Disp_Center_0_Ux(ifreq,5),VARI,2,IMAG,freq
+		
+		*GET,Disp_Center_0_Uy(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_0_Uy(ifreq,2),VARI,3,AMPL,freq
+		*GET,Disp_Center_0_Uy(ifreq,3),VARI,3,PHASE,freq
+		*GET,Disp_Center_0_Uy(ifreq,4),VARI,3,REAL,freq
+		*GET,Disp_Center_0_Uy(ifreq,5),VARI,3,IMAG,freq
+
+		*GET,Disp_Center_0_Uz(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_0_Uz(ifreq,2),VARI,4,AMPL,freq
+		*GET,Disp_Center_0_Uz(ifreq,3),VARI,4,PHASE,freq
+		*GET,Disp_Center_0_Uz(ifreq,4),VARI,4,REAL,freq
+		*GET,Disp_Center_0_Uz(ifreq,5),VARI,4,IMAG,freq		
+		
+		
+		!for 1st floor
+		*GET,Disp_Center_1_Ux(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_1_Ux(ifreq,2),VARI,5,AMPL,freq
+		*GET,Disp_Center_1_Ux(ifreq,3),VARI,5,PHASE,freq
+		*GET,Disp_Center_1_Ux(ifreq,4),VARI,5,REAL,freq
+		*GET,Disp_Center_1_Ux(ifreq,5),VARI,5,IMAG,freq
+		
+		*GET,Disp_Center_1_Uy(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_1_Uy(ifreq,2),VARI,6,AMPL,freq
+		*GET,Disp_Center_1_Uy(ifreq,3),VARI,6,PHASE,freq
+		*GET,Disp_Center_1_Uy(ifreq,4),VARI,6,REAL,freq
+		*GET,Disp_Center_1_Uy(ifreq,5),VARI,6,IMAG,freq
+		
+		*GET,Disp_Center_1_Uz(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_1_Uz(ifreq,2),VARI,7,AMPL,freq
+		*GET,Disp_Center_1_Uz(ifreq,3),VARI,7,PHASE,freq
+		*GET,Disp_Center_1_Uz(ifreq,4),VARI,7,REAL,freq
+		*GET,Disp_Center_1_Uz(ifreq,5),VARI,7,IMAG,freq		
+		
+		
+		
+		!for 2nd floor
+		*GET,Disp_Center_2_Ux(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_2_Ux(ifreq,2),VARI,8,AMPL,freq
+		*GET,Disp_Center_2_Ux(ifreq,3),VARI,8,PHASE,freq
+		*GET,Disp_Center_2_Ux(ifreq,4),VARI,8,REAL,freq
+		*GET,Disp_Center_2_Ux(ifreq,5),VARI,8,IMAG,freq
+		
+		*GET,Disp_Center_2_Uy(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_2_Uy(ifreq,2),VARI,9,AMPL,freq
+		*GET,Disp_Center_2_Uy(ifreq,3),VARI,9,PHASE,freq
+		*GET,Disp_Center_2_Uy(ifreq,4),VARI,9,REAL,freq
+		*GET,Disp_Center_2_Uy(ifreq,5),VARI,9,IMAG,freq
+		
+		*GET,Disp_Center_2_Uz(ifreq,1),VARI,1,REAL,freq
+		*GET,Disp_Center_2_Uz(ifreq,2),VARI,10,AMPL,freq
+		*GET,Disp_Center_2_Uz(ifreq,3),VARI,10,PHASE,freq
+		*GET,Disp_Center_2_Uz(ifreq,4),VARI,10,REAL,freq
+		*GET,Disp_Center_2_Uz(ifreq,5),VARI,10,IMAG,freq			
+		
+		
+		
+		
+		!!for quick visualize in ANSYS
+		
+		Result_Visual(ifreq,0)=freq		
+		!assign frequency
+		Result_Visual(ifreq,1)=Disp_Center_0_Ux(ifreq,2)
+		Result_Visual(ifreq,2)=Disp_Center_0_Uy(ifreq,2)		
+		Result_Visual(ifreq,3)=Disp_Center_0_Uz(ifreq,2)
+		
+		Result_Visual(ifreq,4)=Disp_Center_1_Ux(ifreq,2)
+		Result_Visual(ifreq,5)=Disp_Center_1_Uy(ifreq,2)		
+		Result_Visual(ifreq,6)=Disp_Center_1_Uz(ifreq,2)
+		
+		Result_Visual(ifreq,7)=Disp_Center_2_Ux(ifreq,2)
+		Result_Visual(ifreq,8)=Disp_Center_2_Uy(ifreq,2)		
+		Result_Visual(ifreq,9)=Disp_Center_2_Uz(ifreq,2)
+
+
+		
+		
+		
+		
+		

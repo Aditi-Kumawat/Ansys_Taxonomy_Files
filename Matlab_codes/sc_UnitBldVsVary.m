@@ -32,7 +32,7 @@ else
 end
 %% Importing Transfer Function
 % Define the name of the folder where the results are stored
-rf_fldr = 'Results_UnitBld_VsVary';
+rf_fldr = 'UnitBld_VsVary';
 bf_nm = 'Disp_Center_%s_%d_Vs%d';
 
 % Define the column names in the results table
@@ -53,16 +53,16 @@ for i_str = 0:n_str
         fns_VsVary.get_TFUniBldVsVary(n_str, n_rx, n_ry,...
         l_vect, b_vect, ftyp, V_s, L_f, B_f,...
         bf_nm,i_str,cmpt,n_c,rf_fldr,cols);
-    %%
-    %     figure
-    %     for i_c = 1:n_c
-    %         %% Plotting Transfer Function
-    %         fns_plot.plt_TF(f_vect, TF_amp_mat{i_c},...
-    % i_str, n_rx, n_ry,...
-    %             l_vect, b_vect, ftyp, V_s, L_f,...
-    % B_f, i_c, cmpt,rf_fldr);
-    %     end
-    %%
+    %
+        figure
+        for i_c = 1:n_c
+            %% Plotting Transfer Function
+            fns_plot.plt_TF(f_vect, TF_amp_mat{i_c},...
+    i_str, n_rx, n_ry,...
+                l_vect, b_vect, ftyp, V_s, L_f,...
+    B_f, i_c, cmpt,rf_fldr);
+        end
+    %
     TFabs_zcell{i_str+1} = TF_amp_mat{3};
     TFabs_xcell{i_str+1} = TF_amp_mat{1};
 end
