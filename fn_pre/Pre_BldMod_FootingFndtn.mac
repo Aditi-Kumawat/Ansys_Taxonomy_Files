@@ -99,7 +99,6 @@ ASEL,ALL
 AATT,3,0,3,,3				! Set element attributes: material #3, element #3
 LPLOT
 
-BETAD, 0.001
 
 !**************************** Mesh generation ****************************!
 LSEL,ALL
