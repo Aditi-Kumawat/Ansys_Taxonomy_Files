@@ -5,9 +5,9 @@ clear;clc;
 % close all
 % Define the number of storeys, rooms in x-y-direction
 
-n_str = 2;
-n_rx = 2;
-n_ry = 3;
+n_str = 1;
+n_rx = 1;
+n_ry = 1;
 
 % Define the length, width, and height of the building
 l_vect=5;
@@ -15,11 +15,11 @@ b_vect=3;
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'PLATE';
+ftyp = 'FOOTING';
 % Define the foundation behaviour and analysis type
 st_dtls='SSnoVs30Bld_DR_0pt05';
 % st_dtls='SSnoVs30Bld_DR1002DR2004';
-% st_dtls='SSnoVs30BldNoDmp';
+st_dtls='SSnoVs30BldNoDmp';
 
 % Define the velocity of the excitation
 V_s = 450;

@@ -1,6 +1,56 @@
 %%
 classdef fns_imprtdata
     methods (Static)
+        %%
+        function [f,sigamp_mat,sigR_mat,sigIm_mat,sigcmplx_mat]=...
+                get_ff_inpt(bf_nm_1,s_dir,...
+                stn,date, time,n_s,ff_fldr,cols)
+
+            %             sigamp_mat = cell(n_s, 1);
+            f = cell(n_s, 1);
+            fnm_ff = arrayfun(@(x) sprintf(bf_nm_1, x, stn, date, time),...
+                s_dir, 'UniformOutput', false);
+            cd ..
+
+            fil_path = fullfile(ff_fldr, fnm_ff);
+
+            ff_all = cellfun(@(x) readtable(x, 'ReadVariableNames',...
+                false, 'HeaderLines', 5),...
+                fil_path, 'UniformOutput', false);
+            cd Matlab_codes
+            for i_s = 1:n_s
+                ff_snsr = ff_all{i_s};
+                ff_snsr.Properties.VariableNames = cols;
+                f{i_s} = ff_snsr.Freq;
+                sigamp_mat{i_s} = ff_snsr.Amp;
+                sigR_mat{i_s} = ff_snsr.Re;
+                sigIm_mat{i_s} = ff_snsr.Im;
+                sigcmplx_mat{i_s} =sigR_mat{i_s}+1i.*sigIm_mat{i_s};
+            end
+        end
+        %%
+        function [t,sig_tim]=...
+                get_ff_tim(bf_nm_1,s_dir,...
+                stn,date, time,n_s,ff_fldr,cols)
+            t = cell(n_s, 1);
+            fnm_ff = arrayfun(@(x) sprintf(bf_nm_1, x, stn, date, time),...
+                s_dir, 'UniformOutput', false);
+            cd ..
+
+            fil_path = fullfile(ff_fldr, fnm_ff);
+
+            ff_all = cellfun(@(x) readtable(x, 'ReadVariableNames',...
+                false, 'HeaderLines', 5),...
+                fil_path, 'UniformOutput', false);
+            cd Matlab_codes
+            for i_s = 1:n_s
+                ff_snsr = ff_all{i_s};
+                ff_snsr.Properties.VariableNames = cols;
+                t{i_s} = ff_snsr.tim;
+                sig_tim{i_s} = ff_snsr.val;
+            end
+        end
+        %%
         function [f,sigamp_mat,sigR_mat,sigIm_mat,sigcmplx_mat]=...
                 get_inpt_seisl(bf_nm_1,s_dir,...
                 stn,datm,n_s,ff_fldr,cols)
@@ -97,7 +147,7 @@ classdef fns_imprtdata
                 end
             end
         end
-%%
+        %%
         function [f,Uamp_mat,Ucpmlx_mat]=get_TFvSvary(n_str, n_rx, n_ry,...
                 l_vect, b_vect, ftyp, V_s, L_f, B_f,...
                 bf_nm,i_str,cmpt,n_c,rf_fldr,cols)

@@ -68,10 +68,10 @@ for i = start_num:end_num
     %     plot_tiles.plot_tiles_set_3(3,3,v_ini,v_resampled,v_ifft,t_ini,t_resampled,t,x_l_t,y_l_t,leg_vect)
 %     plot_tiles.plot_tiles_set_2(2,3,u_resampled,abs(u_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
 %     plot_tiles.plot_tiles_set_2(2,3,u_resampled,u_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
-    y_l_f='v(t)';
-    y_l_t='v(t)';
-%     plot_tiles.plot_tiles_set_2(2,3,v_resampled,abs(v_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
-    plot_tiles.plot_tiles_set_2(2,3,v_resampled,v_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+%     y_l_f='v(t)';
+%     y_l_t='v(t)';
+% %     plot_tiles.plot_tiles_set_2(2,3,v_resampled,abs(v_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+%     plot_tiles.plot_tiles_set_2(2,3,v_resampled,v_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
     %% Save data for Ansys
     save_data
 end

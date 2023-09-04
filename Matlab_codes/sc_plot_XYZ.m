@@ -1,6 +1,6 @@
 %%
 clear;clc;
-% close all;
+close all;
 % Define the number of storeys, rooms in x-y-direction
 n_str = 1;
 n_rx = 1;
@@ -12,7 +12,7 @@ h = 3;
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
 ftyp = 'FOOTING';
 % Define the velocity of the excitation
-V_s =100;
+V_s =450;
 % Define the size of the elements
 n_esize = 0.25;
 if strcmp(ftyp,'PLATE')
@@ -35,13 +35,14 @@ cmpt = {'X', 'Y', 'Z'};
 f_vect = [];
 
 folder = fns_plot.get_fldrnm(n_str,n_rx,n_ry,l,b,ftyp,V_s,L_f,B_f);
+u_ref=1;
 for i_str = 0:n_str
     fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str, l, b),...
         cmpt, 'UniformOutput', false);
 
     cd ..
     cd Results_Ansys
-    fil_pth = fullfile(rf_fldr, folder, fil_nm);
+    fil_pth = fullfile(rf_fldr, folder, fil_nm)
     U_all = cellfun(@(x) readtable(x),fil_pth,'UniformOutput',false);
 
     if isempty(f_vect)
@@ -50,6 +51,9 @@ for i_str = 0:n_str
     Uamp_X = U_all{1}.(cols{2});
     Uamp_Y = U_all{2}.(cols{2});
     Uamp_Z = U_all{3}.(cols{2});
+%     Uamp_X= 20*log10(Uamp_X/u_ref);
+%     Uamp_Y= 20*log10(Uamp_Y/u_ref);
+%     Uamp_Z= 20*log10(Uamp_Z/u_ref);
     cd ..
     cd Matlab_codes
     %% Plotting
@@ -81,14 +85,14 @@ for i_str = 0:n_str
         'TickLabelInterpreter','latex',...
         'TickLength',[0.01,0.01]);
     set(gcf, 'Units', 'inches', 'Position',...
-        [18 3 4 2.5], 'PaperUnits', 'Inches',...
+        [18 3 4 2], 'PaperUnits', 'Inches',...
         'PaperSize', [4 2.5]);
     if i_str==0
-        ylim([0.3,1.5])
+        ylim([0.5,1.6])
     else
         ylim([0,10])
     end
-    xlim([0,40])
+%     xlim([0,100])
     filename = ['UcentXYZ_', num2str(i_str),...
         '_n_rooms_X_', num2str(n_rx),...
         '_n_rooms_Y_', num2str(n_ry),...

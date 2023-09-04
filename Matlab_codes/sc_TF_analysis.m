@@ -18,7 +18,7 @@ h = 3;
 ftyp = 'FOOTING';
 
 % Define the velocity of the excitation
-V_s = 100;
+V_s = 450;
 
 % Define the size of the elements
 n_esize = 0.25;
@@ -57,8 +57,8 @@ for i_str = 0:n_str
         bf_nm,i_str,cmpt,n_c,rf_fldr,cols);
 
     %%
-    TFabs_zcell{i_str+1} = TF_amp_mat{3};
-    TFabs_xcell{i_str+1} = TF_amp_mat{1};
+    TFabs_zcell{i_str+1} = TF_amp_mat{3}.*1e-3;
+    TFabs_xcell{i_str+1} = TF_amp_mat{1}.*1e-3;
 end
 %%
 plt_cmp='Z';
@@ -68,11 +68,11 @@ df=f_vect(3)-f_vect(2);
 uzxlim_1_vect=[0 0];
 uzxlim_2_vect=[2 2];
 if V_s==450
-    uzylim_1_vect=[0.4 0];
-    uzylim_2_vect=[2.2 15];
+    uzylim_1_vect=[0.4 0].*1e-3;
+    uzylim_2_vect=[2.2 15].*1e-3;
 elseif V_s==100
-    uzylim_1_vect=[0.4 0];
-    uzylim_2_vect=[2.2 15];
+    uzylim_1_vect=[0.4 0].*1e-3;
+    uzylim_2_vect=[2.2 15].*1e-3;
 end
 for i_flur = 1:2
     TF_abs_Zmat = TFabs_zcell{i_flur};

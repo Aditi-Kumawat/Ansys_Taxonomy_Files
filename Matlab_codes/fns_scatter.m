@@ -114,7 +114,7 @@ classdef fns_scatter
 
             % adjust plot properties
             xlim([min(f_vect), y_lim]);
-            ylim([2, 12]);
+            %             ylim([2, 12]);
             xlabel('Frequency (Hz)', 'FontSize', 10,...
                 'Interpreter', 'latex');
             ylabel('max(Trasfer function)', 'FontSize', 10,...
@@ -128,14 +128,14 @@ classdef fns_scatter
                 'PaperUnits', 'Inches', 'PaperSize', [4 5.5]);
 
             filnm = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.pdf'];
-            filnm1 = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.emf'];
+%             filnm1 = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.emf'];
             filnm2 = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.png'];
             cd SAVE_FIGS
             if ~exist(rf_fldr, 'dir')
                 mkdir(rf_fldr);
             end
             saveas(gcf, fullfile(rf_fldr, filnm));
-            saveas(gcf, fullfile(rf_fldr, filnm1));
+%             saveas(gcf, fullfile(rf_fldr, filnm1));
             saveas(gcf, fullfile(rf_fldr, filnm2));
             cd ..
             cd ..
@@ -208,6 +208,61 @@ classdef fns_scatter
             y_up = TF_mean + TF_std;
         end
         %%
+        function [x,y_mean,y_low,y_up] = get_mean_std1(V_rms_mat,f_cenVect)
+
+            n_blds = length(V_rms_mat);
+
+            max_vals = zeros(1, n_blds);
+            f_max_vals = zeros(1, n_blds);
+
+            for i = 1:n_blds
+                current_data = V_rms_mat(:,i);
+                current_data(end+1) = 0;
+                [peaks, locs] = findpeaks(current_data);
+
+                if isempty(peaks)
+                    max_val = NaN;
+                    f_max_val = NaN;
+                else
+                    [~, idx] = min(locs);
+                    max_val = peaks(idx);
+                    f_max_val = f_cenVect(locs(idx));
+                end
+
+                max_vals(i) = max_val;
+                f_max_vals(i) = f_max_val;
+                if any(isnan(f_max_val))
+                    error('f_max_val contains NaN values')
+                end
+            end
+
+            f_nrm=zeros(length(f_cenVect),n_blds);
+            for i_nb=1:n_blds
+                f_nrm(:,i_nb)=f_cenVect./f_max_vals(i_nb);
+                if any(isnan(f_nrm(:,i_nb)))
+                    error('f_nrm contains NaN values')
+                end
+            end
+
+            f_norm_out = logspace(log10(f_nrm(1,1)), log10(f_nrm(end,end)), length(f_cenVect));
+
+            for i_nb=1:n_blds
+                current_data = V_rms_mat(:,i_nb);
+                data_interp(:,i_nb) = interp1(f_nrm(:,i_nb),...
+                    current_data, f_norm_out, 'linear', 'extrap');
+            end
+
+            data_mean = mean(data_interp, 2);
+            data_std = std(data_interp, 0, 2);
+
+            x = f_norm_out';
+            y_mean = data_mean;
+            y_low = data_mean - data_std;
+            y_up = data_mean + data_std;
+        end
+
+
+        %%
         function plt_TF_MeanSD(x,y_mean,y_low,y_up,xlim_1,xlim_2,...
                 ylim_1,ylim_2,i_fl,V_s,r_fldr,cmpt)
             % Create the plot
@@ -235,8 +290,8 @@ classdef fns_scatter
                 'PaperUnits', 'Inches', 'PaperSize', [4 3]);
             filnm = ['TF_Mean_Std_plot_',cmpt,'_',num2str(i_fl),...
                 '_Vs_', num2str(V_s), '.pdf'];
-            filnm1 = ['TF_Mean_Std_plot_',cmpt,'_',num2str(i_fl),...
-                '_Vs_', num2str(V_s), '.emf'];
+            %             filnm1 = ['TF_Mean_Std_plot_',cmpt,'_',num2str(i_fl),...
+            %                 '_Vs_', num2str(V_s), '.emf'];
             filnm2 = ['TF_Mean_Std_plot_',cmpt,'_',num2str(i_fl),...
                 '_Vs_', num2str(V_s), '.png'];
             cd SAVE_FIGS
@@ -244,7 +299,7 @@ classdef fns_scatter
                 mkdir(r_fldr);
             end
             saveas(gcf, fullfile(r_fldr, filnm));
-            saveas(gcf, fullfile(r_fldr, filnm1));
+            %             saveas(gcf, fullfile(r_fldr, filnm1));
             saveas(gcf, fullfile(r_fldr, filnm2));
             cd ..
             cd ..

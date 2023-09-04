@@ -15,14 +15,25 @@ Iy = ((L1**2)/(Vs**2))*0.24*K_rock
 Iz = ((L1**2)/(Vs**2))*0.045*K_tors
 	
 
-!Create MASS21 at origin.
+*DO,j,0,n_roomsx
+    *DO,i,0,n_roomsy
+        NSEL,ALL
+        NSEL,S,LOC,Z,0
+        NSEL,R,LOC,X,j*l
+        NSEL,R,LOC,Y,i*b
+        CM,col_base%i%%j%,NODE
+        D,col_base%i%%j%,rotx,0
+        D,col_base%i%%j%,roty,0
+        D,col_base%i%%j%,rotz,0
+    *ENDDO
+*ENDDO
+
+NSEL,ALL
+
 NSEL,S,LOC,Z,0
-CM, n_buil_base, NODE        	!creating a group to define load location   
+CM, n_buil_base, NODE       
 NSEL,ALL
-D,n_buil_base,rotx,0
-D,n_buil_base,roty,0
-D,n_buil_base,rotz,0
-NSEL,ALL
+
 KNODE,,n_buil_base
 NUMMRG,KP
 ET,4,MASS21
