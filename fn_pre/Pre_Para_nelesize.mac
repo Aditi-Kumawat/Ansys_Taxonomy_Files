@@ -13,7 +13,7 @@ E_floor=30e9
 nu_floor=0.27
 !*************Dimensions of room**********************!
 l=5
-b=5
+b=3
 h=3
 
 !*********** Columns section ************************!
@@ -23,15 +23,15 @@ h_col=0.3
 h_beam=0.3 
 b_beam=0.3
 !*************Number of storeys**********************!
-n_storeys=1
+n_storeys=2
 !*************Number of rooms in x and y**********************!
-n_roomsx=1
-n_roomsy=1
+n_roomsx=2
+n_roomsy=3
 !*********** Floor thickness **************************!
 t_floor1=0.2
 !************Element Size*********************************!
 *DIM,nele_vect,ARRAY,2,1
-*set,nele_vect(1,1),0.2,0.3
+*set,nele_vect(1,1),1,1
 
 !*********** Soil properties**************************!
 Vs=450          !Shear wave velocity [m/s]

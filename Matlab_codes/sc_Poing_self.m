@@ -60,21 +60,21 @@ plot(f,Vinpt_PPV)
 %         stn,date, time,ulbl_vect,{'f (Hz)'},'cut',evnt)
 % end
 % %%
-bf_nm_ut = 'd_%d_%s_%s_%s';
-bf_nm_vt = 'v_%d_%s_%s_%s';
-cols_t = {'tim', 'val'};
-%
-figure
-for i=1:n_stns
-    stn=stn_vect{i};
-    ff_fldr = fullfile('GM','GM_POI2016',stn);
-
-    [t_in,ff_Vt]=...
-        fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
-        stn,date, time,n_snr,ff_fldr,cols_t);
-    fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
-        stn,date, time,vlbl_vect,{'t (s)'},'cut',evnt)
-end
+% bf_nm_ut = 'd_%d_%s_%s_%s';
+% bf_nm_vt = 'v_%d_%s_%s_%s';
+% cols_t = {'tim', 'val'};
+% %
+% figure
+% for i=1:n_stns
+%     stn=stn_vect{i};
+%     ff_fldr = fullfile('GM','GM_POI2016',stn);
+% 
+%     [t_in,ff_Vt]=...
+%         fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
+%         stn,date, time,n_snr,ff_fldr,cols_t);
+%     fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
+%         stn,date, time,vlbl_vect,{'t (s)'},'cut',evnt)
+% end
 %
 % figure
 % for i=1:n_stns

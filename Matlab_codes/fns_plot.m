@@ -85,7 +85,7 @@ classdef fns_plot
                 'PaperUnits', 'Inches','PaperSize', [7.25, 9.125]);
 
             filename = [sprintf(bf_nm, s_dir, stn, date, time),...
-                '_',typ,'.emf'];
+                '_',typ,'.png'];
 
             cd SAVE_FIGS
             cd FF_Data
@@ -108,12 +108,12 @@ classdef fns_plot
                     'DisplayName',txt_l,'LineWidth', 0.8)
                 legend('show', 'Box', 'off', 'Interpreter','latex',...
                     'FontSize', 8)
-%                 ylim([0 1.5e-4])
-%                 xlim([0 80])
+                ylim([0 1.4e-4])
+                xlim([0 80])
 %                 ylim([-1.5e-3 2e-3])
 %                 xlim([0 15])
-                ylim([-4e-4 6e-4])
-                xlim([0 4])
+                % ylim([-4e-4 6e-4])
+                % xlim([0 4])
                 ylabel(y_lbl{idx}, 'FontSize', 10, 'Interpreter', 'latex')
                 xlabel(x_lbl, 'FontSize', 10,...
                     'Interpreter', 'latex')

@@ -124,8 +124,8 @@ classdef fns_scatter
             %                 'Interpreter', 'latex');
             set(gca, 'FontSize', 10, 'Box', 'on', 'LineWidth', 1,...
                 'TickLabelInterpreter', 'latex', 'TickLength',[0.01,0.01]);
-            set(gcf, 'Units', 'inches', 'Position', [18 3 4 5.5],...
-                'PaperUnits', 'Inches', 'PaperSize', [4 5.5]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 4.5 4],...
+                'PaperUnits', 'Inches', 'PaperSize', [4.5 4]);
 
             filnm = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.pdf'];
 %             filnm1 = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.emf'];

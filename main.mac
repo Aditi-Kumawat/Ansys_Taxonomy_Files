@@ -14,7 +14,7 @@ ftyp='FOOTING'
 !---------------------------------------------------------------------------!
 !-----------------------------Harmonic Analysis-----------------------------!
 StarFreq=0               
-FreqIncr=0.2       ! Frequeny Increment                                     
+FreqIncr=0.5       ! Frequeny Increment                                     
 EndFreq=100.0
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
@@ -48,7 +48,7 @@ D_bl=0.05  		!DMPART cannot work
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 /INPUT,'fn_post\Settings_Export_Pictures','mac'
-!/INPUT,'fn_post\post_F_Indepn_TF','mac'
+/INPUT,'fn_post\post_F_Indepn_TF','mac'
 !---eclectic case for uniform slab of 5mx5m and picking results at y=7.5m---!
 !----------------for comparison with the nonuni slab case-------------------!
-/INPUT,'fn_post\post_uni_Y_7pt5','mac'
+!/INPUT,'fn_post\post_uni_Y_7pt5','mac'

@@ -5,9 +5,9 @@ clear;clc;
 % close all
 % Define the number of storeys, rooms in x-y-direction
 
-n_str = 1;
-n_rx = 1;
-n_ry = 1;
+n_str = 2;
+n_rx = 2;
+n_ry = 3;
 
 % Define the length, width, and height of the building
 l_vect=5;
@@ -80,7 +80,7 @@ for i_c=1:n_c
 %         'FontSize',11);
     set(gcf,'Units','inches', 'Position', [18 3 4.5 6],...
         'PaperUnits', 'Inches', 'PaperSize', [7.25, 9.125]);
-    fil_nm = ['FF_vel_t', '.emf'];
+    fil_nm = ['FF_vel_t', '.png'];
     cd SAVE_FIGS
     % Create the directory (if it doesn't already exist)
     if ~exist(rf_fldr, 'dir')

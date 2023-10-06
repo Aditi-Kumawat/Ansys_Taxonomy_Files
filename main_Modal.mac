@@ -24,7 +24,7 @@ ModAn='with_springs'
 *IF,ftyp,EQ,'FOOTING',THEN
     /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
 *ELSEIF,ftyp,EQ,'PLATE'
-    /INPUT,'fn_pre\Pre_BldMod_PlateFnd'mac'
+    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn'mac'
 *ENDIF
 !/eof
 !---------------------------------------------------------------------------!

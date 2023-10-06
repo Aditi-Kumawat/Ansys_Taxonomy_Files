@@ -26,10 +26,10 @@ h_beam=0.3
 b_beam=0.3
 !--------------------------------------------------------------!
 !----------------------Number of storeys-----------------------!
-n_storeys=1
+n_storeys=2
 !-----------------Number of rooms in x and y-------------------!
-n_roomsx=1
-n_roomsy=1
+n_roomsx=2
+n_roomsy=3
 !--------------------------------------------------------------!
 !----------------------Floor thickness-------------------------!
 t_floor1=0.2
@@ -52,9 +52,7 @@ B_f=n_ele_size/2        !Foundation half-width [m]
 
 !*************************Plate Foundation*************************!
 !---Number of Elements   
-nVolx=8                                      
-nVoly=6
-nVolz=6
-!nVolx=l/n_ele_size                                       
-!nVoly=b/n_ele_size                                      
-!nVolz=h/n_ele_size                         
+nVolx=l/n_ele_size                                       
+nVoly=b/n_ele_size                                      
+nVolz=h/n_ele_size  
+                      

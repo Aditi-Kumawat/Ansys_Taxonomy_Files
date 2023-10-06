@@ -21,7 +21,7 @@ rec=1324;
 V_s = 450;
 
 % Define the size of the elements
-n_esize = 1;
+n_esize = 0.75;
 
 % Calculate the length and width of the footing based on the
 % foundation type
