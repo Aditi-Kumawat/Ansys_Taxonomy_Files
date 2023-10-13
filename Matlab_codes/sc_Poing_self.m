@@ -32,8 +32,12 @@ for i=1:n_stns
     [f_inpt_V,ff_Vamp_mat,ff_Vr_mat,ff_VIm_mat,ff_Vcmplx_mat]=...
         fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
         stn,date, time,n_snr,ff_fldr,cols);
+    % x_lim=[0 80];
+    % y_lim=[0 4e-4];
+    x_lim=[];
+    y_lim=[];
     fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-        stn,date, time,vlbl_vect,{'Frequency,~Hz'},'cut',evnt)
+        stn,date, time,vlbl_vect,{'Frequency,~Hz'},'cut',evnt,x_lim,y_lim)
     if stn=="POI01"
         v_x_Po1=ff_Vamp_mat{1};
         v_y_Po1=ff_Vamp_mat{2};
@@ -48,42 +52,54 @@ f_idx=f(maxrow_indices)
 figure
 plot(f,Vinpt_PPV)
 
-% figure
-% for i=1:n_stns
-%     stn=stn_vect{i};
-%     ff_fldr = fullfile('GM','GM_POI2016',stn);
+figure
+for i=1:n_stns
+    stn=stn_vect{i};
+    ff_fldr = fullfile('GM','GM_POI2016',stn);
+
+    [f_inpt_U,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
+        fns_imprtdata.get_ff_inpt(bf_nm_u,s_dir,...
+        stn,date, time,n_snr,ff_fldr,cols);
+    % x_lim=[0 80];
+    % y_lim=[0 4e-4];
+    x_lim=[];
+    y_lim=[];
+    fns_plot.plt_ff_svrlstns(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
+        stn,date, time,ulbl_vect,{'f (Hz)'},'cut',evnt,x_lim,y_lim)
+end
+%%
+bf_nm_ut = 'd_%d_%s_%s_%s';
+bf_nm_vt = 'v_%d_%s_%s_%s';
+cols_t = {'tim', 'val'};
 %
-%     [f_inpt_U,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
-%         fns_imprtdata.get_ff_inpt(bf_nm_u,s_dir,...
-%         stn,date, time,n_snr,ff_fldr,cols);
-%     fns_plot.plt_ff_svrlstns(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
-%         stn,date, time,ulbl_vect,{'f (Hz)'},'cut',evnt)
-% end
-% %%
-% bf_nm_ut = 'd_%d_%s_%s_%s';
-% bf_nm_vt = 'v_%d_%s_%s_%s';
-% cols_t = {'tim', 'val'};
-% %
-% figure
-% for i=1:n_stns
-%     stn=stn_vect{i};
-%     ff_fldr = fullfile('GM','GM_POI2016',stn);
-% 
-%     [t_in,ff_Vt]=...
-%         fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
-%         stn,date, time,n_snr,ff_fldr,cols_t);
-%     fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
-%         stn,date, time,vlbl_vect,{'t (s)'},'cut',evnt)
-% end
-%
-% figure
-% for i=1:n_stns
-%     stn=stn_vect{i};
-%     ff_fldr = fullfile('GM','GM_POI2016',stn);
-%
-%     [t_in,ff_Ut]=...
-%         fns_imprtdata.get_ff_tim(bf_nm_ut,s_dir,...
-%         stn,date, time,n_snr,ff_fldr,cols_t);
-%     fns_plot.plt_ff_svrlstns(t_in, ff_Ut,bf_nm_ut,123,...
-%         stn,date, time,ulbl_vect,{'t (s)'},'cut',evnt)
-% end
+figure
+for i=1:n_stns
+    stn=stn_vect{i};
+    ff_fldr = fullfile('GM','GM_POI2016',stn);
+
+    [t_in,ff_Vt]=...
+        fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
+        stn,date, time,n_snr,ff_fldr,cols_t);
+    % x_lim=[0 80];
+    % y_lim=[0 4e-4];
+    x_lim=[];
+    y_lim=[];
+    fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
+        stn,date, time,vlbl_vect,{'t (s)'},'cut',evnt,x_lim,y_lim)
+end
+
+figure
+for i=1:n_stns
+    stn=stn_vect{i};
+    ff_fldr = fullfile('GM','GM_POI2016',stn);
+
+    [t_in,ff_Ut]=...
+        fns_imprtdata.get_ff_tim(bf_nm_ut,s_dir,...
+        stn,date, time,n_snr,ff_fldr,cols_t);
+    % x_lim=[0 80];
+    % y_lim=[0 4e-4];
+    x_lim=[];
+    y_lim=[];
+    fns_plot.plt_ff_svrlstns(t_in, ff_Ut,bf_nm_ut,123,...
+        stn,date, time,ulbl_vect,{'t (s)'},'cut',evnt,x_lim,y_lim)
+end
