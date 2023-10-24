@@ -2,19 +2,19 @@
 clear;clc;
 close all;
 % Define the number of storeys, rooms in x-y-direction
-n_str = 1;
-n_rx = 1;
-n_ry = 1;
+n_str = 3;
+n_rx = 2;
+n_ry = 3;
 % Define the length, width, and height of the building
 l = 5;
 b = 5;
 h = 3;
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'FOOTING';
+ftyp = 'PLATE';
 % Define the velocity of the excitation
 V_s =450;
 % Define the size of the elements
-n_esize = 0.25;
+n_esize = 0.5;
 if strcmp(ftyp,'PLATE')
     B_f = n_esize/2;
     L_f = n_esize/2;
@@ -24,7 +24,8 @@ else
 end
 %%
 % rf_fldr = 'MultiUnitBld_GeomVary';
-rf_fldr = 'UnitBld_GeomVary';
+% rf_fldr = 'UnitBld_GeomVary';
+rf_fldr = 'TF_F_Indpn';
 
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 
@@ -42,7 +43,7 @@ for i_str = 0:n_str
 
     cd ..
     cd Results_Ansys
-    fil_pth = fullfile(rf_fldr, folder, fil_nm)
+    fil_pth = fullfile(rf_fldr, folder, fil_nm);
     U_all = cellfun(@(x) readtable(x),fil_pth,'UniformOutput',false);
 
     if isempty(f_vect)
