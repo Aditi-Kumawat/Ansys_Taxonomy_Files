@@ -1,9 +1,21 @@
 classdef fns_data_process
     methods (Static)
-        function [fn_fft_ss,freq,fn_ifft,t]= fun_fftandifft(t_in,Fs,fn_in)
+        %%
+        function [fn_fft_ss,freq_ss,fn_ifft]= fun_fftandifft(t_in,Fs,fn_in)
+            df=(Fs/length(t_in));
+            fn_fft = fft(fn_in) * (1/Fs);
+            n_fft=length(fn_fft);
+            fn_fft_ss =fn_fft(1:n_fft/2+1,:);
+            freq = 0:df:Fs;
+            freq_ss = freq(1:n_fft/2+1);
+            fn_fft_pad = [fn_fft_ss; conj(flipud(fn_fft_ss(2:end-1,:)))];
+            fn_ifft = ifft(fn_fft_pad*Fs, n_fft ,1, 'symmetric');
+        end
+        %%
+        function [fn_fft_ss,freq,fn_ifft,t]= fun_fftandifft_old(t_in,Fs,fn_in)
             nfft = 2^nextpow2(length(t_in));
             freq = Fs / 2 * linspace(0, 1, nfft/2+1);
-            fn_fft = fft(fn_in, nfft) * (1/Fs);
+            fn_fft = fft(fn_in) * (1/Fs);
             %             fn_fft_ss = 2 * fn_fft(1:nfft/2+1,:); %% orignal
             fn_fft_ss =fn_fft(1:nfft/2+1,:);
             %     u_fft_ss=v_fft_ss./1i./(2*pi*f_matrix);
@@ -14,6 +26,7 @@ classdef fns_data_process
             fn_ifft = fn_ifft(1:length(t_in),:); % Truncate to same length as v
             t = (0:length(fn_ifft)-1) / Fs;
         end
+
         %%
         function save_data_time(qnt, stn, date, time_evnt,ff_fldrnew,t,fn_time)
             for i_v=1:3
