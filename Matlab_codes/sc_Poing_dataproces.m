@@ -1,19 +1,8 @@
 clear;clc;close all
 %% Importing Data
-% evnt={'Po2016', 'Po2017'};
-evnt='Po2016'
-rf_fldr = 'input_Data';
-if evnt == "Po2017"
-    stn_vect={'HWMRS', 'LP01S', 'MS1', 'Poing', 'RHS26',...
-        'SCH6S', 'SIS21', 'WS15S'};
-    date='2017_09_09';
-    time_evnt='17_20_29';
-elseif evnt == "Po2016"
-    stn_vect={'POI01', 'POI02', 'POI03'};
-    date='2016_12_20';
-    time_evnt='03_30_51';
-end
-
+stn_vect={'POI01', 'POI02', 'POI03'};
+date='2016_12_20';
+time_evnt='03_30_51';
 n_stns=length(stn_vect);
 
 
@@ -66,23 +55,22 @@ for i = 1:n_stns
     end
     Fs = 200;
     ff_fldrnew=fullfile('GM', 'GM_POI2016', stn);
-
-    [u_fft_ss,freq,u_ifft,t]=fns_data_process.fun_fftandifft(t_cut,Fs,Utin);
+    [u_fft_ss,freq,u_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Utin);
     fns_data_process.save_data_time('d', stn, date, time_evnt,ff_fldrnew,t_cut,Utin);
     fns_data_process.save_data_freq('d', stn, date, time_evnt,ff_fldrnew,freq,u_fft_ss);
-    [v_fft_ss,~,v_ifft,~]=fns_data_process.fun_fftandifft(t_cut,Fs,Vtin);
+    [v_fft_ss,~,v_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Vtin);
     fns_data_process.save_data_time('v', stn, date, time_evnt,ff_fldrnew,t_cut,Vtin);
     fns_data_process.save_data_freq('v', stn, date, time_evnt,ff_fldrnew,freq,v_fft_ss);
-    [a_fft_ss,~,a_ifft,~]=fns_data_process.fun_fftandifft(t_cut,Fs,Atin);
+    [a_fft_ss,~,a_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Atin);
     fns_data_process.save_data_time('a', stn, date, time_evnt,ff_fldrnew,t_cut,Atin);
     fns_data_process.save_data_freq('a', stn, date, time_evnt,ff_fldrnew,freq,a_fft_ss);
-    %% Plotting
-    %     leg_vect={'X','Y','Z'};
-    %
-    %     x_l_f='Frequency~(Hz)';
-    %     y_l_f='u(f)';
-    %     x_l_t='Time~(s)';
-    %     y_l_t='u(t)';
-    %     plot_tiles.plot_tiles_set_2(2,3,u_ifft,abs(u_fft_ss),t,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    % Plotting
+    leg_vect={'X','Y','Z'};
+
+    x_l_f='Frequency~(Hz)';
+    y_l_f='v(f)';
+    x_l_t='Time~(s)';
+    y_l_t='v(t)';
+    plot_tiles.plot_tiles_set_2(2,3,Vtin,v_ifft,t_cut,t_cut,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
 end
 

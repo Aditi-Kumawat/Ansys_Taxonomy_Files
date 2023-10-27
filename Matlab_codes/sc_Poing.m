@@ -24,39 +24,39 @@ n_snr = numel(s_dir);
 vlbl_vect={'$v_x$ (m/s)' '$v_y$ (m/s)' '$v_z$ (m/s)'};
 ulbl_vect={'$u_x$ (m)' '$u_y$ (m)' '$u_z$ (m)'};
 
-figure
-for i=1:n_stns
-    stn=stn_vect{i};
-    fldr_nm = ['GM_', stn, '_', date, '_', time];
-    ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
-        fldr_nm);
-    [f_inpt_V,ff_Vamp_mat,ff_Vr_mat,ff_VIm_mat,ff_Vcmplx_mat]=...
-        fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
-        stn,date, time,n_snr,ff_fldr,cols);
-    % x_lim=[0 80];
-    % y_lim=[0 4e-4];
-    x_lim=[];
-    y_lim=[];
-    fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-        stn,date, time,vlbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
-end
-
-figure
-for i=1:n_stns
-    stn=stn_vect{i};
-    fldr_nm = ['GM_', stn, '_', date, '_', time];
-    ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
-        fldr_nm);
-    [f_inpt_U,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
-        fns_imprtdata.get_ff_inpt(bf_nm_u,s_dir,...
-        stn,date, time,n_snr,ff_fldr,cols);
-    % x_lim=[0 80];
-    % y_lim=[0 4e-4];
-    x_lim=[];
-    y_lim=[];
-    fns_plot.plt_ff_svrlstns(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
-        stn,date, time,ulbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
-end
+% figure
+% for i=1:n_stns
+%     stn=stn_vect{i};
+%     fldr_nm = ['GM_', stn, '_', date, '_', time];
+%     ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
+%         fldr_nm);
+%     [f_inpt_V,ff_Vamp_mat,ff_Vr_mat,ff_VIm_mat,ff_Vcmplx_mat]=...
+%         fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
+%         stn,date, time,n_snr,ff_fldr,cols);
+%     % x_lim=[0 80];
+%     % y_lim=[0 4e-4];
+%     x_lim=[];
+%     y_lim=[];
+%     fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
+%         stn,date, time,vlbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
+% end
+% 
+% figure
+% for i=1:n_stns
+%     stn=stn_vect{i};
+%     fldr_nm = ['GM_', stn, '_', date, '_', time];
+%     ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
+%         fldr_nm);
+%     [f_inpt_U,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
+%         fns_imprtdata.get_ff_inpt(bf_nm_u,s_dir,...
+%         stn,date, time,n_snr,ff_fldr,cols);
+%     % x_lim=[0 80];
+%     % y_lim=[0 4e-4];
+%     x_lim=[];
+%     y_lim=[];
+%     fns_plot.plt_ff_svrlstns(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
+%         stn,date, time,ulbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
+% end
 %%
 bf_nm_ut = 'd_%d_%s_%s_%s';
 bf_nm_vt = 'v_%d_%s_%s_%s';

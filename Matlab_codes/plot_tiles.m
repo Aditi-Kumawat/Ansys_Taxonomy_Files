@@ -52,7 +52,7 @@ classdef plot_tiles
                 ylabel(y_l_t,'FontSize',11,'Interpreter','latex')
                 legend show
                 legend('Box','off','Interpreter','latex','FontSize',11)
-
+                % xlim([0 15])
                 % Plot v2 in the second row of subplot
                 subplot(num_rows,num_cols,subplot_layout(i,2));
                 plot(x2,data2(:, i),'DisplayName',lg{i}, 'LineWidth', 1.2);
