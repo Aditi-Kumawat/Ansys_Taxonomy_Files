@@ -9,8 +9,8 @@
 
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------! 
-!ftyp='PLATE'
-ftyp='FOOTING'
+ftyp='PLATE'
+!ftyp='FOOTING'
 !ModAn='fixed_base'
 ModAn='with_springs'
 
@@ -24,13 +24,12 @@ ModAn='with_springs'
 *IF,ftyp,EQ,'FOOTING',THEN
     /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
 *ELSEIF,ftyp,EQ,'PLATE'
-    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn'mac'
+    /INPUT,'fn_pre\Pre_BldMod_PlateFndtn','mac'
 *ENDIF
-!/eof
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !-------------------------------Mode Analysis-------------------------------!
-n_modes=5                      ! Number of modes to extract           
+n_modes=20                      ! Number of modes to extract           
 Star_ModeFreq=0                 ! Starting frequency                              
 End_ModeFreq=100                ! End frequency
 !------------------------------Mode Extraction------------------------------!
@@ -55,10 +54,10 @@ delta_mode_extract=1            ! Save the deformation figure of the every
     /INPUT,'fn_pre\Pre_M27_Full','mac'	
     /INPUT,'fn_pre\Pre_M27_BaseFixed','mac'
 *ENDIF
-/eof
+
 /INPUT,'fn_analysis\Analysis_Modal','mac'
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
-!/INPUT,'fn_post\Settings_Export_Pictures','mac'
-!/INPUT,'fn_post\post_Modal','mac'
+/INPUT,'fn_post\Settings_Export_Pictures','mac'
+/INPUT,'fn_post\post_Modal','mac'
