@@ -17,7 +17,7 @@ h = 3;
 ftyp = 'PLATE';
 
 % Define the velocity of the excitation
-V_s = 100;
+V_s = 450;
 
 % Define the size of the elements
 n_esize = 0.5;
@@ -37,6 +37,7 @@ name_evnt='Poing';
 if strcmp(name_evnt, 'Poing')
     evnt='Po2016';
     stn_vect={'POI01', 'POI02', 'POI03'};
+    %stn_vect={'POI01'};
     date='2016_12_20';
     time='03_30_51';
 elseif strcmp(name_evnt, 'Unterhaching')
@@ -64,6 +65,9 @@ bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
 wall_config = [1,2,3,4,5,6,7,8,9,10];
+%wall_config = [1,2];
+n_wall_config = length(wall_config);
+
 
 %%
 bf_nm_vt = 'v_%d_%s_%s_%s';
@@ -159,7 +163,7 @@ for i_stn=1:n_stns
             V_KB_freq_yCell{config,i_str+1} = V_KB_freq{config,2};
             
             %Corresponding Frequency
-            freq=f_inpt_V{3}(nzero:end);
+            freq_=f_inpt_V{3}(nzero:end);
         end
     
         %% IFFT compute v(t)
@@ -167,7 +171,10 @@ for i_stn=1:n_stns
         Fs = 200;
         %Exponent of next higher power of 2
         %t_in = 15sec
-        nfft = 2^nextpow2(length(t_in));
+        nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
+        Fs = nfft/(t_in(end)-t_in(1));
+        t_in = transpose(linspace(t_in(1),t_in(end),nfft));
+        
         %frequnecy array 
         freq = Fs / 2 * linspace(0, 1, nfft/2+1);
         dfz=freq(3)-freq(2);
@@ -183,45 +190,146 @@ for i_stn=1:n_stns
             Vzss_fft_pad = [Vss_Zmat; conj(flipud(Vss_Zmat(2:end-1,:)))];
             Vxss_fft_pad = [Vss_Xmat; conj(flipud(Vss_Xmat(2:end-1,:)))];
             Vyss_fft_pad = [Vss_Ymat; conj(flipud(Vss_Ymat(2:end-1,:)))];
-            Vz_ifft = 0.5*ifft(Vzss_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vx_ifft = 0.5*ifft(Vxss_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vy_ifft = 0.5*ifft(Vyss_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_ifft = Vz_ifft(1:length(t_in),:);
-            Vx_ifft = Vx_ifft(1:length(t_in),:);
-            Vy_ifft = Vy_ifft(1:length(t_in),:);
+            Vz_ifft = ifft(Vzss_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vx_ifft = ifft(Vxss_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vy_ifft = ifft(Vyss_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vz_ifft = Vz_ifft(1:length(t_in),:)/Fs;
+            Vx_ifft = Vx_ifft(1:length(t_in),:)/Fs;
+            Vy_ifft = Vy_ifft(1:length(t_in),:)/Fs;
             
-            % Store the result in Cell : {wall config, floor num}
-            Vz_ifft_wall_config{config,i_flur} = Vz_ifft;
-            Vx_ifft_wall_config{config,i_flur} = Vx_ifft;
-            Vy_ifft_wall_config{config,i_flur} = Vy_ifft;
+            %% Store the result in Cell : {wall config, floor num}
+            %Vz_ifft_wall_config{config,i_flur} = Vz_ifft;
+            %Vx_ifft_wall_config{config,i_flur} = Vx_ifft;
+            %Vy_ifft_wall_config{config,i_flur} = Vy_ifft;
 
-    
+            max_Vxmat{config}(i_stn,:,i_flur)=max(Vx_ifft);
+            max_Vymat{config}(i_stn,:,i_flur)=max(Vy_ifft);
+            max_Vzmat{config}(i_stn,:,i_flur)=max(Vz_ifft);
+
+
             %% IFFT data with filter
             V_KB_Zmat = V_KB_freq_zCell{config,i_flur};
-            V_KB_Xmat = V_KB_freq_zCell{config,i_flur};
-            V_KB_Ymat = V_KB_freq_zCell{config,i_flur};
+            V_KB_Xmat = V_KB_freq_xCell{config,i_flur};
+            V_KB_Ymat = V_KB_freq_yCell{config,i_flur};
             Vz_KB_fft_pad = [V_KB_Zmat; conj(flipud(V_KB_Zmat(2:end-1,:)))];
             Vx_KB_fft_pad = [V_KB_Xmat; conj(flipud(V_KB_Xmat(2:end-1,:)))];
             Vy_KB_fft_pad = [V_KB_Ymat; conj(flipud(V_KB_Ymat(2:end-1,:)))];
-            Vz_KB_ifft = 0.5*ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vx_KB_ifft = 0.5*ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vy_KB_ifft = 0.5*ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:);
-            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:);
-            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:);
+            Vz_KB_ifft = ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vx_KB_ifft = ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vy_KB_ifft = ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
+            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:)/Fs;
+            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:)/Fs;
+            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:)/Fs;
 
-            % Store the result in Cell : {wall config, floor num}
-            Vz__KB_ifft_wall_config{config,i_flur} = Vz_KB_ifft;
-            Vx__KB_ifft_wall_config{config,i_flur} = Vx_KB_ifft;
-            Vy__KB_ifft_wall_config{config,i_flur} = Vy_KB_ifft;
+            %% Store the result in Cell : {wall config, floor num}
+            %Vz__KB_ifft_wall_config{config,i_flur} = Vz_KB_ifft;
+            %Vx__KB_ifft_wall_config{config,i_flur} = Vx_KB_ifft;
+            %Vy__KB_ifft_wall_config{config,i_flur} = Vy_KB_ifft;
+            t = (0:length(t_in)-1) / Fs;
+            KB_f_x = fn_rms_kb(t, Vx_KB_ifft*1000 , 0.125);
+            KB_f_y = fn_rms_kb(t, Vy_KB_ifft*1000 , 0.125);
+            KB_f_z = fn_rms_kb(t, Vz_KB_ifft*1000 , 0.125);
 
-            t = (0:length(Vz_ifft)-1) / Fs;
+            max_Vx_KB_f_mat{config}(i_stn,:,i_flur)=max(KB_f_x);
+            max_Vy_KB_f_mat{config}(i_stn,:,i_flur)=max(KB_f_y);
+            max_Vz_KB_f_mat{config}(i_stn,:,i_flur)=max(KB_f_z);
+            
+            
+            % the num_lb here is 2, however, we only have 1 possibility here
+            for ilb=1:num_lb-1 
+
+                % find the freq of max Vss
+                Vss_Xvect=abs(Vss_Xmat(:,ilb));
+                [value, index] = max(Vss_Xvect);
+                f_x_max{config}(i_stn,ilb,i_flur)=freq_(index);
+           
+                disp(index)
+                Vss_Yvect=abs(Vss_Ymat(:,ilb));
+                [value, index] = max(Vss_Yvect);
+                f_y_max{config}(i_stn,ilb,i_flur)=freq_(index);
+
+                Vss_Zvect=abs(Vss_Zmat(:,ilb));
+                [value, index] = max(Vss_Zvect);
+                f_z_max{config}(i_stn,ilb,i_flur)=freq_(index);
+
+
+                %find the time of max Kb_f
+                KB_f_x_vect=KB_f_x(:,ilb);
+                [value, index] = max(KB_f_x_vect);
+                t_x_max{config}(i_stn,ilb,i_flur)=t(index);
     
+                KB_f_y_vect=KB_f_y(:,ilb);
+                [value, index] = max(KB_f_y_vect);
+                t_y_max{config}(i_stn,ilb,i_flur)=t(index);
+    
+                KB_f_z_vect=KB_f_z(:,ilb);
+                [value, index] = max(KB_f_z_vect);
+                t_z_max{config}(i_stn,ilb,i_flur)=t(index);
+
+            end
         end
     end
 end  
-%% Check whether the filter works or not
-    figure
-    plot(imag(Vss_zCell{1,1}(:,1)))
-    hold on
-    plot(imag(V_KB_freq_zCell{1,1}(:,1)))
+
+ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+ylbl=ylbl_vect{1}
+cmp=cmpt{1};
+fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{2}
+cmp=cmpt{2};
+fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{3}
+cmp=cmpt{3};
+fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+
+
+ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
+ylbl=ylbl_vect{1}
+cmp=cmpt{1};
+fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{2}
+cmp=cmpt{2};
+fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{3}
+cmp=cmpt{3};
+fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+close all
+
+%%% Evaluation
+%% For each wll configeration, the focus is on the top floor only, since the
+%% top floor usually have the largest displacement.
+%i_floor = 4; % top floor
+%criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
+%disp("------------------------------------------------------");
+%disp("A value criteria test");
+%for num_wall_config = 1: length(KB_f_x)
+%    Vz_eval = max(KB_f_z{num_wall_config,i_floor});
+%    Vx_eval = max(KB_f_x{num_wall_config,i_floor});
+%    Vy_eval = max(KB_f_y{num_wall_config,i_floor});
+%    disp("X dir");
+%    A_test = fn_evaluate_A_criteria(Vx_eval,0,criteria,false);
+%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
+%    disp("Y dir");
+%    A_test = fn_evaluate_A_criteria(Vy_eval,0,criteria,false);
+%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
+%    disp("Z dir");
+%    A_test = fn_evaluate_A_criteria(Vz_eval,0,criteria,false);
+%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
+%    disp("------------------------------------------------------");
+%end
+
+
+
+
+
+%%% Check whether the filter works or not
+%    figure
+%    plot(real(Vss_zCell{1,1}(:,1)))
+%    hold on
+%    plot(imag(V_KB_freq_zCell{1,1}(:,1)))

@@ -18,7 +18,7 @@ h = 3;
 ftyp = 'FOOTING';
 
 % Define the velocity of the excitation
-V_s = 450;
+V_s = 100;
 
 % Define the size of the elements
 n_esize = 0.5;
@@ -37,8 +37,8 @@ name_evnt='Poing';
 %%
 if strcmp(name_evnt, 'Poing')
     evnt='Po2016';
-    %stn_vect={'POI01', 'POI02', 'POI03'};
-    stn_vect={'POI01'};
+    stn_vect={'POI01', 'POI02', 'POI03'};
+    %stn_vect={'POI01'};
     date='2016_12_20';
     time='03_30_51';
 elseif strcmp(name_evnt, 'Unterhaching')
@@ -180,11 +180,11 @@ for i_stn=1:n_stns
     %t_in = 15sec (3001 elements)
     
     %MODIFICATION 01102023
-        nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
-        Fs = nfft/(t_in(end)-t_in(1));
-        t_in = transpose(linspace(t_in(1),t_in(end),nfft));
+        %nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
+        %Fs = nfft/(t_in(end)-t_in(1));
+        %t_in = transpose(linspace(t_in(1),t_in(end),nfft));
         
-        %nfft = length(t_in);
+        nfft = length(t_in);
         
     %frequnecy array 
     freq = Fs / 2 * linspace(0, 1, nfft/2+1); %length = nfft/2+1
@@ -246,8 +246,8 @@ for i_stn=1:n_stns
 
         %% IFFT data with filter
         V_KB_Zmat = V_KB_freq_zCell{i_flur};
-        V_KB_Xmat = V_KB_freq_zCell{i_flur};
-        V_KB_Ymat = V_KB_freq_zCell{i_flur};
+        V_KB_Xmat = V_KB_freq_xCell{i_flur};
+        V_KB_Ymat = V_KB_freq_yCell{i_flur};
         Vz_KB_fft_pad = [V_KB_Zmat; conj(flipud(V_KB_Zmat(2:end-1,:)))];
         Vx_KB_fft_pad = [V_KB_Xmat; conj(flipud(V_KB_Xmat(2:end-1,:)))];
         Vy_KB_fft_pad = [V_KB_Ymat; conj(flipud(V_KB_Ymat(2:end-1,:)))];
@@ -273,94 +273,132 @@ for i_stn=1:n_stns
 
         t = (0:length(Vz_ifft)-1) / Fs;
 
-        %max_Vxmat(i_stn,:,i_flur)=max(Vx_ifft);
-        %max_Vymat(i_stn,:,i_flur)=max(Vy_ifft);
-        %max_Vzmat(i_stn,:,i_flur)=max(Vz_ifft);
-
+        max_Vxmat(i_stn,:,i_flur)=max(Vx_ifft);
+        max_Vymat(i_stn,:,i_flur)=max(Vy_ifft);
+        max_Vzmat(i_stn,:,i_flur)=max(Vz_ifft);
         %max_Vx_KB_mat(i_stn,:,i_flur)=max(Vx_KB_ifft);
         %max_Vy_KB_mat(i_stn,:,i_flur)=max(Vy_KB_ifft);
         %max_Vz_KB_mat(i_stn,:,i_flur)=max(Vz_KB_ifft);
+        
+        KB_f_x = fn_rms_kb(t, Vx_KB_ifft*1000 , 0.125);
+        KB_f_y = fn_rms_kb(t, Vy_KB_ifft*1000 , 0.125);
+        KB_f_z = fn_rms_kb(t, Vz_KB_ifft*1000 , 0.125);
 
-        %for ilb=1:num_lb
-        %    Vss_Xvect=Vss_Xmat(:,ilb);
-        %    [value, index] = max(Vss_Xvect);
-        %    f_x_max(i_stn,ilb,i_flur)=freq(index);
-        %    Vss_Yvect=Vss_Ymat(:,ilb);
-        %    [value, index] = max(Vss_Yvect);
-        %    f_y_max(i_stn,ilb,i_flur)=freq(index);
-        %    Vss_Zvect=Vss_Zmat(:,ilb);
-        %    [value, index] = max(Vss_Zvect);
-        %    f_z_max(i_stn,ilb,i_flur)=freq(index);
-        %end
+        max_Vx_KB_f_mat(i_stn,:,i_flur)=max(KB_f_x);
+        max_Vy_KB_f_mat(i_stn,:,i_flur)=max(KB_f_y);
+        max_Vz_KB_f_mat(i_stn,:,i_flur)=max(KB_f_z);
+
+        for ilb=1:num_lb
+
+            % find the freq of max Vss
+            Vss_Xvect=abs(Vss_Xmat(:,ilb));
+            [value, index] = max(Vss_Xvect);
+            f_x_max(i_stn,ilb,i_flur)=freq(index);
+            Vss_Yvect=abs(Vss_Ymat(:,ilb));
+            [value, index] = max(Vss_Yvect);
+            f_y_max(i_stn,ilb,i_flur)=freq(index);
+            Vss_Zvect=abs(Vss_Zmat(:,ilb));
+            [value, index] = max(Vss_Zvect);
+            f_z_max(i_stn,ilb,i_flur)=freq(index);
+
+
+            %find the time of max Kb_f
+            KB_f_x_vect=KB_f_x(:,ilb);
+            [value, index] = max(KB_f_x_vect);
+            t_x_max(i_stn,ilb,i_flur)=t(index);
+
+            KB_f_y_vect=KB_f_y(:,ilb);
+            [value, index] = max(KB_f_y_vect);
+            t_y_max(i_stn,ilb,i_flur)=t(index);
+
+            KB_f_z_vect=KB_f_z(:,ilb);
+            [value, index] = max(KB_f_z_vect);
+            t_z_max(i_stn,ilb,i_flur)=t(index);
+        end
     end
 end
-%ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
-%ylbl=ylbl_vect{1}
-%cmp=cmpt{1};
-%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+
+ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+ylbl=ylbl_vect{1}
+cmp=cmpt{1};
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{2}
+cmp=cmpt{2};
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{3}
+cmp=cmpt{3};
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+
+
+ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
+ylbl=ylbl_vect{1}
+cmp=cmpt{1};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{2}
+cmp=cmpt{2};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{3}
+cmp=cmpt{3};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+
+
+
+
+%%% Evalutation for Z-dir for top floor
+%% Comparing the KB_f_max and KB_f_max_appr from different manners
+%% Vz_KB_ifft = [m/s]
+%KB_f = fn_rms_kb(t, Vz_KB_ifft*1000 , 0.125);
 %
-%ylbl=ylbl_vect{2}
-%cmp=cmpt{2};
-%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%%finding the freq where maximum exist
+%% Vss_zCell{2} for only top floor
+%[V_max_freq,index] = max(abs(Vss_zCell{2}));
+%freq_max = freq(index);
+%%freq_max = transpose(freq_(index-nzero));
 %
-%ylbl=ylbl_vect{3}
-%cmp=cmpt{3};
-%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%%finding maximum unweighted velocity V_max in time-domain 
+%V_max_time = max(Vz_ifft)*1000;
+%%V_max_freq2time = V_max_freq*(2*pi)*1000;
+%
+%%Computing the appr.KB_f_max
+%KB_f_max_appr = fn_appr_evaluation_unweighted_signal(V_max_time,freq_max,0.7,0.15);
+%
+%%Checking KB_f_max and KB_f_max_appr are matched or not
+%KB_f_max = max(KB_f);
+%
+%disp("------------------------------------------------------")
+%disp("Comparing data if the KB_f_max in range of KB_f_max_appr (+/-15%)")
+%count = 0;
+%for case_ = 1: length(KB_f_max)
+%    if KB_f_max(case_) >= KB_f_max_appr(case_,2) && KB_f_max(case_) <= KB_f_max_appr(case_,3)
+%        disp(['Case ',num2str(case_ ),': passed']);
+%        count = count +1 ;
+%    else
+%        disp(['Case ',num2str(case_ ),': failed']);
+%        disp(['  KB_f_max      = ',num2str(KB_f_max(case_))]);
+%        disp(['  KB_f_max_appr = [',num2str(KB_f_max_appr(case_,2)),' ,',num2str(KB_f_max_appr(case_,3)),']']);
+%    end
+%end
+%disp("------------------------------------------------------")
+%disp(['passed ratio: ',num2str(count),'/',num2str(length(KB_f_max)),' percentage: ',num2str(count/length(KB_f_max))])
 
 
 
-
-
-
-
-%% Evalutation for Z-dir for top floor
-% Comparing the KB_f_max and KB_f_max_appr from different manners
-% Vz_KB_ifft = [m/s]
-KB_f = fn_rms_kb(t, Vz_KB_ifft*1000 , 0.125);
-
-%finding the freq where maximum exist
-% Vss_zCell{2} for only top floor
-[V_max_freq,index] = max(abs(Vss_zCell{2}));
-freq_max = freq(index);
-%freq_max = transpose(freq_(index-nzero));
-
-%finding maximum unweighted velocity V_max in time-domain 
-V_max_time = max(Vz_ifft)*1000;
-%V_max_freq2time = V_max_freq*(2*pi)*1000;
-
-%Computing the appr.KB_f_max
-KB_f_max_appr = fn_appr_evaluation_unweighted_signal(V_max_time,freq_max,0.7,0.15);
-
-%Checking KB_f_max and KB_f_max_appr are matched or not
-KB_f_max = max(KB_f);
-
-disp("------------------------------------------------------")
-disp("Comparing data if the KB_f_max in range of KB_f_max_appr (+/-15%)")
-count = 0;
-for case_ = 1: length(KB_f_max)
-    if KB_f_max(case_) >= KB_f_max_appr(case_,2) && KB_f_max(case_) <= KB_f_max_appr(case_,3)
-        disp(['Case ',num2str(case_ ),': passed']);
-        count = count +1 ;
-    else
-        disp(['Case ',num2str(case_ ),': failed']);
-        disp(['  KB_f_max      = ',num2str(KB_f_max(case_))]);
-        disp(['  KB_f_max_appr = [',num2str(KB_f_max_appr(case_,2)),' ,',num2str(KB_f_max_appr(case_,3)),']']);
-    end
-end
-disp("------------------------------------------------------")
-disp(['passed ratio: ',num2str(count),'/',num2str(length(KB_f_max)),' percentage: ',num2str(count/length(KB_f_max))])
-
-
-
-%% Comparing with A value
-% setting criteria
-disp("------------------------------------------------------")
-disp("A value criteria test")
-criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
-for case_A = 1:length(KB_f_max)
-    A_test = fn_evaluate_A_criteria(KB_f_max(case_A),0,criteria,false);
-    disp(strcat(['Case ',num2str(case_A ),':  '], A_test));
-end
+%%% Comparing with A value
+%% setting criteria
+%disp("------------------------------------------------------")
+%disp("A value criteria test")
+%criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
+%for case_A = 1:length(KB_f_max)
+%    A_test = fn_evaluate_A_criteria(KB_f_max(case_A),0,criteria,false);
+%    disp(strcat(['Case ',num2str(case_A ),':  '], A_test));
+%end
 
 
 %for plot_num = 1:1
@@ -396,15 +434,15 @@ end
 
 
 
-% verification, QUESTION: using 2^nextpow2 
-figure
-plot(t_in,velocity);
-hold on
-plot(t_in,velocity_ifft);
-
-%% verification, QUESTION: using 2^nextpow2
-figure
-plot(freq,abs(velocity_fft_trun));
+%% verification, QUESTION: using 2^nextpow2 
+%figure
+%plot(t_in,velocity);
+%hold on
+%plot(t_in,velocity_ifft);
+%
+%%% verification, QUESTION: using 2^nextpow2
+%figure
+%plot(freq,abs(velocity_fft_trun));
 %
 %% QUESTION: the ratio of IFFT 
 %figure

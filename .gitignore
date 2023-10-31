@@ -3,7 +3,7 @@
 
 # Ignore Results_Ansys folder
 Results_Ansys
-
+GM
 # Ignore Figs folder
 Matlab_codes/SAVE_FIGS
 *.fig
