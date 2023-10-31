@@ -1,6 +1,8 @@
 clear;clc;close all
 %% Importing Data
-stn_vect={'POI01', 'POI02', 'POI03'};
+% stn_vect={'POI01', 'POI02', 'POI03'};
+stn_vect={'POI03'};
+
 date='2016_12_20';
 time_evnt='03_30_51';
 n_stns=length(stn_vect);
@@ -56,14 +58,14 @@ for i = 1:n_stns
     Fs = 200;
     ff_fldrnew=fullfile('GM', 'GM_POI2016', stn);
     [u_fft_ss,freq,u_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Utin);
-    fns_data_process.save_data_time('d', stn, date, time_evnt,ff_fldrnew,t_cut,Utin);
-    fns_data_process.save_data_freq('d', stn, date, time_evnt,ff_fldrnew,freq,u_fft_ss);
+    % fns_data_process.save_data_time('d', stn, date, time_evnt,ff_fldrnew,t_cut,Utin);
+    % fns_data_process.save_data_freq('d', stn, date, time_evnt,ff_fldrnew,freq,u_fft_ss);
     [v_fft_ss,~,v_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Vtin);
-    fns_data_process.save_data_time('v', stn, date, time_evnt,ff_fldrnew,t_cut,Vtin);
-    fns_data_process.save_data_freq('v', stn, date, time_evnt,ff_fldrnew,freq,v_fft_ss);
+    % fns_data_process.save_data_time('v', stn, date, time_evnt,ff_fldrnew,t_cut,Vtin);
+    % fns_data_process.save_data_freq('v', stn, date, time_evnt,ff_fldrnew,freq,v_fft_ss);
     [a_fft_ss,~,a_ifft]=fns_data_process.fun_fftandifft(t_cut,Fs,Atin);
-    fns_data_process.save_data_time('a', stn, date, time_evnt,ff_fldrnew,t_cut,Atin);
-    fns_data_process.save_data_freq('a', stn, date, time_evnt,ff_fldrnew,freq,a_fft_ss);
+    % fns_data_process.save_data_time('a', stn, date, time_evnt,ff_fldrnew,t_cut,Atin);
+    % fns_data_process.save_data_freq('a', stn, date, time_evnt,ff_fldrnew,freq,a_fft_ss);
     % Plotting
     leg_vect={'X','Y','Z'};
 
