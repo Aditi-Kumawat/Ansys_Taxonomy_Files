@@ -524,6 +524,167 @@ classdef fns_unitgeomdb
                 end
                 close all
             end
-        
+        function plot_DIN4150_3_XYZ_varyDamp(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+            ha_cl = @colors;
+            lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
+                ha_cl('gray')};
+            scatterHandles = zeros(1, n_stns);
+            sz=80;
+            f_max = zeros(length(f_max3D),1);
+            max_Vxyz = zeros(length(f_max3D),1);
+
+            f_upper_limit = zeros(1, n_stns);
+            v_upper_limit = zeros(1, n_stns);
+           
+            folderName = sprintf('Vary_Damp');
+
+                for i_flur= 1:n_flur
+                    sub_folderName = sprintf('%s%d', 'i_flur', i_flur);
+                                    [f,v,v_db]=fns_unitgeomdb.DIN4150_3_lims(v_ref,i_flur);
+                    figure
+                    for i_stn = 1:n_stns
+                       for i_damp = 1:length(f_max3D)
+                           f_max(i_damp) = f_max3D{i_damp}(i_stn,:,i_flur);
+                           max_Vxyz(i_damp) = max_Vxyz3D{i_damp}(i_stn,:,i_flur);
+                       end 
+
+                       f_upper_limit(i_stn)=max(f_max);
+                       v_upper_limit(i_stn)=max(max_Vxyz);
+
+                       plot(f,v)
+                       hold on
+
+                       scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
+                           'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+                    end
+                    
+                    x_upper_lim_for_plot = max(f_upper_limit);
+                    y_upper_lim_for_plot = max(v_upper_limit);
+                    legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
+
+                    ylim([0 y_upper_lim_for_plot*1.2])
+                    xlim([0 floor(x_upper_lim_for_plot)+2])
+                    grid off;
+                    hold off;
+                    set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
+                        'TickLabelInterpreter','latex',...
+                        'TickLength',[0.01,0.01]);
+                    xlabel({'Frequency,~Hz'},'FontSize',11,...
+                        'Interpreter','latex')
+                    ylabel(ylbl,'FontSize',11,'Interpreter','latex')
+                    hold on
+                    set(gcf,'Units','inches', 'Position', [18 3 3 2.5],...
+                        'PaperUnits', 'Inches', 'PaperSize', [3 2.5]);
+    
+                    filename = ['VaryWall_',name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                        '_Vs_', num2str(V_s), '.emf'];
+    
+                    cd SAVE_FIGS
+
+                    % Check if the folder already exists
+                    if exist(folderName, 'dir')
+                        % If the folder exists, change the current directory to it
+                        cd(folderName);
+                    else
+                        % If the folder doesn't exist, create it and then change to it
+                        mkdir(folderName);
+                        cd(folderName);
+                    end
+
+                    if exist(sub_folderName, 'dir')
+                        % If the folder exists, change the current directory to it
+                        cd(sub_folderName);
+                    else
+                        % If the folder doesn't exist, create it and then change to it
+                        mkdir(sub_folderName);
+                        cd(sub_folderName);
+                    end
+                    saveas(gcf, filename);
+                    cd ..
+                    cd ..
+                    cd ..
+                end
+                close all
+            end
+        function plot_DIN4150_2_XYZ_varyDamp( n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+            ha_cl = @colors;
+            lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
+                ha_cl('gray')};
+            scatterHandles = zeros(1, n_stns);
+
+            sz=80;
+
+            f_max = zeros(length(f_max3D),1);
+            max_Vxyz = zeros(length(f_max3D),1);
+
+            f_upper_limit = zeros(1, n_stns);
+            v_upper_limit = zeros(1, n_stns);
+
+               folderName = sprintf('Vary_Damp');
+               for i_flur= 1:n_flur
+                   sub_folderName = sprintf('%s%d', 'i_flur', i_flur);
+                                   [t,v]=fns_unitgeomdb.DIN4150_2_lims(i_flur);
+                   figure
+                   for i_stn = 1:n_stns
+                       for i_damp = 1:length(f_max3D)
+                           f_max(i_damp) = f_max3D{i_damp}(i_stn,:,i_flur);
+                           max_Vxyz(i_damp) = max_Vxyz3D{i_damp}(i_stn,:,i_flur);
+                       end 
+                       f_upper_limit(i_stn)=max(f_max);
+                       v_upper_limit(i_stn)=max(max_Vxyz);
+
+                       plot(t,v)
+                       hold on
+                       scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
+                           'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+
+                   end
+                   x_upper_lim_for_plot = max(f_upper_limit);
+                   y_upper_lim_for_plot = max(v_upper_limit);
+                   legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
+                   %ylim([0 1e-3])
+                   ylim([0 y_upper_lim_for_plot*1.2])
+                   xlim([0 floor(x_upper_lim_for_plot)+2])
+                   grid off;
+                   hold off;
+                   set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
+                       'TickLabelInterpreter','latex',...
+                       'TickLength',[0.01,0.01]);
+                   xlabel({'time,~s'},'FontSize',11,...
+                       'Interpreter','latex')
+                   ylabel(ylbl,'FontSize',11,'Interpreter','latex')
+                   hold on
+                   set(gcf,'Units','inches', 'Position', [18 3 3 2.5],...
+                       'PaperUnits', 'Inches', 'PaperSize', [3 2.5]);
+   
+                   filename = ['VaryWall_',name_evnt,'_V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                       '_Vs_', num2str(V_s), '.emf'];                   
+                   cd SAVE_FIGS
+                   % Check if the folder already exists
+                   if exist(folderName, 'dir')
+                       % If the folder exists, change the current directory to it
+                       cd(folderName);
+                   else
+                       % If the folder doesn't exist, create it and then change to it
+                       mkdir(folderName);
+                       cd(folderName);
+                   end
+                   
+                   if exist(sub_folderName, 'dir')
+                       % If the folder exists, change the current directory to it
+                       cd(sub_folderName);
+                   else
+                       % If the folder doesn't exist, create it and then change to it
+                       mkdir(sub_folderName);
+                       cd(sub_folderName);
+                   end
+                   saveas(gcf, filename);
+                   cd ..
+                   cd ..
+                   cd ..
+               end
+               close all
+                      
+        end
     end
 end
