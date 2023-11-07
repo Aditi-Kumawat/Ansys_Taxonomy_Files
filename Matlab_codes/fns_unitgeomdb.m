@@ -196,29 +196,7 @@ classdef fns_unitgeomdb
                 v_db = lim_db * ones(1, length(f));
             end
         end
-        %%
-        function [t,v]=DIN4150_2_lims(iflur)
-            % Define frequency intervals with delta f of 0.2
-            if iflur==1
-                t1 = 0:0.2:10;
-                t2 = 10.2:0.2:50;
-                t3 = 50.2:0.2:100;
-                lim1=5e-3;
-                lim2=15e-3;
-                lim3=20e-3;
-                % Define corresponding velocity values
-                v1 = lim1 * ones(1, length(t1));
-                v2 = linspace(lim1, lim2, length(t2));
-                v3 = linspace(lim2, lim3, length(t3));
-                % Combine frequencies and velocities for plotting
-                t = [t1, t2, t3];
-                v = [v1, v2, v3];
-            else
-                t = 0:0.01:15;
-                lim=15e-3;
-                v= lim * ones(1, length(t));
-            end
-        end
+
         %%
         function plot_DIN4150_3(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt)
             ha_cl = @colors;
@@ -311,7 +289,7 @@ classdef fns_unitgeomdb
             close all
         end
 
-        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+        function plot_DIN4150_2_XYZ(A_eval,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -319,13 +297,20 @@ classdef fns_unitgeomdb
             sz=80;
              
             for i_flur=n_flur
-                                [t,v]=fns_unitgeomdb.DIN4150_2_lims(i_flur);
+                                
                 figure
+                y1 = yline(A_eval(1),'-r','Au');
+                y1.LabelHorizontalAlignment = 'left';
+                y2 = yline(A_eval(2),'-b','Ao');
+                y2.LabelHorizontalAlignment = 'left';
+                yline(A_eval(3),'-g');
+                legend("off")
+
                 for i_stn = 1:n_stns
                     
                     f_max = f_max3D(i_stn,:,i_flur);
                     max_Vxyz = max_Vxyz3D(i_stn,:,i_flur);
-                                        plot(t,v)
+                                       
                     hold on
                     scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
@@ -333,8 +318,12 @@ classdef fns_unitgeomdb
                 end
                 x_upper_lim_for_plot = max(max(f_max3D(:,:,i_flur)));
                 y_upper_lim_for_plot = max(max(max_Vxyz3D(:,:,i_flur)));
-                legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
+                legend(scatterHandles,stn_vect ,'Box', 'off','FontSize',8,'Interpreter','latex');
                 %ylim([0 5e-3])
+                if y_upper_lim_for_plot >= A_eval(2)/2
+                    y_upper_lim_for_plot = max(max(A_eval),y_upper_lim_for_plot);
+                end
+
                 ylim([0 y_upper_lim_for_plot*1.2])
                 xlim([0 floor(x_upper_lim_for_plot)+2])
                 grid off;
@@ -361,7 +350,7 @@ classdef fns_unitgeomdb
             close all
         end
 
-        function plot_DIN4150_2_XYZ_wallconfig( n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+        function plot_DIN4150_2_XYZ_wallconfig( A_eval, n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -371,15 +360,21 @@ classdef fns_unitgeomdb
 
             f_max = zeros(length(f_max3D),1);
             max_Vxyz = zeros(length(f_max3D),1);
-
             f_upper_limit = zeros(1, n_stns);
             v_upper_limit = zeros(1, n_stns);
 
                folderName = sprintf('Vary_wall');
                for i_flur= 1:n_flur
-                   sub_folderName = sprintf('%s%d', 'i_flur', i_flur);
-                                   [t,v]=fns_unitgeomdb.DIN4150_2_lims(i_flur);
+                   sub_folderName = sprintf('%s%d', 'i_flur', i_flur);               
                    figure
+                   y1 = yline(A_eval(1),'-r','Au');
+                   y1.LabelHorizontalAlignment = 'left';
+
+                   y2 = yline(A_eval(2),'-b','Ao');
+                   y2.LabelHorizontalAlignment = 'left';
+
+                   yline(A_eval(3),'-g');
+                   legend("off")
                    for i_stn = 1:n_stns
                        for i_wallconfig = 1:length(f_max3D)
                            f_max(i_wallconfig) = f_max3D{i_wallconfig}(i_stn,:,i_flur);
@@ -387,8 +382,7 @@ classdef fns_unitgeomdb
                        end 
                        f_upper_limit(i_stn)=max(f_max);
                        v_upper_limit(i_stn)=max(max_Vxyz);
-
-                       plot(t,v)
+                                            
                        hold on
                        scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
                            'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
@@ -397,9 +391,15 @@ classdef fns_unitgeomdb
                    x_upper_lim_for_plot = max(f_upper_limit);
                    y_upper_lim_for_plot = max(v_upper_limit);
                    legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
+                   
                    %ylim([0 1e-3])
+                   if y_upper_lim_for_plot >= A_eval(2)/2
+                        y_upper_lim_for_plot = max(max(A_eval),y_upper_lim_for_plot);
+                   end
                    ylim([0 y_upper_lim_for_plot*1.2])
                    xlim([0 floor(x_upper_lim_for_plot)+2])
+
+                   
                    grid off;
                    hold off;
                    set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
@@ -606,7 +606,7 @@ classdef fns_unitgeomdb
                 end
                 close all
             end
-        function plot_DIN4150_2_XYZ_varyDamp( n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+        function plot_DIN4150_2_XYZ_varyDamp(A_eval, n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -623,8 +623,16 @@ classdef fns_unitgeomdb
                folderName = sprintf('Vary_Damp');
                for i_flur= 1:n_flur
                    sub_folderName = sprintf('%s%d', 'i_flur', i_flur);
-                                   [t,v]=fns_unitgeomdb.DIN4150_2_lims(i_flur);
+                                 
                    figure
+                   y1 = yline(A_eval(1),'-r','Au');
+                   y1.LabelHorizontalAlignment = 'left';
+
+                   y2 = yline(A_eval(2),'-b','Ao');
+                   y2.LabelHorizontalAlignment = 'left';
+
+                   yline(A_eval(3),'-g');
+                   legend("off")                   
                    for i_stn = 1:n_stns
                        for i_damp = 1:length(f_max3D)
                            f_max(i_damp) = f_max3D{i_damp}(i_stn,:,i_flur);
@@ -633,7 +641,6 @@ classdef fns_unitgeomdb
                        f_upper_limit(i_stn)=max(f_max);
                        v_upper_limit(i_stn)=max(max_Vxyz);
 
-                       plot(t,v)
                        hold on
                        scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
                            'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
@@ -643,6 +650,9 @@ classdef fns_unitgeomdb
                    y_upper_lim_for_plot = max(v_upper_limit);
                    legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
                    %ylim([0 1e-3])
+                   if y_upper_lim_for_plot >= A_eval(2)/2
+                        y_upper_lim_for_plot = max(max(A_eval),y_upper_lim_for_plot);
+                   end
                    ylim([0 y_upper_lim_for_plot*1.2])
                    xlim([0 floor(x_upper_lim_for_plot)+2])
                    grid off;

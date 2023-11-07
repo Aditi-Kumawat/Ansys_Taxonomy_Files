@@ -68,8 +68,8 @@ rf_fldr = 'Bld_with_Walls';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
-wall_config = [1,2,3,4,5,6,7,8,9,10];
-%wall_config = [1,2];
+%wall_config = [1,2,3,4,5,6,7,8,9,10];
+wall_config = [1,2];
 n_wall_config = length(wall_config);
 
 
@@ -275,32 +275,33 @@ for i_stn=1:n_stns
 end  
 
 if PLOT
+    criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
 
-    ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
-    ylbl=ylbl_vect{1}
-    cmp=cmpt{1};
-    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-    
-    ylbl=ylbl_vect{2}
-    cmp=cmpt{2};
-    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-    
-    ylbl=ylbl_vect{3}
-    cmp=cmpt{3};
-    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    %ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+    %ylbl=ylbl_vect{1}
+    %cmp=cmpt{1};
+    %fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    %
+    %ylbl=ylbl_vect{2}
+    %cmp=cmpt{2};
+    %fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    %
+    %ylbl=ylbl_vect{3}
+    %cmp=cmpt{3};
+    %fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
    
     ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
     ylbl=ylbl_vect{1}
     cmp=cmpt{1};
-    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(criteria,n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
     
     ylbl=ylbl_vect{2}
     cmp=cmpt{2};
-    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(criteria,n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
     
     ylbl=ylbl_vect{3}
     cmp=cmpt{3};
-    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(criteria,n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
     
     close all
 end

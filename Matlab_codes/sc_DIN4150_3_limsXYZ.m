@@ -262,9 +262,9 @@ for i_stn=1:n_stns
             Vz_KB_ifft = ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vx_KB_ifft = ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vy_KB_ifft = ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:)/Fs;
-            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:)/Fs;
-            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:)/Fs;
+            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:);
+            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:);
+            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:);
 
         % Store the result in Cell : {floor num}
         Vz_KB_ifft_cell{i_flur} = Vz_KB_ifft;
@@ -334,18 +334,19 @@ end
 %
 %
 %
-%ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
-%ylbl=ylbl_vect{1}
-%cmp=cmpt{1};
-%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-%
-%ylbl=ylbl_vect{2}
-%cmp=cmpt{2};
-%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-%
-%ylbl=ylbl_vect{3}
-%cmp=cmpt{3};
-%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
+ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
+ylbl=ylbl_vect{1}
+cmp=cmpt{1};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(criteria,n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{2}
+cmp=cmpt{2};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(criteria,n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+
+ylbl=ylbl_vect{3}
+cmp=cmpt{3};
+fns_unitgeomdb.plot_DIN4150_2_XYZ(criteria, n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 
 
