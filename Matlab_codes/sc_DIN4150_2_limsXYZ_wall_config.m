@@ -1,6 +1,10 @@
 %% Initialization
 clear;clc;close all;
 
+%Activate function 
+PLOT = true;
+EVAL = true;
+
 % Define the number of storeys, rooms in x- y-direction
 n_str = 3;
 n_rx = 2;
@@ -17,7 +21,7 @@ h = 3;
 ftyp = 'PLATE';
 
 % Define the velocity of the excitation
-V_s = 450;
+V_s = 100;
 
 % Define the size of the elements
 n_esize = 0.5;
@@ -171,10 +175,10 @@ for i_stn=1:n_stns
         Fs = 200;
         %Exponent of next higher power of 2
         %t_in = 15sec
-        nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
-        Fs = nfft/(t_in(end)-t_in(1));
-        t_in = transpose(linspace(t_in(1),t_in(end),nfft));
-        
+        %nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
+        %Fs = nfft/(t_in(end)-t_in(1));
+        %t_in = transpose(linspace(t_in(1),t_in(end),nfft));
+        nfft = length(t_in);
         %frequnecy array 
         freq = Fs / 2 * linspace(0, 1, nfft/2+1);
         dfz=freq(3)-freq(2);
@@ -217,9 +221,9 @@ for i_stn=1:n_stns
             Vz_KB_ifft = ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vx_KB_ifft = ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vy_KB_ifft = ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:)/Fs;
-            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:)/Fs;
-            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:)/Fs;
+            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:);
+            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:);
+            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:);
 
             %% Store the result in Cell : {wall config, floor num}
             %Vz__KB_ifft_wall_config{config,i_flur} = Vz_KB_ifft;
@@ -243,7 +247,6 @@ for i_stn=1:n_stns
                 [value, index] = max(Vss_Xvect);
                 f_x_max{config}(i_stn,ilb,i_flur)=freq_(index);
            
-                disp(index)
                 Vss_Yvect=abs(Vss_Ymat(:,ilb));
                 [value, index] = max(Vss_Yvect);
                 f_y_max{config}(i_stn,ilb,i_flur)=freq_(index);
@@ -271,60 +274,64 @@ for i_stn=1:n_stns
     end
 end  
 
-ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
-ylbl=ylbl_vect{1}
-cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+if PLOT
 
-ylbl=ylbl_vect{2}
-cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{3}
-cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-
-
-ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
-ylbl=ylbl_vect{1}
-cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{2}
-cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{3}
-cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-close all
-
-%%% Evaluation
-%% For each wll configeration, the focus is on the top floor only, since the
-%% top floor usually have the largest displacement.
-%i_floor = 4; % top floor
-%criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
-%disp("------------------------------------------------------");
-%disp("A value criteria test");
-%for num_wall_config = 1: length(KB_f_x)
-%    Vz_eval = max(KB_f_z{num_wall_config,i_floor});
-%    Vx_eval = max(KB_f_x{num_wall_config,i_floor});
-%    Vy_eval = max(KB_f_y{num_wall_config,i_floor});
-%    disp("X dir");
-%    A_test = fn_evaluate_A_criteria(Vx_eval,0,criteria,false);
-%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
-%    disp("Y dir");
-%    A_test = fn_evaluate_A_criteria(Vy_eval,0,criteria,false);
-%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
-%    disp("Z dir");
-%    A_test = fn_evaluate_A_criteria(Vz_eval,0,criteria,false);
-%        disp(strcat(['  Config ',num2str(num_wall_config),':  '], A_test));
-%    disp("------------------------------------------------------");
-%end
+    ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+    ylbl=ylbl_vect{1}
+    cmp=cmpt{1};
+    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    
+    ylbl=ylbl_vect{2}
+    cmp=cmpt{2};
+    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    
+    ylbl=ylbl_vect{3}
+    cmp=cmpt{3};
+    fns_unitgeomdb.plot_DIN4150_3_XYZ_wallconfig(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+   
+    ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
+    ylbl=ylbl_vect{1}
+    cmp=cmpt{1};
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    
+    ylbl=ylbl_vect{2}
+    cmp=cmpt{2};
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    
+    ylbl=ylbl_vect{3}
+    cmp=cmpt{3};
+    fns_unitgeomdb.plot_DIN4150_2_XYZ_wallconfig(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+    
+    close all
+end
 
 
+if EVAL
+    %% Evaluation
+    % For each wll configeration, the focus is on the top floor only, since the
+    % top floor usually have the largest displacement.
+    i_floor = 4; % top floor
+    criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
+    disp("------------------------------------------------------");
+    disp("A value criteria test");
+    for i_wall_config = 1: n_wall_config
+        for i_stn = 1:n_stns
+            Vx_eval = max_Vx_KB_f_mat{i_wall_config}(i_stn,:,i_floor);
+            Vy_eval = max_Vy_KB_f_mat{i_wall_config}(i_stn,:,i_floor);
+            Vz_eval = max_Vz_KB_f_mat{i_wall_config}(i_stn,:,i_floor);
+            disp("X dir");
+            A_test = fn_evaluate_A_criteria(Vx_eval,0,criteria,false);
+                disp(strcat(['  Config ',num2str(i_wall_config),' Station ',stn_vect{i_stn},':  '], A_test));
+            disp("Y dir");
+            A_test = fn_evaluate_A_criteria(Vy_eval,0,criteria,false);
+                disp(strcat(['  Config ',num2str(i_wall_config),' Station ',stn_vect{i_stn},':  '], A_test));
+            disp("Z dir");
+            A_test = fn_evaluate_A_criteria(Vz_eval,0,criteria,false);
+                disp(strcat(['  Config ',num2str(i_wall_config),' Station ',stn_vect{i_stn},':  '], A_test));
+        end
+         disp("------------------------------------------------------");
+    end
+end
 
 
 

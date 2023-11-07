@@ -37,8 +37,8 @@ name_evnt='Poing';
 %%
 if strcmp(name_evnt, 'Poing')
     evnt='Po2016';
-    stn_vect={'POI01', 'POI02', 'POI03'};
-    %stn_vect={'POI01'};
+    %stn_vect={'POI01', 'POI02', 'POI03'};
+    stn_vect={'POI01'};
     date='2016_12_20';
     time='03_30_51';
 elseif strcmp(name_evnt, 'Unterhaching')
@@ -194,7 +194,7 @@ for i_stn=1:n_stns
         % Example velocity function (you should replace this with your actual velocity data)
         velocity = sin(2 * pi * 4 * t_in) + 0.5 * sin(2 * pi * 10 * t_in);
         % Calculate the Fourier Transform of velocity
-        velocity_fft = fft(velocity);
+        velocity_fft = fft(velocity)/Fs;
         velocity_fft_trun = velocity_fft(1:nfft/2+1);
         %figure
         %plot(freq,abs(velocity_fft_trun));
@@ -210,7 +210,7 @@ for i_stn=1:n_stns
                 %velocity_ifft  = 0.5*ifft(velocity_fft_pad*Fs, nfft, 1, 'symmetric');
                 %velocity_ifft = velocity_ifft(1:length(t_in),:);
                 velocity_ifft  = ifft(velocity_fft_pad*Fs, nfft, 1, 'symmetric');
-                velocity_ifft = velocity_ifft(1:length(t_in),:)/Fs;
+                velocity_ifft = velocity_ifft(1:length(t_in),:);
             %% ----------------------------------------------------------------
 
         Vss_Zmat = Vss_zCell{i_flur};  %length = 2049
@@ -234,9 +234,9 @@ for i_stn=1:n_stns
             Vz_ifft = ifft(Vzss_fft_pad*Fs, nfft, 1, 'symmetric');
             Vx_ifft = ifft(Vxss_fft_pad*Fs, nfft, 1, 'symmetric');
             Vy_ifft = ifft(Vyss_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_ifft = Vz_ifft(1:length(t_in),:)/Fs;
-            Vx_ifft = Vx_ifft(1:length(t_in),:)/Fs;
-            Vy_ifft = Vy_ifft(1:length(t_in),:)/Fs;
+            Vz_ifft = Vz_ifft(1:length(t_in),:);
+            Vx_ifft = Vx_ifft(1:length(t_in),:);
+            Vy_ifft = Vy_ifft(1:length(t_in),:);
 
         % Store the result in Cell : {floor num}
         Vz_ifft_cell{i_flur} = Vz_ifft;
@@ -319,33 +319,33 @@ for i_stn=1:n_stns
 end
 
 
-ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
-ylbl=ylbl_vect{1}
-cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{2}
-cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{3}
-cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-
-
-ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
-ylbl=ylbl_vect{1}
-cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{2}
-cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
-ylbl=ylbl_vect{3}
-cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+%ylbl=ylbl_vect{1}
+%cmp=cmpt{1};
+%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%
+%ylbl=ylbl_vect{2}
+%cmp=cmpt{2};
+%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%
+%ylbl=ylbl_vect{3}
+%cmp=cmpt{3};
+%fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%
+%
+%
+%ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
+%ylbl=ylbl_vect{1}
+%cmp=cmpt{1};
+%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%
+%ylbl=ylbl_vect{2}
+%cmp=cmpt{2};
+%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+%
+%ylbl=ylbl_vect{3}
+%cmp=cmpt{3};
+%fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 
 
@@ -435,15 +435,15 @@ fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn
 
 
 %% verification, QUESTION: using 2^nextpow2 
-%figure
-%plot(t_in,velocity);
-%hold on
-%plot(t_in,velocity_ifft);
-%
-%%% verification, QUESTION: using 2^nextpow2
-%figure
-%plot(freq,abs(velocity_fft_trun));
-%
+figure
+plot(t_in,velocity);
+hold on
+plot(t_in,velocity_ifft,'--');
+
+%% verification, QUESTION: using 2^nextpow2
+figure
+plot(freq,abs(velocity_fft_trun));
+
 %% QUESTION: the ratio of IFFT 
 %figure
 %plot(t_in,Vz_ifft(:,1))

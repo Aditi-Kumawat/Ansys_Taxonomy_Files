@@ -171,10 +171,10 @@ for i_stn=1:n_stns
         Fs = 200;
         %Exponent of next higher power of 2
         %t_in = 15sec
-        nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
-        Fs = nfft/(t_in(end)-t_in(1));
-        t_in = transpose(linspace(t_in(1),t_in(end),nfft));
-                
+        %nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
+        %Fs = nfft/(t_in(end)-t_in(1));
+        %t_in = transpose(linspace(t_in(1),t_in(end),nfft));
+        nfft = length(t_in);        
         num_lb=length(lb_combs);
         for i_flur = 1:n_str+1
             %% IFFT original data
@@ -214,9 +214,9 @@ for i_stn=1:n_stns
             Vz_KB_ifft = ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vx_KB_ifft = ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
             Vy_KB_ifft = ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:)/Fs;
-            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:)/Fs;
-            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:)/Fs;
+            Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:);
+            Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:);
+            Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:);
 
             %% Store the result in Cell : {wall i_damp, floor num}
             %Vz__KB_ifft_damp_ratio{i_damp,i_flur} = Vz_KB_ifft;
