@@ -15,6 +15,10 @@ bf_nm_a = 'ffta_%d_%s_%s_%s';
 cols = {'Freq', 'Re','Im','Amp'};
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
+%% 
+FACTR_freq = fns_imprtdata.get_FACTR();
+FACTR_time = 1;
+%%%%
 vlbl_vect={'$v_x$,~m/s' '$v_y$,~m/s' '$v_z$,~m/s'};
 ulbl_vect={'$u_x$,~m' '$u_y$,~m' '$u_z$,~m'};
 albl_vect={'$a_x$ (m)' '$a_y$ (m)' '$a_z$ (m)'};
@@ -27,12 +31,12 @@ for i=1:n_stns
     [f_inpt_V,ff_Vamp_mat,ff_Vr_mat,ff_VIm_mat,ff_Vcmplx_mat]=...
         fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
         stn,date, time,n_snr,ff_fldr,cols);
-    % x_lim=[0 80];
-    % y_lim=[0 4e-4];
-    x_lim=[];
-    y_lim=[];
+    x_lim=[0 80];
+    y_lim=[0 4e-5];
+    % x_lim=[];
+    % y_lim=[];
     fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-        stn,date, time,vlbl_vect,{'Frequency,~Hz'},'initial',evnt,x_lim,y_lim)
+        stn,date, time,vlbl_vect,{'Frequency,~Hz'},'initial',evnt,x_lim,y_lim,FACTR_freq)
 if stn=="UH1"
         v_x_UH1=ff_Vamp_mat{1};
         v_y_UH1=ff_Vamp_mat{2};
@@ -60,7 +64,7 @@ for i=1:n_stns
     x_lim=[];
     y_lim=[];
     fns_plot.plt_ff_svrlstns(f_inpt_U, ff_Uamp_mat,bf_nm_u,123,...
-        stn,date, time,ulbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
+        stn,date, time,ulbl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim,FACTR_freq)
 end
 
 figure
@@ -76,7 +80,7 @@ for i=1:n_stns
     x_lim=[];
     y_lim=[];
     fns_plot.plt_ff_svrlstns(f_inpt_A, ff_Aamp_mat,bf_nm_a,123,...
-        stn,date, time,albl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim)
+        stn,date, time,albl_vect,{'f (Hz)'},'initial',evnt,x_lim,y_lim,FACTR_freq)
 end
 % Time domain
 Fs=200;    %sampling rate

@@ -1,7 +1,7 @@
 clear;clc;close all
 %% Importing Data
 % stn_vect={'POI01', 'POI02', 'POI03'};
-stn_vect={'POI03'};
+stn_vect={'POI01'};
 
 date='2016_12_20';
 time_evnt='03_30_51';
@@ -20,18 +20,18 @@ bf_nm_vt = 'v_%d_%s_%s_%s';
 bf_nm_at = 'a_%d_%s_%s_%s';
 cols_t = {'tim', 'val'};
 
-% figure
-% for i=1:n_stns
-%     stn=stn_vect{i};
-%     fldr_nm = ['GM_', stn, '_', date, '_', time];
-%     ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
-%         fldr_nm);
-%     [t_in,ff_Vt]=...
-%         fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
-%         stn,date, time_evnt,n_snr,ff_fldr,cols_t);
-%     fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
-%         stn,date, time_evnt,vlbl_vect,{'t (s)'},'initial',evnt)
-% end
+figure
+for i=1:n_stns
+    stn=stn_vect{i};
+    fldr_nm = ['GM_', stn, '_', date, '_', time];
+    ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
+        fldr_nm);
+    [t_in,ff_Vt]=...
+        fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
+        stn,date, time_evnt,n_snr,ff_fldr,cols_t);
+    fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
+        stn,date, time_evnt,vlbl_vect,{'t (s)'},'initial',evnt)
+end
 
 for i = 1:n_stns
     stn = stn_vect{i};
@@ -73,6 +73,6 @@ for i = 1:n_stns
     y_l_f='v(f)';
     x_l_t='Time~(s)';
     y_l_t='v(t)';
-    plot_tiles.plot_tiles_set_2(2,3,Vtin,v_ifft,t_cut,t_cut,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    plot_tiles.plot_tiles_set_2(2,3,Vtin,abs(v_fft_ss),t_cut,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
 end
 
