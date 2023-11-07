@@ -17,7 +17,7 @@ h = 3;
 ftyp = 'FOOTING';
 
 % Define the velocity of the excitation
-V_s = 100;
+V_s = 450;
 
 % Define the size of the elements
 n_esize = 0.5;
@@ -64,7 +64,7 @@ rf_fldr = 'Vary_DampRatio';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
-damp_ratio = [0,0.25];
+damp_ratio = 0:0.25:4;
 %damp_ratio = [1,2];
 n_damp_ratio = length(damp_ratio);
 
@@ -174,10 +174,7 @@ for i_stn=1:n_stns
         nfft = 2^nextpow2(length(t_in));   % nfft = 4096 
         Fs = nfft/(t_in(end)-t_in(1));
         t_in = transpose(linspace(t_in(1),t_in(end),nfft));
-        
-        %frequnecy array 
-        freq = Fs / 2 * linspace(0, 1, nfft/2+1);
-        dfz=freq(3)-freq(2);
+                
         num_lb=length(lb_combs);
         for i_flur = 1:n_str+1
             %% IFFT original data

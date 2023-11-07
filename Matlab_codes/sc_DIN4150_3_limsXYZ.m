@@ -144,8 +144,8 @@ for i_stn=1:n_stns
             Vss_mat{i_c}=20*log10(Vabs_mat{i_c}(nzero:end,:)./v_ref);
 
             %Apply filter transfer to KB(f)
-            V_KB_freq{i_c} = get_KB_freq(Vcmplx_mat{i_c},f_inpt{i_c});
-            
+            %V_KB_freq{i_c} = get_KB_freq(Vcmplx_mat{i_c},f_inpt{i_c});
+            V_KB_freq{i_c} = fn_kb_highpass(f_inpt{i_c},Vcmplx_mat{i_c},5.6);
         end
         %Original data
         Vss_zCell{i_str+1} = Vcmplx_mat{3};
