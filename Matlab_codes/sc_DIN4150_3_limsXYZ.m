@@ -2,9 +2,9 @@
 clear;clc;close all;
 
 % Define the number of storeys, rooms in x- y-direction
-n_str = 3;
-n_rx = 2;
-n_ry = 3;
+n_str = 1;
+n_rx = 1;
+n_ry = 1;
 
 % Define the length, width, and height of the building
 l_vect=[2 3 4 5 6 7 8];
@@ -14,10 +14,10 @@ b_vect=[2 3 4 5 6 7 8];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'PLATE';
+ftyp = 'FOOTING';
 
 % Define the velocity of the excitation
-V_s = 100;
+V_s = 450;
 
 % Define the size of the elements
 n_esize = 0.5;
@@ -32,7 +32,7 @@ else
     L_f = 0.75;
 end
 %%
-name_evnt='Poing'
+name_evnt='Unterhaching'
 %%
 if strcmp(name_evnt, 'Poing')
     evnt='Po2016';
@@ -56,7 +56,7 @@ cols = {'Freq', 'Re','Im','Amp'};
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
 %% Importing Transfer Function
-rf_fldr = 'MultiUnitBld_GeomVary';
+rf_fldr = 'UnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
@@ -106,11 +106,10 @@ for i_stn=1:n_stns
             %% Calculating Velocity
             TFcpmlx_intrp{i_c}=interp1(f_vect,TF_cpmlx_mat{i_c},...
                 f_inpt{i_c},'linear','extrap');
-            Ucmplx_mat{i_c}=2*ff_Ucmplx_mat{i_c}.*TFcpmlx_intrp{i_c};
+            Ucmplx_mat{i_c}=ff_Ucmplx_mat{i_c}.*TFcpmlx_intrp{i_c};
 
             Vabs_mat{i_c}=abs(Ucmplx_mat{i_c}.*1i.*f_inpt{i_c}*2*pi);
             Vcmplx_mat{i_c}=(Ucmplx_mat{i_c}.*1i.*f_inpt{i_c}*2*pi);
-            Vss_mat{i_c}=20*log10(Vabs_mat{i_c}(nzero:end,:)./v_ref);
         end
         %%
         Vss_zCell{i_str+1} = Vcmplx_mat{3};
@@ -120,8 +119,8 @@ for i_stn=1:n_stns
     end
     %%
     Fs = 200;
-    nfft = 2^nextpow2(length(t_in));
-    freq = Fs / 2 * linspace(0, 1, nfft/2+1);
+    freq = f_inpt{1};
+    nfft=length(freq)*2-1;
     dfz=freq(3)-freq(2);
     num_lb=length(lb_combs);
     for i_flur = 1:n_str+1
@@ -131,13 +130,12 @@ for i_stn=1:n_stns
         Vzss_fft_pad = [Vss_Zmat; conj(flipud(Vss_Zmat(2:end-1,:)))];
         Vxss_fft_pad = [Vss_Xmat; conj(flipud(Vss_Xmat(2:end-1,:)))];
         Vyss_fft_pad = [Vss_Ymat; conj(flipud(Vss_Ymat(2:end-1,:)))];
-        Vz_ifft = 0.5*ifft(Vzss_fft_pad*Fs, nfft, 1, 'symmetric');
-        Vx_ifft = 0.5*ifft(Vxss_fft_pad*Fs, nfft, 1, 'symmetric');
-        Vy_ifft = 0.5*ifft(Vyss_fft_pad*Fs, nfft, 1, 'symmetric');
+        Vz_ifft = ifft(Vzss_fft_pad*Fs, nfft, 1, 'symmetric');
+        Vx_ifft = ifft(Vxss_fft_pad*Fs, nfft, 1, 'symmetric');
+        Vy_ifft = ifft(Vyss_fft_pad*Fs, nfft, 1, 'symmetric');
         Vz_ifft = Vz_ifft(1:length(t_in),:);
         Vx_ifft = Vx_ifft(1:length(t_in),:);
         Vy_ifft = Vy_ifft(1:length(t_in),:);
-        t = (0:length(Vz_ifft)-1) / Fs;
         max_Vxmat(i_stn,:,i_flur)=max(Vx_ifft);
         max_Vymat(i_stn,:,i_flur)=max(Vy_ifft);
         max_Vzmat(i_stn,:,i_flur)=max(Vz_ifft);
@@ -155,16 +153,17 @@ for i_stn=1:n_stns
     end
 end
 ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
+x_lim=[0 20];
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
-
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
 
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+x_lim=[0 60];
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
 
 

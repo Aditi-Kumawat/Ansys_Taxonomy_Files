@@ -234,5 +234,20 @@ classdef fns_imprtdata
                 end
             end
         end
+        %%
+        function FACTR = get_FACTR()
+            % Prompt user for FACTR
+            prompt = ['Enter 1 for only the positive half of spectrum' ...
+                ' or 2 for single-sided spectrum doubled in amplitude: '];
+            FACTR = input(prompt);
+
+            % Validate input
+            while ~ismember(FACTR, [1, 2])
+                disp(['Invalid input. Please enter 1 for only the positive half of spectrum' ...
+                    ' or 2 for single-sided spectrum doubled in amplitude.']);
+                FACTR = input(prompt);
+            end
+        end
+
     end
 end

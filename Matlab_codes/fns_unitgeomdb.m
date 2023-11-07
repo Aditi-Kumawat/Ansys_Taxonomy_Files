@@ -86,7 +86,7 @@ classdef fns_unitgeomdb
             cd ..
         end
         %%
-        function V_rms_mean=plt_Vrms_stats(f_cenVect, V_rms_Zmat, i_flur, V_s, ylbl,cmp,stn,n_str)
+        function V_rms_mean=plt_Vrms_stats(f_cenVect, V_rms_Zmat, i_flur, V_s, ylbl,cmp,stn,n_str,y_lim)
             ha_cl = @colors;
             figure;
             hold on;
@@ -134,7 +134,7 @@ classdef fns_unitgeomdb
             xtickangle(0)
 
             xlim([log10(f_iso(1)),log10(f_iso(end))])
-            ylim([15 125])
+            ylim(y_lim)
             set(gca,'FontSize',8, 'Box', 'on','LineWidth',1,...
                 'TickLabelInterpreter','latex','TickLength',[0.01,0.01]);
             hold on
@@ -145,11 +145,11 @@ classdef fns_unitgeomdb
             % height_position = min(vdblim) + 5;
             % text(mid_f, height_position, 'DIN 4150-3', 'Color', 'r', 'HorizontalAlignment', 'center', 'FontSize', 8, 'Interpreter', 'none');
 
-            set(gcf,'Units','inches', 'Position', [18 3 3.5 2],...
-                'PaperUnits', 'Inches', 'PaperSize', [3.5 2]);
+            set(gcf,'Units','inches', 'Position', [18 3 2.5 1.5],...
+                'PaperUnits', 'Inches', 'PaperSize', [2.5 1.5]);
 
             filename = ['Vrms_db_geomvary_',cmp,'_',stn,'_nstr','_',num2str(n_str),...
-                '_flur','_',num2str(i_flur),'_Vs_', num2str(V_s), '_mean_std.emf'];
+                '_flur','_',num2str(i_flur),'_Vs_', num2str(V_s), '_mean_std.pdf'];
             filename1 = sprintf('PPV_data_flur%d_Vs%d_stn%s_cmp%s', i_flur, V_s, stn, cmp);
             filename_csv = [filename1 '.csv'];
             data_to_save = [V_rms_mean, V_rms_std];
@@ -240,7 +240,7 @@ classdef fns_unitgeomdb
             end
         end
         %%
-        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -259,7 +259,7 @@ classdef fns_unitgeomdb
                 end
                 legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
                 ylim([0 2e-3])
-                xlim([0 10])
+                xlim(x_lim)
                 grid off;
                 hold off;
                 set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
@@ -269,11 +269,11 @@ classdef fns_unitgeomdb
                     'Interpreter','latex')
                 ylabel(ylbl,'FontSize',11,'Interpreter','latex')
                 hold on
-                set(gcf,'Units','inches', 'Position', [18 3 3 2.5],...
-                    'PaperUnits', 'Inches', 'PaperSize', [3 2.5]);
+                set(gcf,'Units','inches', 'Position', [18 3 3 2],...
+                    'PaperUnits', 'Inches', 'PaperSize', [3 2]);
 
                 filename = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
-                    '_Vs_', num2str(V_s), '.emf'];
+                    '_Vs_', num2str(V_s), '.pdf'];
 
                 cd SAVE_FIGS
                 cd UnitGeom

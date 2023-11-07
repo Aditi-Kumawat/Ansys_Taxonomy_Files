@@ -96,7 +96,7 @@ classdef fns_plot
 
         %%
         function plt_ff_svrlstns(f, fnabs_mat,bf_nm,s_dir, stn,date,...
-                time,y_lbl,x_lbl,typ,evnt,x_lim,y_lim)
+                time,y_lbl,x_lbl,typ,evnt,x_lim,y_lim,FACTR)
             ha_cl = @colors;
             lStyl = {'-', '--', ':', '-.'};
             txt_l=sprintf(stn);
@@ -110,7 +110,7 @@ classdef fns_plot
                 if ~isempty(y_lim)
                     ylim(y_lim);
                 end
-                plot(f{idx}, fnabs_mat{idx},...
+                plot(f{idx}, FACTR*fnabs_mat{idx},...
                     'DisplayName',txt_l,'LineWidth', 0.8)
                 legend('show', 'Box', 'off', 'Interpreter','latex',...
                     'FontSize', 8)
@@ -124,23 +124,24 @@ classdef fns_plot
                 set(gca,'FontSize',8, 'Box', 'on','LineWidth',1,...
                     'TickLabelInterpreter', 'latex',...
                     'TickLength',[0.01, 0.01]);
+                % ylim([0,1e-4])
             end
             %             hold off
             set(gcf, 'Renderer', 'painters');
-            set(gcf, 'Units', 'inches', 'Position', [18 3 3.5 4.5],...
-                'PaperUnits', 'Inches','PaperSize', [3.5 4.5]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 3.5 3.5],...
+                'PaperUnits', 'Inches','PaperSize', [3.5 3.5]);
 
-            % filename = [sprintf(bf_nm, s_dir, evnt, date, time),...
-            %     '_',typ, '.pdf'];
-            % filename1 = [sprintf(bf_nm, s_dir, evnt, date, time),...
-            %     '_',typ, '.emf'];
+            filename = [sprintf(bf_nm, s_dir, evnt, date, time),...
+                '_',typ, '.pdf'];
+            filename1 = [sprintf(bf_nm, s_dir, evnt, date, time),...
+                '_',typ, '.emf'];
 
-            % cd SAVE_FIGS
-            % cd FF_Data
-            % print(gcf, '-dpdf', '-r300', filename);
-            % saveas(gcf, fullfile(filename1));
-            % cd ..
-            % cd ..
+            cd SAVE_FIGS
+            cd FF_Data
+            print(gcf, '-dpdf', '-r300', filename);
+            saveas(gcf, fullfile(filename1));
+            cd ..
+            cd ..
         end
         %% function for plotting that uses for loop to plot the
         % amplitude of the displacement for each floor size.

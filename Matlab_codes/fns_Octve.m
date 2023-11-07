@@ -61,7 +61,7 @@ classdef fns_Octve
             for i_1 = 1:length(idx_vect_1)-1
                 idx_F_1 = idx_vect_1(i_1);
                 idx_F_2 = idx_vect_1(i_1+1);
-                F_0 = mean(Fun_vect(idx_F_1:idx_F_2));
+                F_0 = rms(Fun_vect(idx_F_1:idx_F_2));
                 Fn_rmsVect(i_1) = F_0;
             end
 

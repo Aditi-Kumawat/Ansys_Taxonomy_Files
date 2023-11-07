@@ -91,7 +91,7 @@ for i_str = 0:n_str
     if i_str==0
         ylim([0.5,1.6])
     else
-        ylim([0,10])
+        ylim([0,15.3])
     end
 %     xlim([0,100])
     filename = ['UcentXYZ_', num2str(i_str),...
