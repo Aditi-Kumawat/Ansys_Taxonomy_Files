@@ -247,13 +247,13 @@ classdef fns_unitgeomdb
             scatterHandles = zeros(1, n_stns);
             sz=80;
             for i_flur=n_flur
-                                [f,v,v_db]=fns_unitgeomdb.DIN4150_3_lims(v_ref,i_flur);
+                [f,v,v_db]=fns_unitgeomdb.DIN4150_3_lims(v_ref,i_flur);
                 figure
                 for i_stn = 1:n_stns
                     f_max = f_max3D(i_stn,:,i_flur);
                     max_Vxyz = max_Vxyz3D(i_stn,:,i_flur);
-                                        plot(f,v)
-                                        hold on
+                    plot(f,v)
+                    hold on
                     scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
                 end
@@ -282,5 +282,65 @@ classdef fns_unitgeomdb
                 cd ..
             end
         end
+        %% !!!!!functions below are added from Wei's branch!!!!
+        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,timeofday,t_in)
+            ha_cl = @colors;
+            lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
+                ha_cl('gray')};
+            scatterHandles = zeros(1, n_stns);
+            sz=80;
+            A_values=fns_KBvalue.find_A_values(bldtyp,timeofday);
+            Au_vect=A_values(1)*ones(1,length(t_in));
+            Ao_vect=A_values(2)*ones(1,length(t_in));
+            au_color = ha_cl('denim');
+            ao_color = ha_cl('red');
+
+            for i_flur=n_flur
+                figure
+                for i_stn = 1:n_stns
+                    f_max = f_max3D(i_stn,:,i_flur);
+                    max_Vxyz = max_Vxyz3D(i_stn,:,i_flur);
+                    hold on
+                    scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
+                        'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+                end
+                hold on
+                h_Au = plot(t_in, Au_vect, 'LineWidth', 1.2, 'Color', au_color); hold on;
+                h_Ao = plot(t_in, Ao_vect, 'LineWidth', 1.2, 'Color', ao_color);
+
+                x_upper_lim_for_plot = max(max(f_max3D(:,:,i_flur)));
+                y_upper_lim_for_plot = max(max(max_Vxyz3D(:,:,i_flur)));
+                legend_handles = [scatterHandles, h_Au, h_Ao];
+                legend_labels = [stn_vect, '$A_u$', '$A_o$'];
+                legend(legend_handles, legend_labels, 'Box', 'off', 'FontSize', 10, 'Interpreter', 'latex');
+
+                hold on
+
+                %ylim([0 5e-3])
+                ylim([0 1.25])
+                xlim([0 floor(x_upper_lim_for_plot)+3])
+                grid off;
+                hold off;
+                set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
+                    'TickLabelInterpreter','latex',...
+                    'TickLength',[0.01,0.01]);
+                xlabel({'time,~s'},'FontSize',11,...
+                    'Interpreter','latex')
+                ylabel(ylbl,'FontSize',11,'Interpreter','latex')
+                hold on
+                set(gcf,'Units','inches', 'Position', [18 3 3 2.5],...
+                    'PaperUnits', 'Inches', 'PaperSize', [3 2.5]);
+
+                filename = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                    '_Vs_', num2str(V_s), '.emf'];
+
+                cd SAVE_FIGS
+                cd UnitGeom
+                saveas(gcf, filename);
+                cd ..
+                cd ..
+            end
+        end
+     
     end
 end
