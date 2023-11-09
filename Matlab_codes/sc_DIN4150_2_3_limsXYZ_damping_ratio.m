@@ -2,7 +2,7 @@
 clear;clc;close all;
 
 % Define the number of storeys, rooms in x- y-direction
-n_str = 2;
+n_str = 3;
 n_rx = 2;
 n_ry = 3;
 
@@ -14,7 +14,7 @@ b_vect=[5];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'FOOTING';
+ftyp = 'PLATE';
 
 % Define the velocity of the excitation
 V_s = 450;
@@ -64,7 +64,7 @@ rf_fldr = 'Vary_DampRatio';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
-damp_ratio = 0:0.25:4;
+damp_ratio = 0:0.005:0.1;
 %damp_ratio = [1,2];
 n_damp_ratio = length(damp_ratio);
 
@@ -240,7 +240,7 @@ for i_stn=1:n_stns
                 [value, index] = max(Vss_Xvect);
                 f_x_max{i_damp}(i_stn,ilb,i_flur)=freq_(index);
            
-                disp(index)
+                
                 Vss_Yvect=abs(Vss_Ymat(:,ilb));
                 [value, index] = max(Vss_Yvect);
                 f_y_max{i_damp}(i_stn,ilb,i_flur)=freq_(index);
@@ -282,19 +282,20 @@ cmp=cmpt{3};
 fns_unitgeomdb.plot_DIN4150_3_XYZ_varyDamp(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 
+criteria = fn_A_value_evaluating_Kbf("ReinesWohngebiet","day");
 
 ylbl_vect={'$KB{f,x}$', '$KB{f,y}$', '$KB{f,z}$'};
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(criteria,n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(criteria,n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ_varyDamp(criteria,n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp)
 
 close all
 

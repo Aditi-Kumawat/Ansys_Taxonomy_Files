@@ -51,6 +51,10 @@ B_f=0.75        !Foundation half-width [m]
 L_f=n_ele_size/2        !Foundation half-length [m]
 B_f=n_ele_size/2        !Foundation half-width [m]
 *ENDIF
+*IF,ftyp,EQ,'WALLCONFIG',THEN
+L_f=n_ele_size/2        !Foundation half-length [m]
+B_f=n_ele_size/2        !Foundation half-width [m]
+*ENDIF
 *IF,ftyp,EQ,'RAFT',THEN
 L_f=n_ele_size/2        !Foundation half-length [m]
 B_f=n_ele_size/2        !Foundation half-width [m]
