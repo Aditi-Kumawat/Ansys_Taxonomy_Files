@@ -95,11 +95,12 @@ classdef fns_plot
         end
 
         %%
-        function plt_ff_svrlstns(f, fnabs_mat,bf_nm,s_dir, stn,date,...
+        function plt_ff_svrlstns(f, fnabs_mat,bf_nm,s_dir, stn,r,date,...
                 time,y_lbl,x_lbl,typ,evnt,x_lim,y_lim,FACTR)
             ha_cl = @colors;
             lStyl = {'-', '--', ':', '-.'};
-            txt_l=sprintf(stn);
+            cl = {ha_cl('denim'), ha_cl('cadmium green'), ha_cl('black')};
+            txt_l = sprintf('%s (r=%s km)', stn, num2str(r));
 
             for idx = 1:3
                 subplot(3,1,idx);
@@ -110,8 +111,8 @@ classdef fns_plot
                 if ~isempty(y_lim)
                     ylim(y_lim);
                 end
-                plot(f{idx}, FACTR*fnabs_mat{idx},...
-                    'DisplayName',txt_l,'LineWidth', 0.8)
+                plot(f{idx}, 1e3*FACTR*fnabs_mat{idx},...
+                    'DisplayName',txt_l,'Color', cl{1},'LineWidth', 0.8)
                 legend('show', 'Box', 'off', 'Interpreter','latex',...
                     'FontSize', 8)
                 ylabel(y_lbl{idx}, 'FontSize', 10, 'Interpreter', 'latex')
@@ -121,25 +122,25 @@ classdef fns_plot
                 set(gca, 'YTickLabelMode', 'auto');
                 %                 hold off
                 pause(0.01)
-                set(gca,'FontSize',8, 'Box', 'on','LineWidth',1,...
+                set(gca,'FontSize',8, 'Box', 'on','LineWidth',0.3,...
                     'TickLabelInterpreter', 'latex',...
                     'TickLength',[0.01, 0.01]);
                 % ylim([0,1e-4])
             end
             %             hold off
             set(gcf, 'Renderer', 'painters');
-            set(gcf, 'Units', 'inches', 'Position', [18 3 3.5 3.5],...
-                'PaperUnits', 'Inches','PaperSize', [3.5 3.5]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 3.0 4.0],...
+                'PaperUnits', 'Inches','PaperSize', [3.0 4.0]);
 
             filename = [sprintf(bf_nm, s_dir, evnt, date, time),...
-                '_',typ, '.pdf'];
-            filename1 = [sprintf(bf_nm, s_dir, evnt, date, time),...
-                '_',typ, '.emf'];
+                '_',stn,'_',typ, '.pdf'];
+            % filename1 = [sprintf(bf_nm, s_dir, evnt, date, time),...
+            %     '_',typ, '.emf'];
 
             cd SAVE_FIGS
             cd FF_Data
             print(gcf, '-dpdf', '-r300', filename);
-            saveas(gcf, fullfile(filename1));
+            % saveas(gcf, fullfile(filename1));
             cd ..
             cd ..
         end
@@ -347,6 +348,25 @@ classdef fns_plot
             saveas(gcf, filename);
             cd ..
             cd ..
+        end
+        %%
+        function [f_x_max,f_y_max,f_z_max]=find_dominant_freq(fn_amp,freq)
+            [~, index_x] =max(fn_amp{1});
+            [~, index_y] =max(fn_amp{2});
+            [~, index_z] =max(fn_amp{3});
+            f_x_max=freq(index_x);
+            f_y_max=freq(index_y);
+            f_z_max=freq(index_z);
+        end
+        %%
+        function [value_x,value_y,value_z]=find_v_max(vt)
+            [value_x, ~] =max(abs(vt{1}));
+            [value_y, ~] =max(abs(vt{2}));
+            [value_z, ~] =max(abs(vt{3}));
+            % in mm
+            value_x=1e3*value_x;
+            value_y=1e3*value_y;
+            value_z=1e3*value_z;
         end
 
     end
