@@ -157,7 +157,7 @@ classdef fns_unitgeomdb
             [maxrow_indx, ~] = find(bsxfun(@eq, V_rms_mean, max_v_mean));
             max_f=f_cenVect(maxrow_indx)
             cd SAVE_FIGS
-            cd UnitGeom
+            cd MultiUnitGeom
             saveas(gcf, filename);
             writematrix(data_to_save, filename_csv);
             cd ..
@@ -240,7 +240,7 @@ classdef fns_unitgeomdb
             end
         end
         %%
-        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
+        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -252,13 +252,13 @@ classdef fns_unitgeomdb
                 for i_stn = 1:n_stns
                     f_max = f_max3D(i_stn,:,i_flur);
                     max_Vxyz = max_Vxyz3D(i_stn,:,i_flur);
-                    plot(f,v)
+                    % plot(f,v*1e3)
                     hold on
-                    scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
+                    scatterHandles(i_stn) = scatter(f_max,1e3*max_Vxyz,sz,'MarkerEdgeColor','k',...
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
                 end
                 legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
-                ylim([0 2e-3])
+                ylim(y_lim)
                 xlim(x_lim)
                 grid off;
                 hold off;
@@ -269,29 +269,37 @@ classdef fns_unitgeomdb
                     'Interpreter','latex')
                 ylabel(ylbl,'FontSize',11,'Interpreter','latex')
                 hold on
-                set(gcf,'Units','inches', 'Position', [18 3 3 2],...
-                    'PaperUnits', 'Inches', 'PaperSize', [3 2]);
+                set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
+                    'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                filename = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.pdf'];
-
+                filename1 = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                    '_Vs_', num2str(V_s), '.fig'];
                 cd SAVE_FIGS
-                cd UnitGeom
+                cd MultiUnitGeom
                 saveas(gcf, filename);
+                saveas(gcf, filename1);
                 cd ..
                 cd ..
             end
         end
         %% !!!!!functions below are added from Wei's branch!!!!
-        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,timeofday,t_in)
+        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
             scatterHandles = zeros(1, n_stns);
             sz=80;
-            A_values=fns_KBvalue.find_A_values(bldtyp,timeofday);
-            Au_vect=A_values(1)*ones(1,length(t_in));
-            Ao_vect=A_values(2)*ones(1,length(t_in));
+            timeofday="night";
+            A_values_night=fns_KBvalue.find_A_values(bldtyp,timeofday);
+            Au_vect_night=A_values_night(1)*ones(1,length(t_in));
+            Ao_vect_night=A_values_night(2)*ones(1,length(t_in));
+            timeofday="day";
+            A_values_day=fns_KBvalue.find_A_values(bldtyp,timeofday);
+            Au_vect_day=A_values_day(1)*ones(1,length(t_in));
+            Ao_vect_day=A_values_day(2)*ones(1,length(t_in));
+
             au_color = ha_cl('denim');
             ao_color = ha_cl('red');
 
@@ -305,20 +313,24 @@ classdef fns_unitgeomdb
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
                 end
                 hold on
-                h_Au = plot(t_in, Au_vect, 'LineWidth', 1.2, 'Color', au_color); hold on;
-                h_Ao = plot(t_in, Ao_vect, 'LineWidth', 1.2, 'Color', ao_color);
-
+                h_Au = plot(t_in, Au_vect_night, 'LineWidth', 1.2, 'Color', au_color); hold on;
+                h_Ao = plot(t_in, Ao_vect_night, 'LineWidth', 1.2, 'Color', ao_color);
+                h_Au_day = plot(t_in, Au_vect_day, 'LineWidth', 1.2, 'LineStyle', '-.', 'Color', au_color); hold on;
+                h_Ao_day = plot(t_in, Ao_vect_day, 'LineWidth', 1.2, 'LineStyle', '-.', 'Color', ao_color);
                 x_upper_lim_for_plot = max(max(f_max3D(:,:,i_flur)));
                 y_upper_lim_for_plot = max(max(max_Vxyz3D(:,:,i_flur)));
-                legend_handles = [scatterHandles, h_Au, h_Ao];
-                legend_labels = [stn_vect, '$A_u$', '$A_o$'];
+                legend_handles = [scatterHandles];
+                legend_labels = [stn_vect];
+                % legend_handles = [scatterHandles, h_Au_day, h_Ao_day, h_Au, h_Ao];
+                % legend_labels = [stn_vect, '$A_u (day)$', '$A_o (day)$', '$A_u (night)$', '$A_o (night)$'];
                 legend(legend_handles, legend_labels, 'Box', 'off', 'FontSize', 10, 'Interpreter', 'latex');
 
                 hold on
 
                 %ylim([0 5e-3])
-                ylim([0 1.25])
-                xlim([0 floor(x_upper_lim_for_plot)+3])
+                ylim(y_lim)
+                % xlim([0 floor(x_upper_lim_for_plot)+6])
+                xlim([0 4])
                 grid off;
                 hold off;
                 set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
@@ -328,19 +340,22 @@ classdef fns_unitgeomdb
                     'Interpreter','latex')
                 ylabel(ylbl,'FontSize',11,'Interpreter','latex')
                 hold on
-                set(gcf,'Units','inches', 'Position', [18 3 3 2.5],...
-                    'PaperUnits', 'Inches', 'PaperSize', [3 2.5]);
+                set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
+                    'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
-                    '_Vs_', num2str(V_s), '.emf'];
+                filename = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                    '_Vs_', num2str(V_s), '.pdf'];
+                filename1 = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                    '_Vs_', num2str(V_s), '.fig'];
 
                 cd SAVE_FIGS
-                cd UnitGeom
+                cd MultiUnitGeom
                 saveas(gcf, filename);
+                saveas(gcf, filename1);
                 cd ..
                 cd ..
             end
         end
-     
+
     end
 end

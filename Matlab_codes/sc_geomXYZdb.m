@@ -1,14 +1,14 @@
 %% Initialization
 clear;clc;close all
 
-n_str = 1;
-n_rx = 1;
-n_ry = 1;
+n_str = 3;
+n_rx = 2;
+n_ry = 3;
 
 l_vect=[2 3 4 5 6 7 8];
 b_vect=[2 3 4 5 6 7 8];
 h = 3;
-ftyp = 'FOOTING';
+ftyp = 'PLATE';
 
 V_s = 450
 n_esize = 0.5;
@@ -27,7 +27,7 @@ cols = {'Freq', 'Re','Im','Amp'};
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
 %%
-name_evnt='Unterhaching'
+name_evnt='Poing'
 %%
 if strcmp(name_evnt, 'Poing')
     evnt='Po2016';
@@ -55,7 +55,7 @@ end
 fns_plot.plt_ff(f_inpt_V, ff_Uamp_mat,bf_nm_v,123,...
     stn,date, time,'Velocity~(m/s)','initial')
 %% Importing Transfer Function
-rf_fldr = 'UnitBld_GeomVary';
+rf_fldr = 'MultiUnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
@@ -132,7 +132,7 @@ for i_flur = 1:n_str+1
         V_rms_Xmat(:, j)=Fun_rms_vectx;
     end
     % fns_unitgeomdb.plt_Vrms(f_cenVect,V_rms_Zmat,f_iso,i_flur,V_s,ylblvect{i_flur})
-   y_lim=[0 60];
+   y_lim=[0 80];
     fns_unitgeomdb.plt_Vrms_stats(f_cenVectz,V_rms_Zmat,i_flur,V_s,ylblvectz,'Z',stn,n_str,y_lim);
     fns_unitgeomdb.plt_Vrms_stats(f_cenVecty,V_rms_Ymat,i_flur,V_s,ylblvecty,'Y',stn,n_str,y_lim);
     % V_rms_mean=fns_unitgeomdb.plt_Vrms_stats(f_cenVect,V_rms_mat,i_flur,V_s,ylblvect,'PPV',stn,n_str,y_lim);
