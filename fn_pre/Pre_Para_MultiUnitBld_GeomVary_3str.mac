@@ -36,8 +36,8 @@ t_floor1=0.2
 n_ele_size=0.5
 
 !*********** Soil properties**************************!
-Vs=100          !Shear wave velocity [m/s]
-Rho=1.4e3       !Soil density [kg/m^3]
+Vs=450          !Shear wave velocity [m/s]
+Rho=2.3e3       !Soil density [kg/m^3]
 Nu=0.33         !Soil Poisson's Ratio
 
 !---------------------Foundation dimensions--------------------!

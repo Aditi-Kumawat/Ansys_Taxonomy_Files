@@ -9,8 +9,8 @@ n_ry = 1;
 % Define the length, width, and height of the building
 l_vect=[2 3 4 5 6 7 8];
 b_vect=[2 3 4 5 6 7 8];
-% l_vect=[3 5 7];
-% b_vect=[3 5 7];
+% l_vect=[2 2];
+% b_vect=[2 2];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
@@ -45,6 +45,11 @@ elseif strcmp(name_evnt, 'Unterhaching')
     stn_vect={'UH1', 'UH2', 'UH3'};
     date='2013_04_16';
     time='21_51_42';
+elseif strcmp(name_evnt, 'Insheim')
+    evnt='Insheim_Oct2013';
+    stn_vect={'INSH','TMO54','INS5'};
+    date='2013_10_02';
+    time='01_13_26';
 end
 
 n_stns=length(stn_vect);
@@ -59,7 +64,7 @@ cols = {'Freq', 'Re','Im','Amp'};
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
 %% Importing Transfer Function
-%rf_fldr = 'MultiUnitBld_GeomVary';
+% rf_fldr = 'MultiUnitBld_GeomVary_3lby2';
 rf_fldr = 'UnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
@@ -77,6 +82,8 @@ for i_stn=1:n_stns
     elseif strcmp(name_evnt, 'Unterhaching')
         fldr_nm = [stn, '_', evnt];
         ff_fldr = fullfile('GM', 'GM_UH',fldr_nm);
+    elseif strcmp(name_evnt, 'Insheim')
+        ff_fldr = fullfile('GM','GM_Insheim_Oct2013', stn);
     end
     %% Importing sensor data
     [f_inpt,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
@@ -250,35 +257,43 @@ for i_stn=1:n_stns
         end
     end
 end
+strtyp='GeomVary';
 
+ylbl_vect={'$v_{x,max}$,~mm/s', '$v_{y,max}$,~mm/s', '$v_{z,max}$,~mm/s'};
 
-ylbl_vect={'$v_{x,max}$,~m/s', '$v_{y,max}$,~m/s', '$v_{z,max}$,~m/s'};
-x_lim=[0 20];
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
 x_lim=[0 20];
+y_lim=[0 2];
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
-x_lim=[0 60];
+x_lim=[0 20];
+y_lim=[0 3];
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim)
+x_lim=[0 60];
+y_lim=[0 2];
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
 
 %%
 bldtyp="ReinesWohngebiet";
-timeofday="night";
-
 ylbl_vect={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
+
+y_lim=[0 0.2];
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,timeofday,t_in)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
 
+y_lim=[0 0.2];
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,timeofday,t_in)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
 
+y_lim=[0 1.1];
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,timeofday,t_in)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)

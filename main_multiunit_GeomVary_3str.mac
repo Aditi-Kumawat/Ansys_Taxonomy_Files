@@ -10,7 +10,7 @@
 !---------------------------------------------------------------------------!
 !-----------------------------Harmonic Analysis-----------------------------!
 StarFreq=0            ! Starting frequeny f=2*pi*omeg and omeg=a_0_min*vs/b       
-FreqIncr=0.2          ! Frequeny Increment                                     
+FreqIncr=0.5          ! Frequeny Increment                                     
 EndFreq=100
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
@@ -68,6 +68,6 @@ ftyp='PLATE'
         !---------------------------------------------------------------------------!
         !---------------------------------------------------------------------------!
         /INPUT,'fn_post\Settings_Export_Pictures','mac'
-        /INPUT,'fn_post\post_MultiunitBld_GeomVary','mac'
+        /INPUT,'fn_post\post_MultiunitBld_GeomVary_3lby2','mac'
     *enddo 
 *enddo 
