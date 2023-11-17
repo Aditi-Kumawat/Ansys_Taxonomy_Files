@@ -6,7 +6,7 @@ stn_vect={'POI01'};
 date='2016_12_20';
 time_evnt='03_30_51';
 n_stns=length(stn_vect);
-
+evnt='Po2016'
 
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
@@ -23,14 +23,14 @@ cols_t = {'tim', 'val'};
 figure
 for i=1:n_stns
     stn=stn_vect{i};
-    fldr_nm = ['GM_', stn, '_', date, '_', time];
-    ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time],...
+    fldr_nm = ['GM_', stn, '_', date, '_', time_evnt];
+    ff_fldr = fullfile('GM', 'GM_Poing_Sync', ['GM_', date, '_', time_evnt],...
         fldr_nm);
     [t_in,ff_Vt]=...
         fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
         stn,date, time_evnt,n_snr,ff_fldr,cols_t);
-    fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
-        stn,date, time_evnt,vlbl_vect,{'t (s)'},'initial',evnt)
+    % fns_plot.plt_ff_svrlstns(t_in, ff_Vt,bf_nm_vt,123,...
+    %     stn,date, time_evnt,vlbl_vect,{'t (s)'},'initial',evnt)
 end
 
 for i = 1:n_stns
