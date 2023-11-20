@@ -9,7 +9,7 @@ classdef fns_scatter
             lb_comb_idx = [];
             lb_comb = [];
             for i_l = 1:length(l_vect)
-                for i_b = 1:i_l
+                for i_b = 1:length(b_vect)
                     l = l_vect(i_l);
                     b = b_vect(i_b);
                     if b <= l
@@ -58,6 +58,64 @@ classdef fns_scatter
                 end
             end
         end
+
+%%
+        function [f_vect,TFamp_mat,TFcmplx_mat,lb_comb]=...
+                get_TF_scatter_sym(n_str, n_rx, n_ry,l_vect, b_vect,...
+                ftyp, V_s, L_f, B_f,bf_nm,i_str,cmpt,n_c,r_fldr,cols)
+
+            % Generate all possible combinations of l and b such that b<=l
+            lb_comb_idx = [];
+            lb_comb = [];
+            for i_l = 1:length(l_vect)
+                for i_b = 1:length(b_vect)
+                    l = l_vect(i_l);
+                    b = b_vect(i_l);
+                    lb_comb_idx(end+1,:) = [i_l, i_l];
+                    lb_comb(end+1,:) = [l, b];
+                end
+            end
+
+            % Loop over all combinations of l and b
+            for i_cmb = 1:size(lb_comb_idx, 1)
+                i_l = lb_comb_idx(i_cmb, 1);
+                i_b = lb_comb_idx(i_cmb, 2);
+                l = l_vect(i_l);
+                b = b_vect(i_b);
+
+                % Get the folder name for the specific configuration
+                fldr = fns_plot.get_fldrnm(n_str,...
+                    n_rx, n_ry, l, b, ftyp, V_s, L_f, B_f);
+                fl_nm1 = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
+                    l, b),cmpt, 'UniformOutput', false);
+                cd ..
+                cd Results_Ansys
+                fil_pth = fullfile(r_fldr, fldr, fl_nm1);
+                U_all = cellfun(@(x) readtable(x), fil_pth,...
+                    'UniformOutput', false);
+                cd ..
+                cd Matlab_codes
+
+                for i_component = 1:n_c
+                    U = U_all{i_component};
+                    U.Properties.VariableNames = cols;
+                    if i_cmb == 1
+                        f_vect = U.Freq;
+                        TFamp_mat{i_component} = U.AMPL;
+                        TFr_mat{i_component} = U.REAL;
+                        TFim_mat{i_component} = U.IMAG;
+                        TFcmplx_mat{i_component} = U.REAL+1i.*U.IMAG;
+                    else
+                        TFamp_mat{i_component}(:, i_cmb) = U.AMPL;
+                        TFr_mat{i_component}(:, i_cmb)  = U.REAL;
+                        TFim_mat{i_component}(:, i_cmb)  = U.IMAG;
+                        TFcmplx_mat{i_component}(:, i_cmb)  = ...
+                            U.REAL+1i.*U.IMAG;
+                    end
+                end
+            end
+        end
+        
         %%
         function plt_scatter(TFabs_zcell,n_str,f_vect,rf_fldr,plt_cmp,y_lim,lb_combs,V_s)
             TF_abs_Zmat=TFabs_zcell{n_str+1};

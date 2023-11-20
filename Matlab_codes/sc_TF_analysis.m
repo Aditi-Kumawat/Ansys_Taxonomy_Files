@@ -3,19 +3,19 @@
 clear;clc;close all;
 
 % Define the number of storeys, rooms in x- y-direction
-n_str = 1;
-n_rx = 1;
-n_ry = 1;
+n_str = 2;
+n_rx = 2;
+n_ry = 3;
 
 % Define the length, width, and height of the building
-l_vect=[2 3 4 5 6 7 8];
-b_vect=[2 3 4 5 6 7 8];
+l_vect=[3 4 5 6];
+b_vect=[3 4 5 6];
 % l_vect=[3 5 7];
 % b_vect=[3 5 7];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'FOOTING';
+ftyp = 'PLATE';
 
 % Define the velocity of the excitation
 V_s = 450;
@@ -34,7 +34,7 @@ else
 end
 %% Importing Transfer Function
 % Define the name of the folder where the results are stored
-rf_fldr = 'UnitBld_GeomVary';
+rf_fldr = 'MultiUnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 
 % Define the column names in the results table
@@ -52,7 +52,7 @@ fref_vel_amp_mat_1=cell(1, n_c);
 
 for i_str = 0:n_str
     [f_vect,TF_amp_mat,TF_cpmlx_mat,lb_combs]=...
-        fns_scatter.get_TF_scatter(n_str, n_rx, n_ry,...
+        fns_scatter.get_TF_scatter_sym(n_str, n_rx, n_ry,...
         l_vect, b_vect, ftyp, V_s, L_f, B_f,...
         bf_nm,i_str,cmpt,n_c,rf_fldr,cols);
 
