@@ -68,12 +68,10 @@ classdef fns_scatter
             lb_comb_idx = [];
             lb_comb = [];
             for i_l = 1:length(l_vect)
-                for i_b = 1:length(b_vect)
                     l = l_vect(i_l);
                     b = b_vect(i_l);
                     lb_comb_idx(end+1,:) = [i_l, i_l];
                     lb_comb(end+1,:) = [l, b];
-                end
             end
 
             % Loop over all combinations of l and b
@@ -117,7 +115,7 @@ classdef fns_scatter
         end
         
         %%
-        function plt_scatter(TFabs_zcell,n_str,f_vect,rf_fldr,plt_cmp,y_lim,lb_combs,V_s)
+        function [f_max_vals_all, max_vals_all]=plt_scatter(TFabs_zcell,n_str,f_vect,rf_fldr,plt_cmp,x_lim,y_lim,lb_combs,V_s)
             TF_abs_Zmat=TFabs_zcell{n_str+1};
             n_blds = size(TF_abs_Zmat, 2);
             [max_vals, max_indices] = max(TF_abs_Zmat);
@@ -171,8 +169,8 @@ classdef fns_scatter
             cbar.TickLabelInterpreter = 'latex';
 
             % adjust plot properties
-            xlim([min(f_vect), y_lim]);
-            %             ylim([2, 12]);
+            xlim([min(f_vect), x_lim]);
+            ylim(y_lim);
             xlabel('Frequency (Hz)', 'FontSize', 10,...
                 'Interpreter', 'latex');
             ylabel('max(Trasfer function)', 'FontSize', 10,...
@@ -180,10 +178,10 @@ classdef fns_scatter
             %             title('Scatter plot of Maximum values vs Frequency',...
             %                 'FontSize', 14, 'FontWeight', 'bold',...
             %                 'Interpreter', 'latex');
-            set(gca, 'FontSize', 10, 'Box', 'on', 'LineWidth', 1,...
+            set(gca, 'FontSize', 10, 'Box', 'on', 'LineWidth', 0.5,...
                 'TickLabelInterpreter', 'latex', 'TickLength',[0.01,0.01]);
-            set(gcf, 'Units', 'inches', 'Position', [18 3 4.5 4],...
-                'PaperUnits', 'Inches', 'PaperSize', [4.5 4]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 3.5 3],...
+                'PaperUnits', 'Inches', 'PaperSize', [3.5 3]);
 
             filnm = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.pdf'];
 %             filnm1 = ['TF_Scatter_Plot_',plt_cmp,num2str(V_s), '.emf'];
@@ -243,9 +241,9 @@ classdef fns_scatter
             for i_nb=1:n_blds
 
                 f_nrm(:,i_nb)=f_vect./f_max_vals(i_nb);
-                if any(isnan(f_nrm(:,i_nb))) || any(isnan(TF_Zmat(:,i_nb)))
-                    error('Input data contains NaN values')
-                end
+                % if any(isnan(f_nrm(:,i_nb))) || any(isnan(TF_Zmat(:,i_nb)))
+                %     error('Input data contains NaN values')
+                % end
             end
 
             f_norm_out=f_nrm(1,1):df:f_nrm(end,end);
@@ -342,7 +340,7 @@ classdef fns_scatter
             legend show
             legend('Box','off','Interpreter','latex','FontSize',10)
             hold on
-            set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
+            set(gca,'FontSize',10, 'Box', 'on','LineWidth',0.5,...
                 'TickLabelInterpreter', 'latex','TickLength',[0.01, 0.01]);
             set(gcf,'Units','inches', 'Position', [18 3 4 3],...
                 'PaperUnits', 'Inches', 'PaperSize', [4 3]);
