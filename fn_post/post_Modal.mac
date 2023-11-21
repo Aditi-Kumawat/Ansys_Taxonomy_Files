@@ -49,15 +49,15 @@ PLNSOL, U,SUM, 0,1.0
 !*  
 !/ANFILE,SAVE,'ex_mod_sim_1','avi',' ' 
 
-/MKDIR,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%
+/MKDIR,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%_nstr_%n_storeys%
 !!!!!!!!---save eigenfrequencies to freqvec.txt--- !
-/output,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%\freqvec,csv
+/output,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%_nstr_%n_storeys%\freqvec,csv
 set,list
 /output,term
 !MODES=30
 ! ---save eigenvectors to modes.txt--- !
 !nsel,s,node,,all !output results for all nodes
-!/output,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%\modes,csv
+!/output,Results_Ansys\Results_Modal\ftyp_%ftyp%_ModAn_%ModAn%_Vs_%Vs%_nstr_%n_storeys%\modes,csv
 !*do,i,1,n_modes !output the n_modes first modes
 !set,,i
 !prdisp
