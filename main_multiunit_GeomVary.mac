@@ -9,8 +9,8 @@
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !-----------------------------Harmonic Analysis-----------------------------!
-StarFreq=0              ! Starting frequeny f=2*pi*omeg and omeg=a_0_min*vs/b       
-FreqIncr=0.2         ! Frequeny Increment                                     
+StarFreq=0            ! Starting frequeny f=2*pi*omeg and omeg=a_0_min*vs/b       
+FreqIncr=0.5          ! Frequeny Increment                                     
 EndFreq=100
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
@@ -20,47 +20,54 @@ D_bl=0.05
 ftyp='PLATE'
 !ftyp='FOOTING'
 !---------------------------------------------------------------------------!
-!---------------------------------------------------------------------------! 
-/INPUT,'fn_pre\Pre_Para_MultiunitBld_GeomVary','mac'
+!---------------------------------------------------------------------------!
+/INPUT,'fn_pre\Pre_Para_MultiUnitBld_GeomVary','mac'
 /INPUT,'fn_fndtn_para\fndn_para_cnstvals_FULL','mac'
-!/eof
+
 !for accidental runs
+!/eof
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
-*do,i_geo_para_l,1,4,1 
+*do,i_geo_para_l,1,7,1  
+    PARSAV, ALL, F_para,,
+    /nerr,0,,,,0  
+    /UIS, MSGPOP, 4
+    /CLEAR,NOSTART  
+    PARRES, NEW, F_para,,
+    l=l_vect(i_geo_para_l,1)
+
+    *do,i_geo_para_b,1,7,1 
         PARSAV, ALL, F_para,,
         /nerr,0,,,,0  
         /UIS, MSGPOP, 4
-        /CLEAR,NOSTART  
+        /CLEAR,NOSTART 
         PARRES, NEW, F_para,,
-        l=l_vect(i_geo_para_l,1)
-        b=b_vect(i_geo_para_l,1)
+        b=b_vect(i_geo_para_b,1)
+        *IF,b,GT,l,*EXIT
         !---Number of Elements                                                                     
-        nVolx=l/n_ele_size                          
-        nVoly=b/n_ele_size                                   
-        nVolz=h/n_ele_size                    
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    *IF,ftyp,EQ,'FOOTING',THEN
-        /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
-    *ELSEIF,ftyp,EQ,'PLATE'
-        /INPUT,'fn_pre\Pre_BldMod_PlateFndtn','mac'
-    *ENDIF
-    !---------------------------------------------------------------------------!
-    !-----Define matrix27 to element, here create second node at (x,y,-0.1)-----!
-    /INPUT,'fn_pre\Pre_CM_colbase_M27','mac'						!matrix27 used
-    /INPUT,'fn_pre\Pre_M27_Full','mac'		!matrix27 used
-    !---------------------------Constraints for the LPM-------------------------!
-    /INPUT,'fn_pre\Pre_Load_BCs','mac'				!matrix27 used
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    /INPUT,'fn_analysis\Analysis_TranFunc_VH','mac'
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    !---------------------------------------------------------------------------!
-    /INPUT,'fn_post\Settings_Export_Pictures','mac'
-    /INPUT,'fn_post\post_MultiunitBld_GeomVary','mac'
+        nVolx=l/n_ele_size                         
+        nVoly=b/n_ele_size                               
+        nVolz=h/n_ele_size                     
+        *IF,ftyp,EQ,'FOOTING',THEN
+            /INPUT,'fn_pre\Pre_BldMod_FootingFndtn','mac'
+        *ELSEIF,ftyp,EQ,'PLATE'
+            /INPUT,'fn_pre\Pre_BldMod_PlateFndtn','mac'
+        *ENDIF
+        !---------------------------------------------------------------------------!
+        !-----Define matrix27 to element, here create second node at (x,y,-0.1)-----!
+        /INPUT,'fn_pre\Pre_CM_colbase_M27','mac'						!matrix27 used
+        /INPUT,'fn_pre\Pre_M27_Full','mac'		!matrix27 used
+        !---------------------------Constraints for the LPM-------------------------!
+        /INPUT,'fn_pre\Pre_Load_BCs','mac'				!matrix27 used
+        !---------------------------------------------------------------------------!
+        !---------------------------------------------------------------------------!
+        !---------------------------------------------------------------------------!
+        /INPUT,'fn_analysis\Analysis_TranFunc_VH','mac'
+        !---------------------------------------------------------------------------!
+        !---------------------------------------------------------------------------!
+        !---------------------------------------------------------------------------!
+        /INPUT,'fn_post\Settings_Export_Pictures','mac'
+        /INPUT,'fn_post\post_MultiunitBld_GeomVary_3lby2','mac'
+    *enddo 
 *enddo 
