@@ -88,7 +88,7 @@ classdef fns_Wall_and_DR
                 '_Lf_',num2str(L_f),'_Bf_',num2str(B_f),...
                 '_CONFIG_',para];
         end
-         %%
+        %%
         function fldr_nm = get_fldrnmDR(n_str, n_rx, n_ry, l, b,...
                 ftyp,V_s, L_f, B_f,para)
             fldr_nm = ['n_storeys_',num2str(n_str),'_n_rooms_X_',...
@@ -98,5 +98,24 @@ classdef fns_Wall_and_DR
                 '_Lf_',num2str(L_f),'_Bf_',num2str(B_f),...
                 '_DR_',para];
         end
+        %%
+        function [f_vect, TF_amp_mat, TF_cpmlx_mat, bld_cases] = get_TF(rf_fldr, n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f, wall_config, dampg_vect, i_str, n_c)
+            bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
+            cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
+            cmpt = {'X', 'Y', 'Z'};
+            % Initialize bld_cases to an empty array for the cases where it's not used
+            if strcmp(rf_fldr, 'Bld_with_Walls')
+                [f_vect, TF_amp_mat, TF_cpmlx_mat] = fns_Wall_and_DR.get_TFWall(n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f, wall_config, bf_nm, i_str, cmpt, n_c, rf_fldr, cols1);
+                bld_cases = length(wall_config);
+            elseif strcmp(rf_fldr, 'Vary_DampRatio')
+                [f_vect, TF_amp_mat, TF_cpmlx_mat] = fns_Wall_and_DR.get_TF_DR(n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f, dampg_vect, bf_nm, i_str, cmpt, n_c, rf_fldr, cols1);
+                bld_cases = length(dampg_vect);
+            else
+                [f_vect, TF_amp_mat, TF_cpmlx_mat, lb_cmbs] = fns_scatter.get_TF_scatter(n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f, bf_nm, i_str, cmpt, n_c, rf_fldr, cols1);
+                bld_cases=length(lb_cmbs);
+            end
+        end
+
+
     end
 end
