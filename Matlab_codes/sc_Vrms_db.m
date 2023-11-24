@@ -1,51 +1,22 @@
 %% Initialization
 clear;clc;close all
 
-n_str = 3;
-n_rx = 2;
-n_ry = 3;
+rf_fldr = fns_Inpt_BldPara.selectRfFldr();
+disp(['selectedRfFldr: ', rf_fldr])
+%----------------------------------------------------%
+bld_soil_fndn = fns_Inpt_BldPara.select_bldsoilpara();
+disp(['bld_soil_fndnPara: ', bld_soil_fndn])
+%----------------------------------------------------%
+name_evnt= fns_EvntData.select_event_stn();
+disp(['selected_event: ', name_evnt])
 
-l_vect=[2 3 4 5 6 7 8];
-b_vect=[2 3 4 5 6 7 8];
-h = 3;
-ftyp = 'PLATE';
+[l_vect,b_vect,h,wall_config,dampg_vect]=fns_Inpt_BldPara.get_lbh_bldcases_for_rf_fldr(rf_fldr);
 
-V_s = 450
-n_esize = 0.5;
+[n_str,n_rx,n_ry,V_s,ftyp,B_f,L_f]=fns_Inpt_BldPara.get_nstr_nrxy_fndn_soil_info(bld_soil_fndn);
 
-if strcmp(ftyp,'PLATE')
-    B_f = n_esize/2;
-    L_f = n_esize/2;
-else
-    B_f = 0.75;
-    L_f = 0.75;
-end
+[evnt,stn,~,date,time,nzero,ff_fldr,bf_nm_u,bf_nm_v,cols,s_dir,n_snr,cmpt]=...
+    fns_EvntData.get_event_stn(name_evnt);
 %% Importing Data
-bf_nm_u = 'fftd_%d_%s_%s_%s';
-bf_nm_v = 'fftv_%d_%s_%s_%s';
-cols = {'Freq', 'Re','Im','Amp'};
-s_dir = [1 2 3];
-n_snr = numel(s_dir);
-%%
-name_evnt='Poing'
-%%
-if strcmp(name_evnt, 'Poing')
-    evnt='Po2016';
-    stn='POI01';
-    date='2016_12_20';
-    time='03_30_51';
-    nzero=6;
-    ff_fldr = fullfile('GM','GM_POI2016',stn);
-elseif strcmp(name_evnt, 'Unterhaching')
-    evnt='Part1';
-    stn='UH1';
-    date='2013_04_16';
-    time='21_51_42';
-    nzero=4;
-    fldr_nm = [stn, '_', evnt];
-    ff_fldr = fullfile('GM', 'GM_UH',fldr_nm);
-end
-
 [f_inpt,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
     fns_imprtdata.get_ff_inpt(bf_nm_u,s_dir,...
     stn,date, time,n_snr,ff_fldr,cols);
@@ -55,23 +26,13 @@ end
 fns_plot.plt_ff(f_inpt_V, ff_Uamp_mat,bf_nm_v,123,...
     stn,date, time,'Velocity~(m/s)','initial')
 %% Importing Transfer Function
-rf_fldr = 'MultiUnitBld_GeomVary';
-bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
-cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
-cmpt = {'X', 'Y', 'Z'};
-%%
-n_c = length(cmpt);
-Vabs_zCell = cell(1, n_str+1);
-fref_cmplx_mat_1=cell(1, n_c);
-DISP_cmplx_mat=cell(1, n_c);
-VEL_abs_mat=cell(1, n_c);
-fref_vel_amp_mat_1=cell(1, n_c);
+n_c = length(cmpt); % three components
 v_ref=5e-8;
 for i_str = 0:n_str
-    [f_vect,TF_amp_mat,TF_cpmlx_mat,lb_combs]=...
-        fns_scatter.get_TF_scatter(n_str, n_rx, n_ry,...
-        l_vect, b_vect, ftyp, V_s, L_f, B_f,...
-        bf_nm,i_str,cmpt,n_c,rf_fldr,cols1);
+    [f_vect, TF_amp_mat, TF_cpmlx_mat, bld_cases] = fns_Wall_and_DR.get_TF(rf_fldr,...
+        n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f,...
+        wall_config, dampg_vect, i_str, n_c);
+
     for i_c = 1:n_c
         %% Calculating Velocity
         TFcpmlx_intrp{i_c}=interp1(f_vect,TF_cpmlx_mat{i_c},...
@@ -91,10 +52,6 @@ for i_str = 0:n_str
     f_dBx=f_inpt_V{1}(nzero:end);
 end
 
-filename_x = sprintf('Vdb_Cell_Vs_%d_%d_stn%s_cmp%s',n_str, V_s, stn, 'X');
-filename_y = sprintf('Vdb_Cell_Vs_%d_%d_stn%s_cmp%s', V_s, stn, 'Y');
-filename_z = sprintf('Vdb_Cell_Vs_%d_%d_stn%s_cmp%s', V_s, stn, 'Z');
-
 %%
 ylblvectz = {'$v_{z}$,~dB'; '[ref: $5 \times 10^{-8}$ m/s]'};
 ylblvecty = {'$v_{y}$,~dB'; '[ref: $5 \times 10^{-8}$ m/s]'};
@@ -104,7 +61,7 @@ ylblvect = {'PPV,~dB'; '[ref: $5 \times 10^{-8}$ m/s]'};
 dfz=f_dBz(3)-f_dBz(2);
 dfy=f_dBy(3)-f_dBy(2);
 dfx=f_dBx(3)-f_dBx(2);
-num_lb=length(lb_combs);
+num_lb=length(bld_cases);
 for i_flur = 1:n_str+1
     %     [f,v,v_db]=fns_unitgeomdb.DIN4150_3_lims(v_ref,i_flur);
     Vdb_Zmat = Vdb_zCell{i_flur};
@@ -117,7 +74,6 @@ for i_flur = 1:n_str+1
         [Fun_rms_vect, f_cenVect] = fns_Octve.get_octBand(...
             Vdb_vect, f_dBz, dfz);
         V_rms_mat(:, j)=Fun_rms_vect;
-
         Vdb_Zvect=Vdb_Zmat(:,j);
         [Fun_rms_vectz, f_cenVectz] = fns_Octve.get_octBand(...
             Vdb_Zvect, f_dBz, dfz);
@@ -132,11 +88,11 @@ for i_flur = 1:n_str+1
         V_rms_Xmat(:, j)=Fun_rms_vectx;
     end
     % fns_unitgeomdb.plt_Vrms(f_cenVect,V_rms_Zmat,f_iso,i_flur,V_s,ylblvect{i_flur})
-   y_lim=[0 80];
-    fns_unitgeomdb.plt_Vrms_stats(f_cenVectz,V_rms_Zmat,i_flur,V_s,ylblvectz,'Z',stn,n_str,y_lim);
-    fns_unitgeomdb.plt_Vrms_stats(f_cenVecty,V_rms_Ymat,i_flur,V_s,ylblvecty,'Y',stn,n_str,y_lim);
+    y_lim=[0 85];
+    fns_unitgeomdb.plt_Vrms_stats(f_cenVectz,V_rms_Zmat,i_flur,V_s,ylblvectz,'Z',stn,n_str,y_lim,rf_fldr);
+    fns_unitgeomdb.plt_Vrms_stats(f_cenVecty,V_rms_Ymat,i_flur,V_s,ylblvecty,'Y',stn,n_str,y_lim,rf_fldr);
     % V_rms_mean=fns_unitgeomdb.plt_Vrms_stats(f_cenVect,V_rms_mat,i_flur,V_s,ylblvect,'PPV',stn,n_str,y_lim);
-    fns_unitgeomdb.plt_Vrms_stats(f_cenVectx,V_rms_Xmat,i_flur,V_s,ylblvectx,'X',stn,n_str,y_lim)
+    fns_unitgeomdb.plt_Vrms_stats(f_cenVectx,V_rms_Xmat,i_flur,V_s,ylblvectx,'X',stn,n_str,y_lim,rf_fldr);
     %% plot velocity results in db for individual direction for linear f scale
     %     Vzdb_mean = mean(Vdb_Zmat, 2);
     %     Vzdb_std = std(Vdb_Zmat, 0, 2);
