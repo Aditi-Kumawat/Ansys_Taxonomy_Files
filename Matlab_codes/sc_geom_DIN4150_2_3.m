@@ -2,9 +2,9 @@
 clear;clc;close all;
 
 % Define the number of storeys, rooms in x- y-direction
-n_str = 1;
-n_rx = 1;
-n_ry = 1;
+n_str = 3;
+n_rx = 2;
+n_ry = 3;
 
 % Define the length, width, and height of the building
 l_vect=[2 3 4 5 6 7 8];
@@ -14,7 +14,7 @@ b_vect=[2 3 4 5 6 7 8];
 h = 3;
 
 % Define the type of foundation as either 'PLATE' or 'FOOTING'
-ftyp = 'FOOTING';
+ftyp = 'PLATE';
 
 % Define the velocity of the excitation
 V_s = 450;
@@ -64,8 +64,8 @@ cols = {'Freq', 'Re','Im','Amp'};
 s_dir = [1 2 3];
 n_snr = numel(s_dir);
 %% Importing Transfer Function
-% rf_fldr = 'MultiUnitBld_GeomVary_3lby2';
-rf_fldr = 'UnitBld_GeomVary';
+rf_fldr = 'MultiUnitBld_GeomVary_3lby2';
+% rf_fldr = 'UnitBld_GeomVary';
 bf_nm = 'Disp_Center_%s_%d_l%d_b%d';
 cols1 = {'Freq', 'AMPL','PHASE','REAL','IMAG'};
 cmpt = {'X', 'Y', 'Z'};
@@ -265,19 +265,19 @@ ylbl=ylbl_vect{1}
 cmp=cmpt{1};
 x_lim=[0 20];
 y_lim=[0 2];
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
 x_lim=[0 20];
 y_lim=[0 3];
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
 x_lim=[0 60];
 y_lim=[0 2];
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 
 %%
 bldtyp="ReinesWohngebiet";
@@ -286,14 +286,14 @@ ylbl_vect={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
 y_lim=[0 0.2];
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)
 
 y_lim=[0 0.2];
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)
 
 y_lim=[0 1.1];
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)

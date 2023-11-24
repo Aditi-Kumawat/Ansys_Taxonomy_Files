@@ -236,17 +236,17 @@ x_lim=[0 30];
 y_lim=[0 2];
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 x_lim=[0 30];
 y_lim=[0 5];
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 x_lim=[0 30];
 y_lim=[0 2];
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp,rf_fldr)
 
 %%
 bldtyp="ReinesWohngebiet";
@@ -254,12 +254,12 @@ y_lim=[0 2];
 ylbl_vect={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
 ylbl=ylbl_vect{1}
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)
 y_lim=[0 2];
 ylbl=ylbl_vect{2}
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)
 y_lim=[0 2];
 ylbl=ylbl_vect{3}
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp,rf_fldr)
