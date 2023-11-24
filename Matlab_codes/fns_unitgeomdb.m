@@ -86,7 +86,8 @@ classdef fns_unitgeomdb
             cd ..
         end
         %%
-        function V_rms_mean=plt_Vrms_stats(f_cenVect, V_rms_Zmat, i_flur, V_s, ylbl,cmp,stn,n_str,y_lim)
+        function V_rms_mean=plt_Vrms_stats(f_cenVect, V_rms_mat, i_flur,...
+                V_s, ylbl,cmp,stn,n_str,y_lim,r_fldr)
             ha_cl = @colors;
             figure;
             hold on;
@@ -98,8 +99,8 @@ classdef fns_unitgeomdb
             f_up = log10(f_cenVect * 2^(1/6));
 
             % Calculate mean and standard deviation
-            V_rms_mean = mean(V_rms_Zmat, 2);
-            V_rms_std = std(V_rms_Zmat, 0, 2);
+            V_rms_mean = mean(V_rms_mat, 2);
+            V_rms_std = std(V_rms_mat, 0, 2);
 
             % Plot mean and standard deviation with shading
             for i=1:length(f_cenVect)
@@ -150,18 +151,24 @@ classdef fns_unitgeomdb
 
             filename = ['Vrms_db_geomvary_',cmp,'_',stn,'_nstr','_',num2str(n_str),...
                 '_flur','_',num2str(i_flur),'_Vs_', num2str(V_s), '_mean_std.pdf'];
-            filename1 = sprintf('PPV_data_flur%d_Vs%d_stn%s_cmp%s', i_flur, V_s, stn, cmp);
+            filename1 = sprintf('Vrms_data_flur%d_Vs%d_stn%s_cmp%s', i_flur, V_s, stn, cmp);
             filename_csv = [filename1 '.csv'];
-            data_to_save = [V_rms_mean, V_rms_std];
-            max_v_mean=max(V_rms_mean)
+            max_v_mean=max(V_rms_mean);
             [maxrow_indx, ~] = find(bsxfun(@eq, V_rms_mean, max_v_mean));
-            max_f=f_cenVect(maxrow_indx)
+            max_f=f_cenVect(maxrow_indx);
+            data_to_save = [f_cenVect.',V_rms_mean, V_rms_std,...
+                max_v_mean*ones(length(f_cenVect),1),...
+                max_f*ones(length(f_cenVect),1)];
+
             cd SAVE_FIGS
-            cd MultiUnitGeom
-            saveas(gcf, filename);
-            writematrix(data_to_save, filename_csv);
+            if ~exist(r_fldr, 'dir')
+                mkdir(r_fldr);
+            end
+            saveas(gcf, fullfile(r_fldr,filename));
+            writematrix(data_to_save, fullfile(r_fldr,filename_csv));
             cd ..
             cd ..
+            cd Matlab_codes
         end
         %%
         function [f,v,v_db]=DIN4150_3_lims(v_ref,iflur)
@@ -240,7 +247,7 @@ classdef fns_unitgeomdb
             end
         end
         %%
-        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,strtyp)
+        function plot_DIN4150_3_XYZ(v_ref,n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim,y_lim,r_fldr)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -272,20 +279,24 @@ classdef fns_unitgeomdb
                 set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
                     'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                filename = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.pdf'];
-                filename1 = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                filename1 = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.fig'];
+
                 cd SAVE_FIGS
-                cd MultiUnitGeom
-                saveas(gcf, filename);
-                saveas(gcf, filename1);
+                if ~exist(r_fldr, 'dir')
+                    mkdir(r_fldr);
+                end
+                saveas(gcf, fullfile(r_fldr,filename));
+                saveas(gcf, fullfile(r_fldr,filename1));
                 cd ..
                 cd ..
+                cd Matlab_codes
             end
         end
         %% !!!!!functions below are added from Wei's branch!!!!
-        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,y_lim,strtyp)
+        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,x_lim,y_lim,r_fldr)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -330,7 +341,7 @@ classdef fns_unitgeomdb
                 %ylim([0 5e-3])
                 ylim(y_lim)
                 % xlim([0 floor(x_upper_lim_for_plot)+6])
-                xlim([0 4])
+                xlim([x_lim])
                 grid off;
                 hold off;
                 set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
@@ -343,17 +354,102 @@ classdef fns_unitgeomdb
                 set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
                     'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                filename = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.pdf'];
-                filename1 = [strtyp,'_',name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                filename1 = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.fig'];
 
                 cd SAVE_FIGS
-                cd MultiUnitGeom
-                saveas(gcf, filename);
-                saveas(gcf, filename1);
+                if ~exist(r_fldr, 'dir')
+                    mkdir(r_fldr);
+                end
+                saveas(gcf, fullfile(r_fldr,filename));
+                saveas(gcf, fullfile(r_fldr,filename1));
                 cd ..
                 cd ..
+                cd Matlab_codes
+            end
+        end
+        %%
+        function [y_lim_x_D2,y_lim_y_D2,y_lim_z_D2,x_lim_D2,x_lim_x_D3,...
+                y_lim_x_D3,x_lim_y_D3,y_lim_y_D3,x_lim_z_D3,y_lim_z_D3]=...
+                get_ylim(rf_fldr,name_evnt)
+            if strcmp(rf_fldr, 'Bld_with_Walls')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_x_D2=[0 1];
+                    y_lim_y_D2=[0 2];
+                    y_lim_z_D2=[0 0.8];
+                    x_lim_D2=[0 10];
+                    x_lim_x_D3=[0 30];
+                    y_lim_x_D3=[0 1.5];
+                    x_lim_y_D3=[0 30];
+                    y_lim_y_D3=[0 4];
+                    x_lim_z_D3=[0 40];
+                    y_lim_z_D3=[0 2];
+                elseif strcmp(name_evnt, 'Insheim')
+                    y_lim_x_D2=[0 5.5];
+                    y_lim_y_D2=[0 3.5];
+                    y_lim_z_D2=[0 6];
+                    x_lim_D2=[0 20];
+                    x_lim_x_D3=[0 30];
+                    y_lim_x_D3=[0 12];
+                    x_lim_y_D3=[0 30];
+                    y_lim_y_D3=[0 6];
+                    x_lim_z_D3=[0 40];
+                    y_lim_z_D3=[0 12];
+                end
+            elseif strcmp(rf_fldr, 'MultiUnitBld_GeomVary_3lby2')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_x_D2=[0 0.35];
+                    y_lim_y_D2=[0 0.65];
+                    y_lim_z_D2=[0 0.8];
+                    x_lim_D2=[0 10];
+                    %-------------------------%
+                    x_lim_x_D3=[0 8];
+                    y_lim_x_D3=[0 0.7];
+                    x_lim_y_D3=[0 15];
+                    y_lim_y_D3=[0 2];
+                    x_lim_z_D3=[0 60];
+                    y_lim_z_D3=[0 2];
+                elseif strcmp(name_evnt, 'Insheim')
+                    y_lim_x_D2=[0 2.5];
+                    y_lim_y_D2=[0 1];
+                    y_lim_z_D2=[0 6];
+                    x_lim_D2=[0 20];
+                    %-------------------------%
+                    x_lim_x_D3=[0 10];
+                    y_lim_x_D3=[0 6.5];
+                    x_lim_y_D3=[0 15];
+                    y_lim_y_D3=[0 1.6];
+                    x_lim_z_D3=[0 50];
+                    y_lim_z_D3=[0 12];
+                end
+            elseif strcmp(rf_fldr, 'Vary_DampRatio')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_x_D2=[0 0.25];
+                    y_lim_y_D2=[0 0.4];
+                    y_lim_z_D2=[0 0.8];
+                    x_lim_D2=[0 10];
+                    %-------------------------%
+                    x_lim_x_D3=[0 10];
+                    y_lim_x_D3=[0 0.6];
+                    x_lim_y_D3=[0 10];
+                    y_lim_y_D3=[0 1.2];
+                    x_lim_z_D3=[0 30];
+                    y_lim_z_D3=[0 1.8];
+                elseif strcmp(name_evnt, 'Insheim')
+                    y_lim_x_D2=[0 2.2];
+                    y_lim_y_D2=[0 0.3];
+                    y_lim_z_D2=[0 6];
+                    x_lim_D2=[0 15];
+                    %-------------------------%
+                    x_lim_x_D3=[0 12];
+                    y_lim_x_D3=[0 4.5];
+                    x_lim_y_D3=[0 10];
+                    y_lim_y_D3=[0 1];
+                    x_lim_z_D3=[0 35];
+                    y_lim_z_D3=[0 12];
+                end
             end
         end
 
