@@ -14,6 +14,7 @@ Matlab_codes/SAVE_DATA
 *.csv
 *.xlsx
 *.zip
+*.mat
 # Ignore all text files
 *.txt
 *.dat
