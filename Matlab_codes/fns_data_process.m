@@ -72,5 +72,113 @@ classdef fns_data_process
                 cd Matlab_codes
             end
         end
+
+        function [stn_vect,date,time_evnt,r_vect]=get_event_fordataprocess(evnt)
+            %%
+            if strcmp(evnt, '2009')
+                stn_vect={'LDAU'};
+                date='2009_10_18';
+                time_evnt='19_12_12';
+                r_vect=4.66;
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2010_1')
+                stn_vect={'LDAU'};
+                date='2010_04_07';
+                time_evnt='09_04_04';
+                r_vect=5.27;
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2010_2')
+                stn_vect={'LDAU'};
+                date='2010_04_07';
+                time_evnt='13_46_21';
+                r_vect=5.27;
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2012_1')
+                stn_vect={'INS2','INS3','INS4','INS5','INS6', 'INSH'};
+                date='2012_11_12';
+                time_evnt='11_15_04';
+                r_vect=[3.19 7.67 6.76 3.52 6.67 0.64];
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2012_2')
+                stn_vect={'INS2','INS3','INS4','INS5','INS6', 'INSH'};
+                date='2012_11_12';
+                time_evnt='12_53_02';
+                r_vect=[2.88 7.36 6.84 3.63 6.57 0.95];
+                % tmin=0;
+                % tmax=50;
+
+            elseif strcmp(evnt, '2013Jan')
+                % stn_vect={'INS1'};
+                stn_vect={'INS1','INS2','INS3','INS4','INS5','INS6','INS7', 'INSH'};
+                date='2013_01_26';
+                time_evnt='19_48_27';
+                r_vect=[7.86 4.55 8.65 5.00 4.96 8.54 4.3 1.6];
+                % tmin=0;
+                % tmax=60;
+
+            elseif strcmp(evnt, '2013Feb') %%
+                stn_vect={'INS1','INS2','INS3','INS4','INS5','INS6','INS7','INSH'};
+                date='2013_02_17';
+                time_evnt='20_07_15';
+                r_vect=[7.82 4.74 8.79 4.78 5.16 8.77 4.36 1.82];
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2013Oct') %% higest magnitude
+                % stn_vect={'INS1','INS2','INS3','INS4','INS5','INS6','INS7',...
+                %     'INSH', 'TMO20', 'TMO22', 'TMO54', 'TMO55'};
+                stn_vect={'INSH','TMO54','INS5'};
+                r_vect=[1.9 3 5.2];
+                date='2013_10_02';
+                time_evnt='01_13_26';
+                % r_vect=[7.84 4.85 8.88 4.7 5.24 8.88 4.37 1.9 7.47 6.8 3 7.9];
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2013Nov18')
+                stn_vect={'INS1','INS2','INS3','INS4','INS5','INS6','INS7',...
+                    'INSH', 'TMO20', 'TMO22', 'TMO54', 'TMO55'};
+                date='2013_11_18';
+                time_evnt='12_54_15';
+                r_vect=[7.27 2.8 7.0 6.2 4.5 7.2 5.1 1.49 7.98 8.82 1.35 9.66];
+                % tmin=0;
+                % tmax=60;
+
+            elseif strcmp(evnt, '2013Nov21') %%
+                stn_vect={'INS1','INS2','INS3','INS4','INS5','INS6','INS7',...
+                    'INSH', 'TMO20', 'TMO22', 'TMO54', 'TMO55'};
+                date='2013_11_21';
+                time_evnt='14_15_22';
+                r_vect=[7.84 3.64 7.92 5.87 4.3 7.58 4.36 1.49 8.14 8.0 2.17 9.20];
+                % tmin=0;
+                % tmax=40;
+
+            elseif strcmp(evnt, '2016_1')
+                stn_vect={'A127A','INS3','INS4B','INS5','INS6B','INS7','INS8',...
+                    'INSH', 'TMO20', 'TMO22', 'TMO54', 'TMO55', 'TMO57', 'TMO66'};
+                date='2016_02_12';
+                time_evnt='06_26_04';
+                r_vect=[7.40 5.91 4.32 7.48 4.77 13.11 1.16 8.11 8.52 1.71 9.53 9.73 11.0 13.71];
+                % tmin=0;
+                % tmax=50;
+
+            elseif strcmp(evnt, '2016_2')
+                stn_vect={'INS1','INS3','INS4B','INS5','INS6B','INS7','INS8',...
+                    'INSH', 'TMO20', 'TMO54', 'TMO55', 'TMO57', 'TMO66'};
+                date='2016_07_14';
+                time_evnt='17_49_10';
+                r_vect=[7.99 8.02 5.76 4.17 7.71 4.22 12.74 0.77 8.27 2.30 9.25 9.18 10.98];
+                % tmin=0;
+                % tmax=40;
+            end
+        end
     end
 end

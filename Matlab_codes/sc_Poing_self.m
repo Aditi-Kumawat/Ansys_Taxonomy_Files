@@ -42,7 +42,7 @@ for i=1:n_stns
     if stn=="POI01"
         v_x_Po1=ff_Vamp_mat{1};
         v_y_Po1=ff_Vamp_mat{2};
-        v_z_Po1=ff_Vamp_mat{2};
+        v_z_Po1=ff_Vamp_mat{3};
     end
 end
 % Vinpt_PPV=(v_x_Po1.^2+v_y_Po1.^2+v_z_Po1.^2).^0.5;

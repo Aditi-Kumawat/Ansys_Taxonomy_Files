@@ -248,6 +248,6 @@ classdef fns_imprtdata
                 FACTR = input(prompt);
             end
         end
-
+       
     end
 end

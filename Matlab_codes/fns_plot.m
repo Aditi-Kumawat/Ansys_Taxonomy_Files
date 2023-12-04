@@ -105,12 +105,12 @@ classdef fns_plot
             for idx = 1:3
                 subplot(3,1,idx);
                 hold on;
-                if ~isempty(x_lim)
-                    xlim(x_lim);
-                end
-                if ~isempty(y_lim)
-                    ylim(y_lim);
-                end
+                % if ~isempty(x_lim)
+                %     xlim(x_lim);
+                % end
+                % if ~isempty(y_lim)
+                %     ylim(y_lim);
+                % end
                 plot(f{idx}, 1e3*FACTR*fnabs_mat{idx},...
                     'DisplayName',txt_l,'Color', cl{1},'LineWidth', 0.8)
                 legend('show', 'Box', 'off', 'Interpreter','latex',...
@@ -137,12 +137,12 @@ classdef fns_plot
             % filename1 = [sprintf(bf_nm, s_dir, evnt, date, time),...
             %     '_',typ, '.emf'];
 
-            cd SAVE_FIGS
-            cd FF_Data
-            print(gcf, '-dpdf', '-r300', filename);
+            % cd SAVE_FIGS
+            % cd FF_Data
+            % print(gcf, '-dpdf', '-r300', filename);
             % saveas(gcf, fullfile(filename1));
-            cd ..
-            cd ..
+            % cd ..
+            % cd ..
         end
         %% function for plotting that uses for loop to plot the
         % amplitude of the displacement for each floor size.
