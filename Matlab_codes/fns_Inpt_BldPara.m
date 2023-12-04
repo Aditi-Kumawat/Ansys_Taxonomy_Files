@@ -32,13 +32,25 @@ classdef fns_Inpt_BldPara
         end
 
         %%
-        function [l_vect,b_vect,h,wall_config,dampg_vect]=get_lbh_bldcases_for_rf_fldr(rf_fldr)
+        function [l_vect,b_vect,h,wall_config,dampg_vect,bld_cases]=get_lbh_bldcases_for_rf_fldr(rf_fldr)
             if strcmp(rf_fldr, 'MultiUnitBld_GeomVary_3lby2') || strcmp(rf_fldr, 'MultiUnitBld_GeomVary')
                 l_vect=[2 3 4 5 6 7 8];
                 b_vect=[2 3 4 5 6 7 8];
                 h = 3;
                 wall_config=[];
                 dampg_vect=[];
+
+                % Calculate the number of unique pair combinations
+                n = length(l_vect); % Number of elements in the vector
+                k = 2; % Choosing two elements
+                unique_combs = nchoosek(n, k);
+
+                % Add the repetitions (each element paired with itself)
+                repetitions = n;
+
+                % Total combinations
+                bld_cases = unique_combs + repetitions;
+
             elseif strcmp(rf_fldr, 'Bld_with_Walls')
                 l_vect=5;
                 b_vect=5;
@@ -46,12 +58,14 @@ classdef fns_Inpt_BldPara
                 wall_config = [1,2,3,4,5,6,7,8,9,10];
                 % wall_config = [1,2];
                 dampg_vect=[];
+                bld_cases = length(wall_config);
             elseif strcmp(rf_fldr, 'Vary_DampRatio')
                 l_vect=5;
                 b_vect=5;
                 h = 3;
                 wall_config=[];
                 dampg_vect = 0:0.005:0.1;
+                bld_cases=length(dampg_vect);
             end
         end
         %%
