@@ -40,7 +40,7 @@ classdef fns_EvntData
                 nzero=4;
                 fldr_nm = [stn, '_', evnt];
                 ff_fldr = fullfile('GM', 'GM_UH',fldr_nm);
-            elseif strcmp(name_evnt, 'Insheim')
+            elseif strcmp(name_evnt, 'Insheim_1')
                 evnt='Insheim_Oct2013';
                 stn='TMO54';
                 stn_vect={'INSH','TMO54','INS5'};
@@ -62,7 +62,7 @@ classdef fns_EvntData
 
             elseif strcmp(name_dataset, 'Unterhaching')
             elseif strcmp(name_dataset, 'Insheim_1')
-                event_vect = {'2009', '2010_1', '2010_2', '2012_1', '2012_2', '2013Jan', '2013Feb', '2013Oct', '2013Nov18', '2013Nov21', '2016_1', '2016_2'};
+                event_vect = {'2009', '2010_1', '2010_2', '2012_1', '2012_2', '2013_1', '2013_2', '2013_3', '2013_4', '2013_5', '2016_1', '2016_2'};
                 nzero=6;
             end
         end
@@ -74,7 +74,7 @@ classdef fns_EvntData
             elseif strcmp(name_evnt, 'Unterhaching')
                 fldr_nm = [stn, '_', evnt];
                 ff_fldr = fullfile('GM', 'GM_UH',fldr_nm);
-            elseif strcmp(name_evnt, 'Insheim')
+            elseif strcmp(name_evnt, 'Insheim_1')
                 ff_fldr = fullfile('GM','GM_Insheim_Oct2013', stn);
             end
         end
