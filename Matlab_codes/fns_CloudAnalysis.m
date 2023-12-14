@@ -77,7 +77,7 @@ classdef fns_CloudAnalysis
                 error('File %s does not exist.', filename2);
             end
         end
-         %%
+        %%
         function save_freq_forVmax(ff_Vamp_mat,f_inpt_V,ff_fldr)
             maxVx=max(ff_Vamp_mat{1});
             maxVy=max(ff_Vamp_mat{2});
@@ -138,6 +138,90 @@ classdef fns_CloudAnalysis
             fz = data1.f_vz_max;
             cd Matlab_codes
         end
+        %% plot results
+        function plot_CA(event_vect,all_PGV,all_max_v_or_KB,event_labels,ylb,xlb,titleText,filename)
+            evntlbl_length = jet(length(event_vect));
+            figure;
+            fnt=16;
+            s = scatter(all_PGV, all_max_v_or_KB, [], event_labels, 'filled');
+            colormap(evntlbl_length);
+            s.MarkerEdgeColor = 'k';
+            s.LineWidth = 0.1;
+            s.MarkerFaceAlpha = 1;
+            % Calculate the maximum value of all_PGV and add some space
+            max_PGV = max(all_PGV);
+            space_after_max = max_PGV * 0.1; % for example, 10% more than the max value
+            xlim([min(all_PGV) max_PGV + space_after_max]); % Set new x-axis limits
+            grid on;
+            xlabel(xlb, 'FontSize', fnt,'Interpreter', 'latex');
+            ylabel(ylb, 'FontSize', fnt,'Interpreter', 'latex');
+            set(gca, 'XScale', 'log');
+            set(gca, 'FontSize', fnt, 'Box', 'on', 'LineWidth', 0.5,...
+                'TickLabelInterpreter', 'latex', 'TickLength',[0.01,0.01]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 6 4],...
+                'PaperUnits', 'Inches', 'PaperSize', [6 4]);
+            % Create a custom legend
+            hold on;
+            legend_entries = gobjects(length(event_vect), 1); % Initialize an array of graphic objects
+            for ie = 1:length(event_vect)
+                % Create scatter plots for legend entries with the same marker properties
+                legend_entries(ie) = scatter(NaN, NaN, [], evntlbl_length(ie, :), 'filled', 'DisplayName', event_vect{ie});
+                legend_entries(ie).MarkerEdgeColor = 'k';
+                legend_entries(ie).LineWidth = 0.1;
+                legend_entries(ie).MarkerFaceAlpha = 1;
+            end
 
+            % Set legend to two columns
+            legend(legend_entries, 'NumColumns', 3, 'Location', 'northwest', 'FontSize', fnt,...
+                'Interpreter', 'latex','Box','off');
+            title(titleText, 'Interpreter', 'latex', 'FontSize', fnt);
+            hold off;
+            fns_FragilityFns.save_figure_to_pdf(filename);
+        end
+        %% plot results
+        function plot_CAfull(event_vect,all_PGV,all_max_v_or_KB,event_labels,ylb,xlb,titleText,filename)
+            evntlbl_length = jet(length(event_vect));
+
+            colors = evntlbl_length(event_labels, :);
+            figure;
+            fnt=18;
+            for i = 1:size(all_max_v_or_KB, 2)
+                s = scatter(all_PGV, all_max_v_or_KB(:,i), 100, colors, 'filled');
+                colormap(evntlbl_length);
+                s.MarkerEdgeColor = 'k';
+                s.LineWidth = 0.1;
+                % transperency commands-don't work with legend
+                % s.MarkerFaceAlpha = 0.6;
+                % s.MarkerEdgeAlpha = 0.6;
+                hold on;  % Hold on to plot all columns on the same figure
+            end
+            % Calculate the maximum value of all_PGV and add some space
+            max_PGV = max(all_PGV);
+            space_after_max = max_PGV * 0.3; % for example, 10% more than the max value
+            xlim([min(all_PGV) max_PGV + space_after_max]); % Set new x-axis limits
+            grid on;
+            xlabel(xlb, 'FontSize', fnt,'Interpreter', 'latex');
+            ylabel(ylb, 'FontSize', fnt,'Interpreter', 'latex');
+            set(gca, 'XScale', 'log');
+            set(gca, 'FontSize', fnt, 'Box', 'on', 'LineWidth', 0.5,...
+                'TickLabelInterpreter', 'latex', 'TickLength',[0.01,0.01]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 6.5 5.5],...
+                'PaperUnits', 'Inches', 'PaperSize', [6.5 5.5]);
+            % Create a custom legend
+            hold on;
+            legend_entries = gobjects(length(event_vect), 1);  % Initialize an array of graphic objects
+            for ie = 1:length(event_vect)
+                % Create dummy scatter plot handles for legend entries
+                legend_entries(ie) = plot(NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerEdgeColor', 'k', 'MarkerFaceColor', evntlbl_length(ie, :), 'DisplayName', event_vect{ie});
+                % set(legend_entries(ie), 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+            end
+
+            % Set legend with the custom plot handles
+            legend(legend_entries, 'NumColumns', 4, 'Location', 'northwest', 'FontSize', fnt, 'Interpreter', 'latex', 'Box', 'off');
+
+            % title(titleText, 'Interpreter', 'latex', 'FontSize', fnt);
+            hold off;
+            fns_FragilityFns.save_figure_to_pdf(filename);
+        end
     end
 end
