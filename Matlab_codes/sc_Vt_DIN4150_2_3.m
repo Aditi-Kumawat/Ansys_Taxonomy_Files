@@ -10,7 +10,7 @@ disp(['bld_soil_fndnPara: ', bld_soil_fndn])
 name_evnt= fns_EvntData.select_event_stn();
 disp(['selected_event: ', name_evnt])
 
-[l_vect,b_vect,h,wall_config,dampg_vect]=fns_Inpt_BldPara.get_lbh_bldcases_for_rf_fldr(rf_fldr);
+[l_vect,b_vect,h,wall_config,dampg_vect,bldcases]=fns_Inpt_BldPara.get_lbh_bldcases_for_rf_fldr(rf_fldr);
 
 [n_str,n_rx,n_ry,V_s,ftyp,B_f,L_f]=fns_Inpt_BldPara.get_nstr_nrxy_fndn_soil_info(bld_soil_fndn);
 
@@ -46,7 +46,7 @@ for i_stn=1:n_stns
 
     %% Importing Transfer function computed from ANSYS
     for i_str = 0:n_str
-        [f_vect, TF_amp_mat, TF_cpmlx_mat, bld_cases] = fns_Wall_and_DR.get_TF(rf_fldr,...
+        [f_vect, TF_amp_mat, TF_cpmlx_mat] = fns_Wall_and_DR.get_TF(rf_fldr,...
             n_str, n_rx, n_ry, l_vect, b_vect, ftyp, V_s, L_f, B_f,...
             wall_config, dampg_vect, i_str, n_c);
         for i_c = 1:n_c
@@ -95,7 +95,7 @@ for i_stn=1:n_stns
     % hold on
     % plot(t_in,(random_fn_ifft),'-.r');
     %% ----------------------------------------------------------------
-    num_lb=bld_cases;
+    num_lb=bldcases;
     for i_flur = 1:n_str+1
         %% IFFT original data
         Vss_Zmat = Vss_zCell{i_flur};  %length = 2049

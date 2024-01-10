@@ -1,13 +1,13 @@
 clear;  clc;
 close all
 % Define file path and prefix
-file_path = 'data_Vs30_Bld';
-file_prefix = 'receiver-';
+file_path = 'homo_soil/attn';
+file_prefix = '20hz-receiver-';
 x_val = 4000;
 y_val = 4000;
 % Define receiver range
-start_num = 936;
-end_num = 936;
+start_num = 17;
+end_num = 20;
 
 % Loop over receiver numbers
 for i = start_num:end_num
@@ -44,11 +44,11 @@ for i = start_num:end_num
     v_fft = fft(v, nfft) * (1/Fs);
     v_fft_ss = 2 * v_fft(1:nfft/2+1,:);
     v_fft_pad = [v_fft_ss; conj(flipud(v_fft_ss(2:end-1,:)))];
-%     v_fft_ss(1:3,:)=0;
+    %     v_fft_ss(1:3,:)=0;
     u_fft = fft(u, nfft) * (1/Fs);
     u_fft_ss = 2 * u_fft(1:nfft/2+1,:);
     f_matrix = repmat(freq', 1, 3);
-%     u_fft_ss=v_fft_ss./1i./(2*pi*f_matrix);
+    %     u_fft_ss=v_fft_ss./1i./(2*pi*f_matrix);
 
     u_fft_pad = [u_fft_ss; conj(flipud(u_fft_ss(2:end-1,:)))];
 
@@ -65,13 +65,13 @@ for i = start_num:end_num
     y_l_f='u(f)';
     x_l_t='Time~(s)';
     y_l_t='u(t)';
-    %     plot_tiles.plot_tiles_set_3(3,3,v_ini,v_resampled,v_ifft,t_ini,t_resampled,t,x_l_t,y_l_t,leg_vect)
-%     plot_tiles.plot_tiles_set_2(2,3,u_resampled,abs(u_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
-%     plot_tiles.plot_tiles_set_2(2,3,u_resampled,u_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
-%     y_l_f='v(t)';
-%     y_l_t='v(t)';
-% %     plot_tiles.plot_tiles_set_2(2,3,v_resampled,abs(v_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
-%     plot_tiles.plot_tiles_set_2(2,3,v_resampled,v_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    plot_tiles.plot_tiles_set_3(3,3,v_ini,v_resampled,v_ifft,t_ini,t_resampled,t,x_l_t,y_l_t,leg_vect)
+    %     plot_tiles.plot_tiles_set_2(2,3,u_resampled,abs(u_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    %     plot_tiles.plot_tiles_set_2(2,3,u_resampled,u_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    %     y_l_f='v(t)';
+    %     y_l_t='v(t)';
+    % %     plot_tiles.plot_tiles_set_2(2,3,v_resampled,abs(v_fft_ss),t_resampled,freq,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
+    %     plot_tiles.plot_tiles_set_2(2,3,v_resampled,v_ifft,t_resampled,t,x_l_f,y_l_f,x_l_t,y_l_t,leg_vect)
     %% Save data for Ansys
     save_data
 end

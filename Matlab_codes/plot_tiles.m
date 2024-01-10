@@ -65,7 +65,7 @@ classdef plot_tiles
             set(gcf,'Units','inches', 'Position', [18 3 12 6],...
                 'PaperUnits', 'Inches', 'PaperSize', [7.25, 9.125]);
             filename = ['disp_t_plus_fft', '.png'];
-            saveas(gcf, fullfile(filename));
+            % saveas(gcf, fullfile(filename));
         end
     end
 end
