@@ -29,7 +29,7 @@ ModAn='with_springs'
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !-------------------------------Mode Analysis-------------------------------!
-n_modes=40                     ! Number of modes to extract           
+n_modes=20                     ! Number of modes to extract           
 Star_ModeFreq=0                 ! Starting frequency                              
 End_ModeFreq=100                ! End frequency
 !------------------------------Mode Extraction------------------------------!

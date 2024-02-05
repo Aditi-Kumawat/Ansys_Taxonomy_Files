@@ -64,4 +64,61 @@ set,list
 !*enddo
 !/output,term
 
+
+!*GET,nbmode,ACTIVE,0,SOLU,NCMSS
+!*DIM,PF,ARRAY,nbmode,20
+!*do,i,1,nbmode
+!SET,1,i
+!*GET,PF(i,1),MODE,i,PFACT,,DIREC,X
+!*GET,PF(i,2),MODE,i,PFACT,,DIREC,Y
+!*GET,PF(i,3),MODE,i,PFACT,,DIREC,Z
+!*GET,PF(i,4),MODE,i,PFACT,,DIREC,ROTX
+!*GET,PF(i,5),MODE,i,PFACT,,DIREC,ROTY
+!*GET,PF(i,6),MODE,i,PFACT,,DIREC,ROTZ
+!*enddo
+!*CFOPEN,ParticipationFactor,txt,'Results_Ansys\Results_Modal'
+!*VWRITE,PF(1,1),PF(1,2),PF(1,3),PF(1,4),PF(1,5),PF(1,6)
+!(6(' ',F10.5))
+!*CFCLOS
+
+*GET,n_modes,ACTIVE,0,SOLU,NCMSS
+
+*DIM,MODAL_PF,ARRAY,n_modes,3
+*DIM,MODAL_EM,ARRAY,n_modes,3
+*DIM,MODAL_RAT,ARRAY,n_modes,1
+
+*DO,i,1,n_modes
+
+    SET,1,i
+
+    *GET,MODAL_PF(i,1),MODE,i,PFACT,,DIREC,X
+
+    *GET,MODAL_PF(i,2),MODE,i,PFACT,,DIREC,Y
+
+    *GET,MODAL_PF(i,3),MODE,i,PFACT,,DIREC,Z
+
+    *GET,MODAL_EM(i,1),MODE,i,MODM,,DIREC,X
+
+    *GET,MODAL_EM(i,2),MODE,i,MODM,,DIREC,Y
+
+    *GET,MODAL_EM(i,3),MODE,i,MODM,,DIREC,Z
+
+    *get,totmassx,ELEM,0,MTOT,X
+    !MODAL_RAT(i,1)=MODAL_EM(i,1)/totmassx
+    *get,totmassy,ELEM,0,MTOT,Y
+    *get,totmassz,ELEM,0,MTOT,Z
+
+*ENDDO
+
+*CFOPEN,PF,txt,'Results_Ansys\Results_Modal'
+
+*VWRITE,MODAL_PF(1,1), MODAL_PF(1,2), MODAL_PF(1,3), MODAL_EM(1,1), MODAL_EM(1,2) ,MODAL_EM(1,3)
+(F15.6,F15.6,F15.6,F15.6,F15.6,F15.6)
+
+*CFCLOS
+*CFOPEN,totmass,txt,'Results_Ansys\Results_Modal'
+*VWRITE, totmassx, totmassy, totmassz
+(F15.6,F15.6,F15.6)
+*CFCLOS
+
 FINISH 										! Finish and Exit Postprocessor
