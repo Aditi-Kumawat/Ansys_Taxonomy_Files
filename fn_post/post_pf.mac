@@ -1,0 +1,16 @@
+/SOLU   
+!*  
+ANTYPE,2
+!*  
+!*  
+MODOPT,LANB,10  
+EQSLV,SPAR  
+MXPAND,0, , ,0  
+LUMPM,0 
+PSTRES,0
+!*  
+MODOPT,LANB,10,0,0, ,OFF
+/STATUS,SOLU
+SOLVE  
+
+
