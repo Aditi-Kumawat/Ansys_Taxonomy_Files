@@ -12,13 +12,11 @@
 ftyp='PLATE'
 !ftyp='FOOTING'
 ModAn='fixed_base'
-!ModAn='with_springs'
 
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------! 
 /INPUT,'fn_pre\Pre_Para_main','mac'
-/INPUT,'fn_fndtn_para\fndn_para_cnstvals_FULL','mac'
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------! 
 *IF,ftyp,EQ,'FOOTING',THEN
@@ -37,24 +35,21 @@ delta_mode_extract=1            ! Save the deformation figure of the every
                                 ! (delta_mode_extract)th mode
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------! 
-*IF,ModAn,EQ,'fixed_base',THEN
-    NSEL,S,LOC,Z,0
-    CM, n_base, NODE           
-    NSEL,ALL
-    D,n_base,ux,0 
-    D,n_base,uy,0 
-    D,n_base,uz,0
-    D,n_base,rotx,0
-    D,n_base,roty,0
-    D,n_base,rotz,0
-    NSEL,ALL
-    FINISH 
-*ELSEIF,ModAn,EQ,'with_springs'
-    /INPUT,'fn_pre\Pre_CM_colbase_M27','mac'						
-    /INPUT,'fn_pre\Pre_M27_Full','mac'	
-    /INPUT,'fn_pre\Pre_M27_BaseFixed','mac'
-*ENDIF
-/eof
+NSEL,S,LOC,Z,0
+CM, n_base, NODE           
+NSEL,ALL
+D,n_base,ux,0 
+D,n_base,uy,0 
+D,n_base,uz,0
+D,n_base,rotx,0
+D,n_base,roty,0
+D,n_base,rotz,0
+NSEL,ALL
+FINISH 
+!---------------------------------------------------------------------------!
+!---------------------------------------------------------------------------! 
+
+
 /INPUT,'fn_analysis\Analysis_Modal','mac'
 !---------------------------------------------------------------------------!
 !---------------------------------------------------------------------------!
