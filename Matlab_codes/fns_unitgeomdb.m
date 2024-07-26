@@ -148,27 +148,41 @@ classdef fns_unitgeomdb
 
             set(gcf,'Units','inches', 'Position', [18 3 2.5 1.5],...
                 'PaperUnits', 'Inches', 'PaperSize', [2.5 1.5]);
-
-            filename = ['Vrms_db_geomvary_',cmp,'_',stn,'_nstr','_',num2str(n_str),...
+            % set(gcf,'Units','inches', 'Position', [18 3 3.5 2],... %%size for horz
+            % vert case
+            %               'PaperUnits', 'Inches', 'PaperSize', [3.5 2]);
+            filename = [r_fldr,'_','Vrms_db_geomvary_',cmp,'_',stn,'_nstr','_',num2str(n_str),...
                 '_flur','_',num2str(i_flur),'_Vs_', num2str(V_s), '_mean_std.pdf'];
+            filename2 = [r_fldr,'_','Vrms_db_geomvary_',cmp,'_',stn,'_nstr','_',num2str(n_str),...
+                '_flur','_',num2str(i_flur),'_Vs_', num2str(V_s), '_mean_std.fig'];
             filename1 = sprintf('Vrms_data_flur%d_Vs%d_stn%s_cmp%s', i_flur, V_s, stn, cmp);
             filename_csv = [filename1 '.csv'];
-            max_v_mean=max(V_rms_mean);
+            max_v_mean = max(V_rms_mean);
+            max_v_std = max(V_rms_std);
             [maxrow_indx, ~] = find(bsxfun(@eq, V_rms_mean, max_v_mean));
-            max_f=f_cenVect(maxrow_indx);
-            data_to_save = [f_cenVect.',V_rms_mean, V_rms_std,...
-                max_v_mean*ones(length(f_cenVect),1),...
-                max_f*ones(length(f_cenVect),1)];
+            [maxrow_indx1, ~] = find(bsxfun(@eq, V_rms_std, max_v_std));
+            max_f = f_cenVect(maxrow_indx);
+            max_fstd = f_cenVect(maxrow_indx1);
+            data_to_save = [f_cenVect.', V_rms_mean, V_rms_std, ...
+                max_v_mean * ones(length(f_cenVect), 1), ...
+                max_f * ones(length(f_cenVect), 1), ...
+                max_v_std * ones(length(f_cenVect), 1), ...
+                max_fstd * ones(length(f_cenVect), 1)];
+
+            head_nm = {'f_cen', 'v_m', 'v_SD', 'max_vm', 'max_f', 'max_vSD', 'max_fSD'};
+            T = array2table(data_to_save, 'VariableNames', head_nm);
 
             cd SAVE_FIGS
             if ~exist(r_fldr, 'dir')
                 mkdir(r_fldr);
             end
-            saveas(gcf, fullfile(r_fldr,filename));
-            writematrix(data_to_save, fullfile(r_fldr,filename_csv));
+            saveas(gcf, fullfile(r_fldr, filename));
+            saveas(gcf, fullfile(r_fldr, filename2));
+            writetable(T, fullfile(r_fldr, filename_csv));
             cd ..
             cd ..
             cd Matlab_codes
+
         end
         %%
         function [f,v,v_db]=DIN4150_3_lims(v_ref,iflur)
@@ -264,7 +278,7 @@ classdef fns_unitgeomdb
                     scatterHandles(i_stn) = scatter(f_max,1e3*max_Vxyz,sz,'MarkerEdgeColor','k',...
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
                 end
-                legend(scatterHandles, stn_vect,'Box', 'off','FontSize',8,'Interpreter','latex');
+                legend(scatterHandles, stn_vect,'Box', 'off','FontSize',10,'Interpreter','latex');
                 ylim(y_lim)
                 xlim(x_lim)
                 grid off;
@@ -276,12 +290,12 @@ classdef fns_unitgeomdb
                     'Interpreter','latex')
                 ylabel(ylbl,'FontSize',11,'Interpreter','latex')
                 hold on
-                set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
+                set(gcf,'Units','inches', 'Position', [11 3 3 2.3],...
                     'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                filename = [name_evnt,'_',r_fldr,'_V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.pdf'];
-                filename1 = [name_evnt,'V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
+                filename1 = [name_evnt,'_',r_fldr,'_V_',cmp,'_DIN4150_3_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.fig'];
 
                 cd SAVE_FIGS
@@ -295,8 +309,69 @@ classdef fns_unitgeomdb
                 cd Matlab_codes
             end
         end
+        %% This one saves the excel data
+        function plot_DIN4150_3_XYZ1(v_ref, n_flur, f_max3D, max_Vxyz3D, V_s, n_stns, stn_vect, name_evnt, ylbl, cmp, x_lim, y_lim, r_fldr)
+            ha_cl = @colors;
+            lcol = {ha_cl('ball blue'), ha_cl('crimson'), ha_cl('gray')};
+            scatterHandles = zeros(1, n_stns);
+            sz = 80;
+
+            for i_flur = n_flur
+                [f, v, v_db] = fns_unitgeomdb.DIN4150_3_lims(v_ref, i_flur);
+                figure
+                for i_stn = 1:n_stns
+                    f_max = f_max3D(i_stn, :, i_flur);
+                    max_Vxyz = max_Vxyz3D(i_stn, :, i_flur);
+                    % plot(f,v*1e3)
+                    hold on
+                    scatterHandles(i_stn) = scatter(f_max, 1e3 * max_Vxyz, sz, 'MarkerEdgeColor', 'k', ...
+                        'MarkerFaceColor', lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+
+                    % Create a table for each station
+                    len_f_max = length(f_max);
+                    numeration = (1:len_f_max)';
+                    T = table(numeration, f_max', (max_Vxyz*1e3)', 'VariableNames', {'Index', 'f_max(Hz)', 'max_Vxyz(mm/s)'});
+                    sheetName = ['Station_' stn_vect{i_stn}];
+
+                    % Save the table to an Excel file in the same folder as figures
+                    filename = ['Serv_',name_evnt, '_', r_fldr, '_flur_', num2str(i_flur), cmp, '.xlsx'];
+                    if i_stn == 1
+                        writetable(T, fullfile('SAVE_FIGS', r_fldr, filename), 'Sheet', sheetName, 'WriteMode', 'overwrite');
+                    else
+                        writetable(T, fullfile('SAVE_FIGS', r_fldr, filename), 'Sheet', sheetName, 'WriteMode', 'append');
+                    end
+                end
+
+                legend(scatterHandles, stn_vect, 'Box', 'off', 'FontSize', 10, 'Interpreter', 'latex');
+                ylim(y_lim)
+                xlim(x_lim)
+                grid off;
+                hold off;
+                set(gca, 'FontSize', 10, 'Box', 'on', 'LineWidth', 1, ...
+                    'TickLabelInterpreter', 'latex', 'TickLength', [0.01, 0.01]);
+                xlabel({'$f_d$,~Hz'}, 'FontSize', 11, 'Interpreter', 'latex')
+                ylabel(ylbl, 'FontSize', 11, 'Interpreter', 'latex')
+                hold on
+                set(gcf, 'Units', 'inches', 'Position', [11 3 3 2.3], ...
+                    'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
+
+                pdf_filename = [name_evnt, '_', r_fldr, '_V_', cmp, '_DIN4150_3_cmpr_flur_', num2str(i_flur), '_Vs_', num2str(V_s), '.pdf'];
+                fig_filename = [name_evnt, '_', r_fldr, '_V_', cmp, '_DIN4150_3_cmpr_flur_', num2str(i_flur), '_Vs_', num2str(V_s), '.fig'];
+
+                cd SAVE_FIGS
+                if ~exist(r_fldr, 'dir')
+                    mkdir(r_fldr);
+                end
+                saveas(gcf, fullfile(r_fldr, pdf_filename));
+                saveas(gcf, fullfile(r_fldr, fig_filename));
+                cd ..
+                cd ..
+                cd Matlab_codes
+            end
+        end
+
         %% !!!!!functions below are added from Wei's branch!!!!
-        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,x_lim,y_lim,r_fldr)
+        function plot_DIN4150_2_XYZ(n_flur,f_max3D,max_Vxyz3D,V_s,n_stns,stn_vect,name_evnt,xlbl,ylbl,cmp,bldtyp,x_lim,y_lim,r_fldr)
             ha_cl = @colors;
             lcol = {ha_cl('ball blue'),ha_cl('crimson'),...
                 ha_cl('gray')};
@@ -304,12 +379,13 @@ classdef fns_unitgeomdb
             sz=80;
             timeofday="night";
             A_values_night=fns_KBvalue.find_A_values(bldtyp,timeofday);
-            Au_vect_night=A_values_night(1)*ones(1,length(t_in));
-            Ao_vect_night=A_values_night(2)*ones(1,length(t_in));
+            y_vect=(0:0.1:x_lim(2)).';
+            Au_vect_night=A_values_night(1)*ones(1,length(y_vect));
+            Ao_vect_night=A_values_night(2)*ones(1,length(y_vect));
             timeofday="day";
             A_values_day=fns_KBvalue.find_A_values(bldtyp,timeofday);
-            Au_vect_day=A_values_day(1)*ones(1,length(t_in));
-            Ao_vect_day=A_values_day(2)*ones(1,length(t_in));
+            Au_vect_day=A_values_day(1)*ones(1,length(y_vect));
+            Ao_vect_day=A_values_day(2)*ones(1,length(y_vect));
 
             au_color = ha_cl('denim');
             ao_color = ha_cl('red');
@@ -322,21 +398,35 @@ classdef fns_unitgeomdb
                     hold on
                     scatterHandles(i_stn) = scatter(f_max,max_Vxyz,sz,'MarkerEdgeColor','k',...
                         'MarkerFaceColor',lcol{i_stn}, 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
+                    % Create a table for each station
+                    len_f_max = length(f_max);
+                    numeration = (1:len_f_max)';
+                    T = table(numeration, f_max', (max_Vxyz*1e3)', 'VariableNames', {'Index', 'f_max(Hz)', 'max_Vxyz(mm/s)'});
+                    sheetName = ['Station_' stn_vect{i_stn}];
+
+                    % Save the table to an Excel file in the same folder as figures
+                    filename = ['Comf_',name_evnt, '_', r_fldr, '_flur_', num2str(i_flur), cmp, '.xlsx'];
+                    if i_stn == 1
+                        writetable(T, fullfile('SAVE_FIGS', r_fldr, filename), 'Sheet', sheetName, 'WriteMode', 'overwrite');
+                    else
+                        writetable(T, fullfile('SAVE_FIGS', r_fldr, filename), 'Sheet', sheetName, 'WriteMode', 'append');
+                    end
                 end
                 hold on
-                h_Au = plot(t_in, Au_vect_night, 'LineWidth', 1.2, 'Color', au_color); hold on;
-                h_Ao = plot(t_in, Ao_vect_night, 'LineWidth', 1.2, 'Color', ao_color);
-                h_Au_day = plot(t_in, Au_vect_day, 'LineWidth', 1.2, 'LineStyle', '-.', 'Color', au_color); hold on;
-                h_Ao_day = plot(t_in, Ao_vect_day, 'LineWidth', 1.2, 'LineStyle', '-.', 'Color', ao_color);
+                h_Au = plot(y_vect, Au_vect_night, 'LineWidth', 1, 'Color', au_color); hold on;
+                h_Ao = plot(y_vect, Ao_vect_night, 'LineWidth', 1, 'Color', ao_color);
+                h_Au_day = plot(y_vect, Au_vect_day, 'LineWidth', 1, 'LineStyle', '-.', 'Color', au_color); hold on;
+                h_Ao_day = plot(y_vect, Ao_vect_day, 'LineWidth', 0.5, 'LineStyle', '-.', 'Color', ao_color);
                 x_upper_lim_for_plot = max(max(f_max3D(:,:,i_flur)));
                 y_upper_lim_for_plot = max(max(max_Vxyz3D(:,:,i_flur)));
-                legend_handles = [scatterHandles];
-                legend_labels = [stn_vect];
-                % legend_handles = [scatterHandles, h_Au_day, h_Ao_day, h_Au, h_Ao];
-                % legend_labels = [stn_vect, '$A_u (day)$', '$A_o (day)$', '$A_u (night)$', '$A_o (night)$'];
-                legend(legend_handles, legend_labels, 'Box', 'off', 'FontSize', 10, 'Interpreter', 'latex');
+                % legend_handles = [scatterHandles];
+                % legend_labels = [stn_vect];
+                legend_handles = [scatterHandles, h_Au_day, h_Ao_day, h_Au, h_Ao];
+                legend_labels = [stn_vect, '$A_u(d)$', '$A_o(d)$', '$A_u(n)$', '$A_o(n)$'];
+                lgd = legend(legend_handles, legend_labels, 'Box', 'off', 'FontSize', 10, 'Interpreter', 'latex');
 
-                hold on
+                % Shorten the legend handles
+                set(lgd, 'ItemTokenSize', [10, 5]);
 
                 %ylim([0 5e-3])
                 ylim(y_lim)
@@ -347,16 +437,16 @@ classdef fns_unitgeomdb
                 set(gca,'FontSize',10, 'Box', 'on','LineWidth',1,...
                     'TickLabelInterpreter','latex',...
                     'TickLength',[0.01,0.01]);
-                xlabel({'time,~s'},'FontSize',11,...
+                xlabel(xlbl,'FontSize',11,...
                     'Interpreter','latex')
                 ylabel(ylbl,'FontSize',11,'Interpreter','latex')
                 hold on
                 set(gcf,'Units','inches', 'Position', [18 3 3 2.3],...
                     'PaperUnits', 'Inches', 'PaperSize', [3 2.3]);
 
-                filename = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                filename = [name_evnt,'_',r_fldr,'_V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.pdf'];
-                filename1 = [name_evnt,'V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
+                filename1 = [name_evnt,'_',r_fldr,'_V_',cmp,'_DIN4150_2_cmpr_flur_',num2str(i_flur),...
                     '_Vs_', num2str(V_s), '.fig'];
 
                 cd SAVE_FIGS
@@ -386,7 +476,7 @@ classdef fns_unitgeomdb
                     y_lim_y_D3=[0 4];
                     x_lim_z_D3=[0 40];
                     y_lim_z_D3=[0 2];
-                elseif strcmp(name_evnt, 'Insheim')
+                elseif strcmp(name_evnt, 'Insheim_1')
                     y_lim_x_D2=[0 5.5];
                     y_lim_y_D2=[0 3.5];
                     y_lim_z_D2=[0 6];
@@ -397,6 +487,8 @@ classdef fns_unitgeomdb
                     y_lim_y_D3=[0 6];
                     x_lim_z_D3=[0 40];
                     y_lim_z_D3=[0 12];
+                    x_lim=[0 50];
+                    y_lim=[0 6];
                 end
             elseif strcmp(rf_fldr, 'MultiUnitBld_GeomVary_3lby2')
                 if strcmp(name_evnt, 'Poing')
@@ -411,7 +503,7 @@ classdef fns_unitgeomdb
                     y_lim_y_D3=[0 2];
                     x_lim_z_D3=[0 60];
                     y_lim_z_D3=[0 2];
-                elseif strcmp(name_evnt, 'Insheim')
+                elseif strcmp(name_evnt, 'Insheim_1')
                     y_lim_x_D2=[0 2.5];
                     y_lim_y_D2=[0 1];
                     y_lim_z_D2=[0 6];
@@ -437,7 +529,7 @@ classdef fns_unitgeomdb
                     y_lim_y_D3=[0 1.2];
                     x_lim_z_D3=[0 30];
                     y_lim_z_D3=[0 1.8];
-                elseif strcmp(name_evnt, 'Insheim')
+                elseif strcmp(name_evnt, 'Insheim_1')
                     y_lim_x_D2=[0 2.2];
                     y_lim_y_D2=[0 0.3];
                     y_lim_z_D2=[0 6];
@@ -452,6 +544,77 @@ classdef fns_unitgeomdb
                 end
             end
         end
-
+        %%
+        function [y_lim_D2,x_lim_D2,x_lim_x_D3,...
+                y_lim_x_D3,x_lim_y_D3,y_lim_y_D3,x_lim_z_D3,y_lim_z_D3]=...
+                get_ylim1(rf_fldr,name_evnt)
+            if strcmp(rf_fldr, 'Bld_with_Walls')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_D2=[0 2];
+                    x_lim_D2=[0 10];
+                    %-------------------------%
+                    x_lim_x_D3=[0 30];
+                    y_lim_x_D3=[0 1.5];
+                    x_lim_y_D3=[0 30];
+                    y_lim_y_D3=[0 4];
+                    x_lim_z_D3=[0 40];
+                    y_lim_z_D3=[0 2];
+                elseif strcmp(name_evnt, 'Insheim_1')
+                    y_lim_D2=[0 7];
+                    x_lim_D2=[0 50];
+                    %-------------------------%
+                    x_lim_x_D3=[0 30];
+                    y_lim_x_D3=[0 12];
+                    x_lim_y_D3=[0 30];
+                    y_lim_y_D3=[0 6];
+                    x_lim_z_D3=[0 40];
+                    y_lim_z_D3=[0 12];
+                end
+            elseif strcmp(rf_fldr, 'MultiUnitBld_GeomVary_3lby2')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_D2=[0 0.65];
+                    x_lim_D2=[0 10];
+                    %-------------------------%
+                    x_lim_x_D3=[0 8];
+                    y_lim_x_D3=[0 0.7];
+                    x_lim_y_D3=[0 15];
+                    y_lim_y_D3=[0 2];
+                    x_lim_z_D3=[0 60];
+                    y_lim_z_D3=[0 2];
+                elseif strcmp(name_evnt, 'Insheim_1')
+                    y_lim_D2=[0 7];
+                    x_lim_D2=[0 60];
+                    %-------------------------%
+                    x_lim_x_D3=[0 10];
+                    y_lim_x_D3=[0 6.5];
+                    x_lim_y_D3=[0 15];
+                    y_lim_y_D3=[0 1.6];
+                    x_lim_z_D3=[0 50];
+                    y_lim_z_D3=[0 12];
+                end
+            elseif strcmp(rf_fldr, 'Vary_DampRatio')
+                if strcmp(name_evnt, 'Poing')
+                    y_lim_D2=[0 0.8];
+                    x_lim_D2=[0 10];
+                    %-------------------------%
+                    x_lim_x_D3=[0 10];
+                    y_lim_x_D3=[0 0.6];
+                    x_lim_y_D3=[0 10];
+                    y_lim_y_D3=[0 1.2];
+                    x_lim_z_D3=[0 30];
+                    y_lim_z_D3=[0 1.8];
+                elseif strcmp(name_evnt, 'Insheim_1')
+                    y_lim_D2=[0 7];
+                    x_lim_D2=[0 30];
+                    %-------------------------%
+                    x_lim_x_D3=[0 12];
+                    y_lim_x_D3=[0 4.5];
+                    x_lim_y_D3=[0 10];
+                    y_lim_y_D3=[0 1];
+                    x_lim_z_D3=[0 35];
+                    y_lim_z_D3=[0 12];
+                end
+            end
+        end
     end
 end

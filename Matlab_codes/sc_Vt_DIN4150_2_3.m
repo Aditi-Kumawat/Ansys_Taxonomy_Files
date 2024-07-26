@@ -33,8 +33,8 @@ for i_stn=1:n_stns
     [f_inpt_V,ff_Vamp_mat,ff_Vr_mat,ff_VIm_mat,ff_Vcmplx_mat]=...
         fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
         stn,date, time,n_snr,ff_fldr,cols);
-    fns_plot.plt_ff(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-        stn,date, time,'Velocity~(m/s)','initial')
+    % fns_plot.plt_ff(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
+    %     stn,date, time,'Velocity~(m/s)','initial')
 
     [t_in,ff_Vt]=...
         fns_imprtdata.get_ff_tim(bf_nm_vt,s_dir,...
@@ -59,7 +59,7 @@ for i_stn=1:n_stns
             Vabs_mat{i_c}=abs(Ucmplx_mat{i_c}.*1i.*f_inpt{i_c}*2*pi);
             Vcmplx_mat{i_c}=(Ucmplx_mat{i_c}.*1i.*f_inpt{i_c}*2*pi);
             %% Apply filter transfer to KB(f)
-            V_KB_freq{i_c} = fns_KBvalue.fn_kb_highpass(f_inpt{i_c},Vcmplx_mat{i_c},5.6);
+            KB_freq{i_c} = fns_KBvalue.fn_kb_highpass(f_inpt{i_c},Vcmplx_mat{i_c},5.6);
         end
         % Original data
         Vss_zCell{i_str+1} = Vcmplx_mat{3};
@@ -67,9 +67,9 @@ for i_stn=1:n_stns
         Vss_yCell{i_str+1} = Vcmplx_mat{2};
 
         %Data with filter: KB(f)
-        V_KB_freq_zCell{i_str+1} = V_KB_freq{3};
-        V_KB_freq_xCell{i_str+1} = V_KB_freq{1};
-        V_KB_freq_yCell{i_str+1} = V_KB_freq{2};
+        KB_freq_zCell{i_str+1} = KB_freq{3};
+        KB_freq_xCell{i_str+1} = KB_freq{1};
+        KB_freq_yCell{i_str+1} = KB_freq{2};
     end
 
     %% IFFT compute v(t)
@@ -96,12 +96,12 @@ for i_stn=1:n_stns
     % plot(t_in,(random_fn_ifft),'-.r');
     %% ----------------------------------------------------------------
     num_lb=bldcases;
-    for i_flur = 1:n_str+1
+    % for i_flur = 1:n_str+1 !!!!!!!! check
+    for i_flur = 4
         %% IFFT original data
         Vss_Zmat = Vss_zCell{i_flur};  %length = 2049
         Vss_Xmat = Vss_xCell{i_flur};
         Vss_Ymat = Vss_yCell{i_flur};
-
 
         Vzss_fft_pad = [Vss_Zmat; conj(flipud(Vss_Zmat(2:end-1,:)))];
         Vxss_fft_pad = [Vss_Xmat; conj(flipud(Vss_Xmat(2:end-1,:)))];
@@ -121,24 +121,24 @@ for i_stn=1:n_stns
 
 
         %% IFFT data with filter
-        V_KB_Zmat = V_KB_freq_zCell{i_flur};
-        V_KB_Xmat = V_KB_freq_xCell{i_flur};
-        V_KB_Ymat = V_KB_freq_yCell{i_flur};
-        Vz_KB_fft_pad = [V_KB_Zmat; conj(flipud(V_KB_Zmat(2:end-1,:)))];
-        Vx_KB_fft_pad = [V_KB_Xmat; conj(flipud(V_KB_Xmat(2:end-1,:)))];
-        Vy_KB_fft_pad = [V_KB_Ymat; conj(flipud(V_KB_Ymat(2:end-1,:)))];
+        KBss_Zmat = KB_freq_zCell{i_flur};
+        KBss_Xmat = KB_freq_xCell{i_flur};
+        KBss_Ymat = KB_freq_yCell{i_flur};
+        KBz_fft_pad = [KBss_Zmat; conj(flipud(KBss_Zmat(2:end-1,:)))];
+        KBx_fft_pad = [KBss_Xmat; conj(flipud(KBss_Xmat(2:end-1,:)))];
+        KBy_fft_pad = [KBss_Ymat; conj(flipud(KBss_Ymat(2:end-1,:)))];
 
-        Vz_KB_ifft = ifft(Vz_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-        Vx_KB_ifft = ifft(Vx_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-        Vy_KB_ifft = ifft(Vy_KB_fft_pad*Fs, nfft, 1, 'symmetric');
-        Vz_KB_ifft = Vz_KB_ifft(1:length(t_in),:);
-        Vx_KB_ifft = Vx_KB_ifft(1:length(t_in),:);
-        Vy_KB_ifft = Vy_KB_ifft(1:length(t_in),:);
+        KBz_ifft = ifft(KBz_fft_pad*Fs, nfft, 1, 'symmetric');
+        KBx_ifft = ifft(KBx_fft_pad*Fs, nfft, 1, 'symmetric');
+        KBy_ifft = ifft(KBy_fft_pad*Fs, nfft, 1, 'symmetric');
+        KBz_ifft = KBz_ifft(1:length(t_in),:);
+        KBx_ifft = KBx_ifft(1:length(t_in),:);
+        KBy_ifft = KBy_ifft(1:length(t_in),:);
 
         % Store the result in Cell : {floor num}
-        Vz_KB_ifft_cell{i_flur} = Vz_KB_ifft;
-        Vx_KB_ifft_cell{i_flur} = Vx_KB_ifft;
-        Vy_KB_ifft_cell{i_flur} = Vy_KB_ifft;
+        KBz_ifft_cell{i_flur} = KBz_ifft;
+        KBx_ifft_cell{i_flur} = KBx_ifft;
+        KBy_ifft_cell{i_flur} = KBy_ifft;
 
         t = (0:length(Vz_ifft)-1) / Fs;
 
@@ -146,13 +146,14 @@ for i_stn=1:n_stns
         max_Vymat(i_stn,:,i_flur)=max(Vy_ifft);
         max_Vzmat(i_stn,:,i_flur)=max(Vz_ifft);
 
-        KB_f_x = fns_KBvalue.fn_rms_kb(t, Vx_KB_ifft*1000 , 0.125);
-        KB_f_y = fns_KBvalue.fn_rms_kb(t, Vy_KB_ifft*1000 , 0.125);
-        KB_f_z = fns_KBvalue.fn_rms_kb(t, Vz_KB_ifft*1000 , 0.125);
+        KB_f_x = fns_KBvalue.fn_rms_kb(t, KBx_ifft*1000 , 0.125);
+        KB_f_y = fns_KBvalue.fn_rms_kb(t, KBy_ifft*1000 , 0.125);
+        KB_f_z = fns_KBvalue.fn_rms_kb(t, KBz_ifft*1000 , 0.125);
 
-        max_Vx_KB_f_mat(i_stn,:,i_flur)=max(KB_f_x);
-        max_Vy_KB_f_mat(i_stn,:,i_flur)=max(KB_f_y);
-        max_Vz_KB_f_mat(i_stn,:,i_flur)=max(KB_f_z);
+        max_KBx_f_mat(i_stn,:,i_flur)=max(KB_f_x);
+        max_KBy_f_mat(i_stn,:,i_flur)=max(KB_f_y);
+        max_KBz_f_mat(i_stn,:,i_flur)=max(KB_f_z);
+        max_KB_f_mat(i_stn,:,i_flur) = max([max(KB_f_x); max(KB_f_y); max(KB_f_z)], [], 1);
 
         for ilb=1:num_lb
 
@@ -170,46 +171,86 @@ for i_stn=1:n_stns
 
             %find the time of max Kb_f
             KB_f_x_vect=KB_f_x(:,ilb);
-            [~, index] = max(KB_f_x_vect);
+            [max_x, index] = max(KB_f_x_vect);
             t_x_max(i_stn,ilb,i_flur)=t(index);
 
             KB_f_y_vect=KB_f_y(:,ilb);
-            [~, index] = max(KB_f_y_vect);
+            [max_y, index] = max(KB_f_y_vect);
             t_y_max(i_stn,ilb,i_flur)=t(index);
 
             KB_f_z_vect=KB_f_z(:,ilb);
-            [~, index] = max(KB_f_z_vect);
+            [max_z, index] = max(KB_f_z_vect);
             t_z_max(i_stn,ilb,i_flur)=t(index);
+            % Determine the maximum value among the three directions and select the corresponding time
+            [~, max_idx] = max([max_x, max_y, max_z]);
+            if max_idx == 1
+                t_max(i_stn,ilb,i_flur) = t_x_max(i_stn,ilb,i_flur);
+            elseif max_idx == 2
+                t_max(i_stn,ilb,i_flur) = t_y_max(i_stn,ilb,i_flur);
+            else
+                t_max(i_stn,ilb,i_flur) = t_z_max(i_stn,ilb,i_flur);
+            end
+
+            % find the freq of max KBss
+            KBss_Xvect=abs(KBss_Xmat(:,ilb));
+            [max_x, ~] = max(KBss_Xvect);
+            KBss_Yvect=abs(KBss_Ymat(:,ilb));
+            [max_y, ~] = max(KBss_Yvect);
+            KBss_Zvect=abs(KBss_Zmat(:,ilb));
+            [max_z, ~] = max(KBss_Zvect);
+            % Determine the maximum value among the three directions and
+            % select the corresponding freq
+            [~, max_idx] = max([max_x, max_y, max_z]);
+            if max_idx == 1
+                f_max(i_stn,ilb,i_flur) = f_x_max(i_stn,ilb,i_flur);
+            elseif max_idx == 2
+                f_max(i_stn,ilb,i_flur) = f_y_max(i_stn,ilb,i_flur);
+            else
+                f_max(i_stn,ilb,i_flur) = f_z_max(i_stn,ilb,i_flur);
+            end
         end
     end
 end
-[y_lim_x_D2,y_lim_y_D2,y_lim_z_D2,x_lim_D2,x_lim_x_D3,...
-                y_lim_x_D3,x_lim_y_D3,y_lim_y_D3,x_lim_z_D3,y_lim_z_D3]=...
-                fns_unitgeomdb.get_ylim(rf_fldr,name_evnt);
-ylbl_vect={'$v_{x,max}$,~mm/s', '$v_{y,max}$,~mm/s', '$v_{z,max}$,~mm/s'};
+% [y_lim_x_D2,y_lim_y_D2,y_lim_z_D2,x_lim_D2,x_lim_x_D3,...
+%     y_lim_x_D3,x_lim_y_D3,y_lim_y_D3,x_lim_z_D3,y_lim_z_D3]=...
+%     fns_unitgeomdb.get_ylim(rf_fldr,name_evnt);
+[y_lim_D2,x_lim_D2,x_lim_x_D3,...
+    y_lim_x_D3,x_lim_y_D3,y_lim_y_D3,x_lim_z_D3,y_lim_z_D3]=...
+    fns_unitgeomdb.get_ylim1(rf_fldr,name_evnt);
+%%
+ylbl_vect={'$\max[v_x(t)]$,~mm/s', '$\max[v_y(t)]$,~mm/s', '$\max[v_z(t)]$,~mm/s'};
 
 ylbl=ylbl_vect{1};
 cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_x_D3,y_lim_x_D3,rf_fldr)
+fns_unitgeomdb.plot_DIN4150_3_XYZ1(v_ref,n_str+1,f_x_max,max_Vxmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_x_D3,y_lim_x_D3,rf_fldr)
 ylbl=ylbl_vect{2};
 cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_y_D3,y_lim_y_D3,rf_fldr)
+fns_unitgeomdb.plot_DIN4150_3_XYZ1(v_ref,n_str+1,f_y_max,max_Vymat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_y_D3,y_lim_y_D3,rf_fldr)
 ylbl=ylbl_vect{3};
 cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_3_XYZ(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_z_D3,y_lim_z_D3,rf_fldr)
+fns_unitgeomdb.plot_DIN4150_3_XYZ1(v_ref,n_str+1,f_z_max,max_Vzmat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,x_lim_z_D3,y_lim_z_D3,rf_fldr)
 
 %%
 bldtyp="ReinesWohngebiet";
-ylbl_vect={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
-
-ylbl=ylbl_vect{1};
-cmp=cmpt{1};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_Vx_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_x_D2,rf_fldr)
-
-ylbl=ylbl_vect{2};
-cmp=cmpt{2};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_Vy_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_y_D2,rf_fldr)
-
-ylbl=ylbl_vect{3};
-cmp=cmpt{3};
-fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_Vz_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_z_D2,rf_fldr)
+ylbl_vect={'$\max[KB_{F}(x)]$', '$\max[KB_{F}(y)]$', '$\max[KB_{F}(z)]$'};
+xlbl_vect={'$t_p$,~s','$f_d$,~Hz'};
+% ylbl=ylbl_vect{1};
+% xlbl=xlbl_vect{1};
+% cmp=cmpt{1};
+% fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_x_max,max_KBx_f_mat,V_s,n_stns,stn_vect,name_evnt,xlbl,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_x_D2,rf_fldr)
+%
+% ylbl=ylbl_vect{2};
+% xlbl=xlbl_vect{1};
+% cmp=cmpt{2};
+% fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_y_max,max_KBy_f_mat,V_s,n_stns,stn_vect,name_evnt,xlbl,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_y_D2,rf_fldr)
+%
+% ylbl=ylbl_vect{3};
+% xlbl=xlbl_vect{1};
+% cmp=cmpt{3};
+% fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,t_z_max,max_KBz_f_mat,V_s,n_stns,stn_vect,name_evnt,xlbl,ylbl,cmp,bldtyp,t_in,x_lim_D2,y_lim_z_D2,rf_fldr)
+%%
+% ylbl='$\max[KB_{F}]$';
+% xlbl=xlbl_vect{2};
+% cmp='max';
+% 
+% fns_unitgeomdb.plot_DIN4150_2_XYZ(n_str+1,f_max,max_KB_f_mat,V_s,n_stns,stn_vect,name_evnt,xlbl,ylbl,cmp,bldtyp,x_lim_D2,y_lim_D2,rf_fldr)
