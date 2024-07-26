@@ -94,19 +94,7 @@ end
 %% Importing data for building vibrations generated using Seisol
 rec_vect=[18 19 20];
 
-rec_f=rec_vect(i_str+1);
-fil_nm1 = strcat(sprintf('vt_rec_%d',rec_f), '.txt');
-% funs_plot_properties.import_tim_data(fref_data_folder,filename)
-cd ..
-% Combine the directory path and file name using the file separator
-fil_pth = [ff_fldr filesep fil_nm1];
 
-% Import the data
-data_seissol = readtable(fil_pth);
-cd Matlab_codes
-
-% Assign column names
-data_seissol.Properties.VariableNames = {'t', 'data_x', 'data_y', 'data_z'};
 
 %% Importing the time-domain results generated in Ansys for disp and convert those to velocity
 ut_mat=cell(1, n_c);
@@ -114,6 +102,19 @@ u_fft=cell(1, n_c);
 vt_mat=cell(1, n_c);
 
 for i_str = 0:n_str
+    rec_f=rec_vect(i_str+1);
+    fil_nm1 = strcat(sprintf('vt_rec_%d',rec_f), '.txt');
+    % funs_plot_properties.import_tim_data(fref_data_folder,filename)
+    cd ..
+    % Combine the directory path and file name using the file separator
+    fil_pth = [ff_fldr filesep fil_nm1];
+
+    % Import the data
+    data_seissol = readtable(fil_pth);
+    cd Matlab_codes
+
+    % Assign column names
+    data_seissol.Properties.VariableNames = {'t', 'data_x', 'data_y', 'data_z'};
     for i_l=1:length(l_vect)
         l=l_vect(i_l);
         for i_b=1:length(b_vect)
@@ -199,7 +200,7 @@ for i_str = 0:n_str
     cd ..
     cd Matlab_codes
 
-%% Generating and plotting the comparison in frequency domain
+    %% Generating and plotting the comparison in frequency domain
     figure
     for i_s = 1:n_c
 
