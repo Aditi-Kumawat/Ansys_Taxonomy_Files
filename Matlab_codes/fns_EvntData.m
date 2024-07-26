@@ -59,10 +59,13 @@ classdef fns_EvntData
             n_snr = numel(s_dir);
             cmpt = {'X', 'Y', 'Z'};
             if strcmp(name_dataset, 'Poing')
-
+                event_vect = {'2016', '2017'};
+                nzero=6;
             elseif strcmp(name_dataset, 'Unterhaching')
             elseif strcmp(name_dataset, 'Insheim_1')
                 event_vect = {'2009', '2010_1', '2010_2', '2012_1', '2012_2', '2013_1', '2013_2', '2013_3', '2013_4', '2013_5', '2016_1', '2016_2'};
+                % event_vect = {'2013_3'};
+
                 nzero=6;
             end
         end
@@ -81,7 +84,9 @@ classdef fns_EvntData
         %%
         function [ff_fldr]=get_ff_fldr1(data_set,stn,date_evnt,time_evnt)
             if strcmp(data_set, 'Poing')
-                ff_fldr = fullfile('GM','GM_POI2016',stn);
+                fldr_evnt=['GM_', date_evnt, '_', time_evnt];
+                fldr_stn_nm = ['GM_', stn, '_', date_evnt, '_', time_evnt];
+                ff_fldr=fullfile('GM', 'GM_Poing', fldr_evnt, fldr_stn_nm);
             elseif strcmp(data_set, 'Unterhaching')
                 fldr_nm = [stn, '_', evnt];
                 ff_fldr = fullfile('GM', 'GM_UH',fldr_nm);
@@ -91,8 +96,5 @@ classdef fns_EvntData
                 ff_fldr=fullfile('GM', 'GM_Insheim_1', fldr_evnt, fldr_stn_nm);
             end
         end
-
-
-
     end
 end

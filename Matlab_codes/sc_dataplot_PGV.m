@@ -11,10 +11,14 @@ cols_t = {'tim', 'val'};
 vlbl_vect={'$v_x$ (m/s)' '$v_y$ (m/s)' '$v_z$ (m/s)'};
 ulbl_vect={'$u_x$ (m)' '$u_y$ (m)' '$u_z$ (m)'};
 %----------------------------------------------------%
+%% Start a parallel pool
+if isempty(gcp('nocreate'))
+    parpool;
+end
 parfor ie = 1:length(event_vect)
     evnt=event_vect{ie};
     disp(['evnt: ', evnt])
-    [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(evnt);
+    [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(data_set,evnt);
     n_stns=length(stn_vect);
     % COMMENT/UNCOMMENT "figure" below or inside the for loop depending upon
     % if you want all stns in a single figure file or each stn in a different figure

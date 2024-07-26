@@ -31,14 +31,14 @@ for i=1:n_stns
         fns_imprtdata.get_ff_inpt(bf_nm_v,s_dir,...
         stn,date, time,n_snr,ff_fldr,cols);
     [f_x_max,f_y_max,f_z_max]=fns_plot.find_dominant_freq(ff_Vamp_mat,f_inpt_V{1})
-    % figure
+    figure
     % x_lim=[0 80];
     % y_lim=[0 1.4e-4];
     x_lim=[];
     y_lim=[];
     r=r_vect(i);
-    % fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
-    %     stn,r,date, time,vlbl_vect,{'Frequency,~Hz'},'cut',evnt,x_lim,y_lim,FACTR_freq)
+    fns_plot.plt_ff_svrlstns(f_inpt_V, ff_Vamp_mat,bf_nm_v,123,...
+        stn,r,date, time,vlbl_vect,{'Frequency,~Hz'},'cut',evnt,x_lim,y_lim,FACTR_freq)
     if stn=="POI01"
         v_x_Po1=ff_Vamp_mat{1};
         v_y_Po1=ff_Vamp_mat{2};
