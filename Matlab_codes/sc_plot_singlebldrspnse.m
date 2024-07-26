@@ -68,6 +68,7 @@ for i_str = 0:n_str
         cmpt, 'UniformOutput', false);
 
     cd ..
+    cd APDL_codes
     cd Results_Ansys
     fil_pth = fullfile(rf_fldr, folder, fil_nm);
     U_all = cellfun(@(x) readtable(x),fil_pth,'UniformOutput',false);
@@ -81,6 +82,7 @@ for i_str = 0:n_str
         TFim_mat{i_component} = U.IMAG;
         TFcmplx_mat{i_component} = U.REAL+1i.*U.IMAG;
     end
+    cd ..
     cd ..
     cd Matlab_codes
     for i_c = 1:3
@@ -117,9 +119,9 @@ for i_str = 0:n_str
 
     legend('show', 'Box', 'off', 'Interpreter', 'latex',...
         'FontSize', 8)
-    xlabel({'f (Hz)'}, 'FontSize', 10,...
+    xlabel({'f, Hz'}, 'FontSize', 10,...
         'Interpreter', 'latex')
-    ylabel('$v$ (mm/s)', 'FontSize', 10,...
+    ylabel('$v$, mm/s', 'FontSize', 10,...
         'Interpreter', 'latex')
 
     set(gca, 'XTickLabelMode', 'auto');
@@ -195,9 +197,9 @@ for i_flur = 4
 
     legend('show', 'Box', 'off', 'Interpreter', 'latex',...
         'FontSize', 8)
-    xlabel({'$t$ (s)'}, 'FontSize', 10,...
+    xlabel({'$t$, s'}, 'FontSize', 10,...
         'Interpreter', 'latex')
-    ylabel('$v$ (mm/s)', 'FontSize', 10,...
+    ylabel('$v$, mm/s', 'FontSize', 10,...
         'Interpreter', 'latex')
 
     set(gca, 'XTickLabelMode', 'auto');

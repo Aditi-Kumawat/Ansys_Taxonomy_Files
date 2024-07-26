@@ -44,6 +44,7 @@ for i_str = 0:n_str
         cmpt, 'UniformOutput', false);
 
     cd ..
+    cd APDL_codes
     cd Results_Ansys
     fil_pth = fullfile(rf_fldr, folder, fil_nm);
     U_all = cellfun(@(x) readtable(x),fil_pth,'UniformOutput',false);
@@ -57,6 +58,7 @@ for i_str = 0:n_str
 %     Uamp_X= 20*log10(Uamp_X/u_ref);
 %     Uamp_Y= 20*log10(Uamp_Y/u_ref);
 %     Uamp_Z= 20*log10(Uamp_Z/u_ref);
+    cd ..
     cd ..
     cd Matlab_codes
     %% Plotting

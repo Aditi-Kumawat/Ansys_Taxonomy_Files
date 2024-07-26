@@ -128,10 +128,12 @@ for i_str = 0:n_str
                 cmpt, 'UniformOutput', false);
 
             cd ..
+            cd APDL_codes
             cd Results_Ansys
             fil_pths = fullfile(rf_fldr, fldr, filNms);
             U_all = cellfun(@(x) readtable(x), fil_pths,...
                 'UniformOutput', false);
+            cd ..
             cd ..
             cd Matlab_codes
 

@@ -32,10 +32,12 @@ classdef fns_scatter
                 fl_nm1 = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
                     l, b),cmpt, 'UniformOutput', false);
                 cd ..
+                cd APDL_codes
                 cd Results_Ansys
                 fil_pth = fullfile(r_fldr, fldr, fl_nm1);
                 U_all = cellfun(@(x) readtable(x), fil_pth,...
                     'UniformOutput', false);
+                cd ..
                 cd ..
                 cd Matlab_codes
 
@@ -87,10 +89,12 @@ classdef fns_scatter
                 fl_nm1 = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str,...
                     l, b),cmpt, 'UniformOutput', false);
                 cd ..
+                cd APDL_codes
                 cd Results_Ansys
                 fil_pth = fullfile(r_fldr, fldr, fl_nm1);
                 U_all = cellfun(@(x) readtable(x), fil_pth,...
                     'UniformOutput', false);
+                cd ..
                 cd ..
                 cd Matlab_codes
 
