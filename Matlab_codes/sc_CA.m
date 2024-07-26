@@ -1,3 +1,9 @@
+%% Saves the results for the maximum values velocity and KB levels 
+% at selected locations of the building models. The corresponding values
+% dominant frequencies and time, respectively where the maximum v and KB
+% are observed are also saved but they are not used later on. 
+% (this remains to be modified)
+
 %% Initialization
 clear;clc;close all;
 
@@ -9,7 +15,7 @@ disp(['bld_soil_fndnPara: ', bld_soil_fndn])
 %----------------------------------------------------%
 data_set= fns_EvntData.select_event_stn();
 disp(['selected_dataset: ', data_set])
-% [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(evnt);
+% [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(data_set,evnt);
 [l_vect,b_vect,h,wall_config,dampg_vect,bldcases]=fns_Inpt_BldPara.get_lbh_bldcases_for_rf_fldr(rf_fldr);
 
 [n_str,n_rx,n_ry,V_s,ftyp,B_f,L_f]=fns_Inpt_BldPara.get_nstr_nrxy_fndn_soil_info(bld_soil_fndn);
@@ -22,11 +28,16 @@ disp(['selected_dataset: ', data_set])
 bf_nm_vt = 'v_%d_%s_%s_%s';
 cols_t = {'tim', 'val'};
 %
-tic
-parfor ie = 1:length(event_vect)
+% tic;
+%% Start a parallel pool
+% if isempty(gcp('nocreate'))
+%     parpool;
+% end
+
+for ie = 1:length(event_vect)
     evnt=event_vect{ie};
     disp(['evnt: ', evnt])
-    [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(evnt);
+    [stn_vect,date_evnt,time_evnt,r_vect]=fns_data_process.get_event_fordataprocess(data_set,evnt);
     %%
     n_stns=length(stn_vect);
     max_Vxmat = zeros(n_stns, bldcases, n_str + 1);
@@ -43,6 +54,7 @@ parfor ie = 1:length(event_vect)
     t_z_max = zeros(n_stns, bldcases, n_str + 1);
     for i_stn=1:n_stns
         stn=stn_vect{i_stn};
+        disp(['stn: ', stn])
         [ff_fldr]=fns_EvntData.get_ff_fldr1(data_set,stn,date_evnt,time_evnt);
         %% Importing sensor data
         [f_inpt,ff_Uamp_mat,ff_Ur_mat,ff_UIm_mat,ff_Ucmplx_mat]=...
@@ -231,5 +243,5 @@ parfor ie = 1:length(event_vect)
 
 
 end
-t_ex=toc;
-disp(['Cloud analysis: evnt processing time=',t_ex])
+% t_ex=toc;
+% disp(['Cloud analysis: evnt processing time=',t_ex])

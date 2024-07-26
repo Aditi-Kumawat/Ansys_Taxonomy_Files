@@ -77,6 +77,44 @@ classdef fns_CloudAnalysis
                 error('File %s does not exist.', filename2);
             end
         end
+                %%
+        function [max_Vxmat, max_Vymat, max_Vzmat,...
+                max_Vx_KB_f_mat, max_Vy_KB_f_mat, max_Vz_KB_f_mat] = ...
+                import_DINvalsSingleBld(data_set, date_evnt, time_evnt, rf_fldr, bld_soil_fndn)
+
+            % Construct the directory path
+            baseDir = 'SAVE_DATA'; % Adjust this if your base directory is different
+            fldr_evnt = ['DINvals_', date_evnt, '_', time_evnt];
+            dirPath = fullfile(baseDir, data_set, rf_fldr, bld_soil_fndn, fldr_evnt);
+
+            % Check if the directory exists
+            if ~exist(dirPath, 'dir')
+                error('Directory %s does not exist.', dirPath);
+            end
+
+            % Define file names
+            filename1 = fullfile(dirPath, 'singlebldDIN4150_3_Vmax.mat');
+            filename2 = fullfile(dirPath, 'singlebldDIN4150_2_KBval.mat');
+
+            % Load data from the files
+            if exist(filename1, 'file')
+                data1 = load(filename1);
+                max_Vxmat = data1.max_Vxmat;
+                max_Vymat = data1.max_Vymat;
+                max_Vzmat = data1.max_Vzmat;
+            else
+                error('File %s does not exist.', filename1);
+            end
+
+            if exist(filename2, 'file')
+                data2 = load(filename2);
+                max_Vx_KB_f_mat = data2.max_Vx_KB_f_mat;
+                max_Vy_KB_f_mat = data2.max_Vy_KB_f_mat;
+                max_Vz_KB_f_mat = data2.max_Vz_KB_f_mat;
+            else
+                error('File %s does not exist.', filename2);
+            end
+        end
         %%
         function save_freq_forVmax(ff_Vamp_mat,f_inpt_V,ff_fldr)
             maxVx=max(ff_Vamp_mat{1});
@@ -179,14 +217,14 @@ classdef fns_CloudAnalysis
             fns_FragilityFns.save_figure_to_pdf(filename);
         end
         %% plot results
-        function plot_CAfull(event_vect,all_PGV,all_max_v_or_KB,event_labels,ylb,xlb,titleText,filename)
+        function plot_CAfull(event_vect,all_PGV,all_max_v_or_KB,event_labels,ylb,xlb,filename,ylimits)
             evntlbl_length = jet(length(event_vect));
 
             colors = evntlbl_length(event_labels, :);
             figure;
-            fnt=18;
+            fnt=12;
             for i = 1:size(all_max_v_or_KB, 2)
-                s = scatter(all_PGV, all_max_v_or_KB(:,i), 100, colors, 'filled');
+                s = scatter(all_PGV, all_max_v_or_KB(:,i), 50, colors, 'filled');
                 colormap(evntlbl_length);
                 s.MarkerEdgeColor = 'k';
                 s.LineWidth = 0.1;
@@ -197,27 +235,28 @@ classdef fns_CloudAnalysis
             end
             % Calculate the maximum value of all_PGV and add some space
             max_PGV = max(all_PGV);
-            space_after_max = max_PGV * 0.3; % for example, 10% more than the max value
+            space_after_max = max_PGV * 0.5; % for example, 10% more than the max value
             xlim([min(all_PGV) max_PGV + space_after_max]); % Set new x-axis limits
+            ylim(ylimits);
             grid on;
             xlabel(xlb, 'FontSize', fnt,'Interpreter', 'latex');
             ylabel(ylb, 'FontSize', fnt,'Interpreter', 'latex');
             set(gca, 'XScale', 'log');
             set(gca, 'FontSize', fnt, 'Box', 'on', 'LineWidth', 0.5,...
                 'TickLabelInterpreter', 'latex', 'TickLength',[0.01,0.01]);
-            set(gcf, 'Units', 'inches', 'Position', [18 3 6.5 5.5],...
-                'PaperUnits', 'Inches', 'PaperSize', [6.5 5.5]);
+            set(gcf, 'Units', 'inches', 'Position', [18 3 5 3.5],...
+                'PaperUnits', 'Inches', 'PaperSize', [5 3.5]);
             % Create a custom legend
             hold on;
             legend_entries = gobjects(length(event_vect), 1);  % Initialize an array of graphic objects
             for ie = 1:length(event_vect)
                 % Create dummy scatter plot handles for legend entries
-                legend_entries(ie) = plot(NaN, NaN, 'o', 'MarkerSize', 9, 'MarkerEdgeColor', 'k', 'MarkerFaceColor', evntlbl_length(ie, :), 'DisplayName', event_vect{ie});
+                legend_entries(ie) = plot(NaN, NaN, 'o', 'MarkerSize', 6, 'MarkerEdgeColor', 'k', 'MarkerFaceColor', evntlbl_length(ie, :), 'DisplayName', event_vect{ie});
                 % set(legend_entries(ie), 'MarkerFaceAlpha', 0.6, 'MarkerEdgeAlpha', 0.6);
             end
 
             % Set legend with the custom plot handles
-            legend(legend_entries, 'NumColumns', 4, 'Location', 'northwest', 'FontSize', fnt, 'Interpreter', 'latex', 'Box', 'off');
+            legend(legend_entries, 'NumColumns', 2, 'Location', 'northwest', 'FontSize', fnt, 'Interpreter', 'latex', 'Box', 'off');
 
             % title(titleText, 'Interpreter', 'latex', 'FontSize', fnt);
             hold off;

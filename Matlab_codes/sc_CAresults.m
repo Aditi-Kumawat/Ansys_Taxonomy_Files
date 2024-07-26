@@ -1,5 +1,8 @@
 clear; clc; close all;
-
+%% Plots the cloud analysis results for individual set of results for different 
+% cases of models
+% The plots added to the paper: sc_CAresultsFull.m
+% The results have been saved by sc_CA.m
 %----------------------------------------------------%
 rf_fldr = fns_Inpt_BldPara.selectRfFldr();
 disp(['selectedRfFldr: ', rf_fldr])
@@ -34,7 +37,7 @@ for ie = 1:length(event_vect)
     evnt = event_vect{ie};
     disp(['evnt: ', evnt]);
     [stn_vect, date_evnt, time_evnt, r_vect] =...
-        fns_data_process.get_event_fordataprocess(evnt);
+        fns_data_process.get_event_fordataprocess(data_set,evnt);
     n_stns = length(stn_vect);
     PGVx_vect = zeros(n_stns,1);
     PGVy_vect = zeros(n_stns,1);

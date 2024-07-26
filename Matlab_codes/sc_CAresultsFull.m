@@ -1,4 +1,12 @@
 clear; clc; close all;
+%% Plots the cloud analysis results for all cases of building models
+% This plots added to the paper has analyzed all possible cases for the
+% building model amounting to 87 building cases. The plots show the
+% maximum values of the velocity and KB levels at selected locations of the
+% models with the PGVs of the GMs of the selected dataset of input seismic
+% data. 
+% !!The results have been saved by sc_CA.m!!
+
 rf_fldr_vect = {'MultiUnitBld_GeomVary_3lby2', 'Bld_with_Walls',...
     'Vary_DampRatio'};
 data_set = 'Insheim_1';
@@ -45,7 +53,7 @@ for irf=1:length(rf_fldr_vect)
             evnt = event_vect{ie};
             disp(['evnt: ', evnt]);
             [stn_vect, date_evnt, time_evnt, r_vect] =...
-                fns_data_process.get_event_fordataprocess(evnt);
+                fns_data_process.get_event_fordataprocess(data_set,evnt);
             n_stns = length(stn_vect);
             PGVx_vect = zeros(n_stns,1);
             PGVy_vect = zeros(n_stns,1);
@@ -99,36 +107,49 @@ for irf=1:length(rf_fldr_vect)
     end
 end
 
-
-event_vect_lbl = {'$2009$', '$2010_1$', '$2010_2$', '$2012_1$',...
-    '$2012_2$', '$2013_1$', '$2013_2$', '$2013_3$', '$2013_4$',...
-    '$2013_5$', '$2016_1$', '$2016_2$'};
-
-ylbl_vect1={'$v_{max}(x)$,~m/s', '$v_{max}(y)$,~m/s',...
-    '$v_{max}(z)$,~m/s'};
-ylbl_vect2={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
-xlbl_vect={'PGV(x),~m/s', 'PGV(y),~m/s', 'PGV(z),~m/s'};
-xlbl_vect = {'log(PGV($x$)), m/s', 'log(PGV($y$)), m/s',...
-    'log(PGV($z$)), m/s'};
-titleText = {'$v_{max}$ for Building Responses ($x$-dir)',...
-    '$v_{max}$ for Building Responses ($y$-dir)',...
-    '$v_{max}$ for Building Responses ($z$-dir)',...
-    'KB value for Building Responses ($x$-dir)',...
-    'KB value for Building Responses ($y$-dir)',...
-    'KB value for Building Responses ($z$-dir)'};
+ylbl_vect1={'$\max[v_x(t)]$,~mm/s', '$\max[v_y(t)]$,~mm/s',...
+    '$\max[v_z(t)]$,~mm/s'};
+% ylbl_vect2={'$KB_{Fmax}(x)$', '$KB_{Fmax}(y)$', '$KB_{Fmax}(z)$'};
+ylbl_vect2={'$\max[KB_{F}]$','$\max[KB_{F}]$','$\max[KB_{F}]$'};
+% xlbl_vect={'PGV(x),~m/s', 'PGV(y),~m/s', 'PGV(z),~m/s'};
+xlbl_vect = {'log(PGV($x$)), mm/s', 'log(PGV($y$)), mm/s',...
+    'log(PGV($z$)), mm/s'};
 filename = {'VmaxPlot_x.pdf','VmaxPlot_y.pdf','VmaxPlot_z.pdf',...
     'KBmaxPlot_x.pdf','KBmaxPlot_y.pdf','KBmaxPlot_z.pdf'};
-% event_labels_full=repmat(event_labels_full, 1, size(evry_max_Vx, 2));
-% all_PGVx=repmat(all_PGVx, 1, size(evry_max_Vx, 2));
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVx,evry_max_Vx,...
-    event_labels_full,ylbl_vect1{1},xlbl_vect{1},titleText{1},filename{1})
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVy,evry_max_Vy,...
-    event_labels_full,ylbl_vect1{2},xlbl_vect{2},titleText{2},filename{2})
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVz,evry_max_Vz,...
-    event_labels_full,ylbl_vect1{3},xlbl_vect{3},titleText{3},filename{3})
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVx,evry_max_KBx,...
-    event_labels_full,ylbl_vect2{1},xlbl_vect{1},titleText{4},filename{4})
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVy,evry_max_KBy,...
-    event_labels_full,ylbl_vect2{2},xlbl_vect{2},titleText{5},filename{5})
-fns_CloudAnalysis.plot_CAfull(event_vect_lbl,all_PGVz,evry_max_KBz,...
-    event_labels_full,ylbl_vect2{3},xlbl_vect{3},titleText{6},filename{6})
+filename = strcat(data_set, '_', filename);
+
+if strcmp(data_set, 'Poing')
+    event_vect_lbl = { '$2016$', '$2017$' };
+    ylimits_set = [0 8; 0 3.5; 0 26; 0 4; 0 2; 0 6];
+elseif strcmp(data_set, 'Insheim_1')
+    event_vect_lbl = {'$2009$', '$2010_1$', '$2010_2$', '$2012_1$',...
+        '$2012_2$', '$2013_1$', '$2013_2$', '$2013_3$', '$2013_4$',...
+        '$2013_5$', '$2016_1$', '$2016_2$'};
+    ylimits_set = [0 12; 0 6; 0 25; 0 14; 0 14; 0 14];
+end
+% Concatenate the matrices along the third dimension
+KB3D_mat = cat(3, evry_max_KBx, evry_max_KBy, evry_max_KBz);
+
+% Find the maximum along the third dimension
+KBmax_mat = max(KB3D_mat, [], 3);
+% data_vect = {evry_max_Vx, evry_max_Vy, evry_max_Vz, evry_max_KBx, evry_max_KBy, evry_max_KBz};
+data_vect = {evry_max_Vx, evry_max_Vy, evry_max_Vz, KBmax_mat, KBmax_mat, KBmax_mat};
+PGV_vect={all_PGVx, all_PGVy, all_PGVz, all_PGVx, all_PGVy, all_PGVz};
+fct_mm_set = [1e3, 1e3, 1e3, 1, 1, 1];
+
+for i = 1:6
+    ylimits = ylimits_set(i, :);
+    fct_mm = fct_mm_set(i);
+
+    if i <= 3
+        ylbl_vect = ylbl_vect1;
+    else
+        ylbl_vect = ylbl_vect2;
+    end
+
+    fns_CloudAnalysis.plot_CAfull(event_vect_lbl, PGV_vect{i}*1e3, data_vect{i} * fct_mm, ...
+        event_labels_full, ylbl_vect{mod(i-1,3)+1}, xlbl_vect{mod(i-1,3)+1}, ...
+        filename{i}, ylimits);
+end
+
+
