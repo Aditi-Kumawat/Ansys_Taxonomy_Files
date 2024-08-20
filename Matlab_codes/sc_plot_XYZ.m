@@ -39,7 +39,7 @@ f_vect = [];
 
 folder = fns_plot.get_fldrnm(n_str,n_rx,n_ry,l,b,ftyp,V_s,L_f,B_f);
 u_ref=1;
-for i_str = 0:n_str
+for i_str = [0,n_str] %0:n_str
     fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str, l, b),...
         cmpt, 'UniformOutput', false);
 

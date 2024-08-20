@@ -63,7 +63,7 @@ dfz=freq(3)-freq(2);
 %%
 u_ref=1;
 fct=1e3;
-for i_str = 0:n_str
+for i_str = [0,3]           % 0:n_str
     fil_nm = arrayfun(@(x) sprintf(bf_nm, x{1}, i_str, l, b),...
         cmpt, 'UniformOutput', false);
 
@@ -155,7 +155,7 @@ for i_str = 0:n_str
     cd Matlab_codes
 end
 
-for i_flur = 4
+for i_flur = [1,4]
     %% IFFT original data
     Vss_Zmat = Vss_zCell{i_flur};  %length = 2049
     Vss_Xmat = Vss_xCell{i_flur};
