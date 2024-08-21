@@ -1,4 +1,4 @@
-# Project Name
+# Ansys_Taxonomy_Files
 
 This repository contains various codes and resources related to ground motion analysis and building vibration prediction, focusing on geothermal-induced earthquakes.
 
@@ -20,5 +20,5 @@ Feel free to contribute by forking the repository and creating pull requests. Fo
 
 ## Contact
 
-For any questions or issues, please contact [Aditi Kumawat] at [aditi.kumawat@tum.de].
+For any questions or issues, please contact Aditi Kumawat at [aditi.kumawat@tum.de].
 
