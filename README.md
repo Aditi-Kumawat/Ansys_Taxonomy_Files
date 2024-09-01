@@ -1,18 +1,18 @@
-# Ansys_Taxonomy_Files
+# TaxoSim
 
 This repository contains various codes and resources related to ground motion analysis and building vibration prediction, focusing on geothermal-induced earthquakes.
 
 ## Directory Structure
 
 - **APDL_codes/**
-  - Contains ANSYS Parametric Design Language (APDL) scripts and files. These are used for finite element analysis (FEA) simulations related to seismic activities.  
+  - Contains ANSYS Parametric Design Language (APDL) scripts and files. These are used for creating finite element models of building structures, and there analysis under harmonic/transient loads.  
   - main_*.mac files are the ones used for creating various taxonomy classes
 
 - **GM/**
 - This folder is intended to contain the ground motion data. However, due to the large file size, the data is not included in this repository. To access the data, please contact [aditi.kumawat@tum.de].
 
 - **Matlab_codes/**
-  - This folder holds MATLAB scripts for processing and analyzing results generated using the APDL codes. It includes modifications to result folders.  
+  - This folder holds MATLAB scripts for processing and analyzing results generated using the FEM analysis. 
 
 ## Contributions
 
